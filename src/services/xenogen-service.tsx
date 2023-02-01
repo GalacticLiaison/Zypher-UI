@@ -7,6 +7,8 @@ export interface Xenogen {
   legendary: number;
 }
 
+export type XenogenType = keyof Xenogen;
+
 export const getXenogen = (): Xenogen => {
   return {} as Xenogen;
 };

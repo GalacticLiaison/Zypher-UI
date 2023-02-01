@@ -1,10 +1,11 @@
 import { Mutation } from "./mutation-service";
+import { Rarity } from "./rarity-service";
 
 export interface Gene {
   id: string;
   name: string;
   description: string;
-  rarity: string;
+  rarity: Rarity;
   speciesId: string;
   discovered: boolean;
   xenogenCost: {
@@ -14,16 +15,18 @@ export interface Gene {
     legendary: number;
   };
   strains: Strain[];
+  image: string;
 }
 
 export interface Strain {
   id: string;
   name: string;
   description: string;
-  rarity: string;
+  rarity: Rarity;
   geneId: string;
   discovered: boolean;
   possibleMutations: Mutation[];
+  image: string;
 }
 
 export const getDiscoveredGenes = () => {};

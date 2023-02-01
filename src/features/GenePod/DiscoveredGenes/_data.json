@@ -1,0 +1,83 @@
+[
+  {
+    "id": "Ge_Hu1",
+    "name": "Human",
+    "description": "The common human form, believed to first originate rom the Caltori sector",
+    "rarity": "Common",
+    "speciesId": "Human",
+    "discovered": true,
+    "xenogenCost": {
+      "standard": 3,
+      "rare": 0,
+      "epic": 0,
+      "legendary": 0
+    },
+    "strains": [
+      {
+        "id": "Ge_Hu1_St1",
+        "name": "Standard Human",
+        "description": "The most common Human variation",
+        "rarity": "Common",
+        "geneId": "Ge_Hu1",
+        "discovered": true,
+        "possibleMutations": [],
+        "image": "/some/path/to/image.png"
+      }
+    ],
+    "image": "src/assets/genes/HumanGene.png"
+  },
+  {
+    "id": "Ge_Rab1",
+    "name": "Rabbit",
+    "description": "A morph that shares common evolutionary traits to your earth rabbit",
+    "rarity": "Common",
+    "speciesId": "Human",
+    "discovered": true,
+    "xenogenCost": {
+      "standard": 3,
+      "rare": 3,
+      "epic": 2,
+      "legendary": 0
+    },
+    "strains": [
+      {
+        "id": "Ge_Rab1_St1",
+        "name": "Standard Rabbit",
+        "description": "The most common Rabbit variation",
+        "rarity": "Common",
+        "geneId": "Ge_Rab1",
+        "discovered": true,
+        "possibleMutations": [],
+        "image": "/some/path/to/image.png"
+      }
+    ],
+    "image": "src/assets/genes/RabbitGene.png"
+  },
+  {
+    "id": "Ge_Rep1",
+    "name": "Reptilian",
+    "description": "A gene shared among most species of the Dracorian sector. Usually characterized by scales, claws, and sharp teeth",
+    "rarity": "Common",
+    "speciesId": "Human",
+    "discovered": true,
+    "xenogenCost": {
+      "standard": 3,
+      "rare": 5,
+      "epic": 0,
+      "legendary": 1
+    },
+    "strains": [
+      {
+        "id": "Ge_Rep1_St1",
+        "name": "Standard Reptilian",
+        "description": "The most common Reptilian variation",
+        "rarity": "Common",
+        "geneId": "Ge_Rep1",
+        "discovered": true,
+        "possibleMutations": [],
+        "image": "/some/path/to/image.png"
+      }
+    ],
+    "image": "src/assets/genes/LizardGene.png"
+  }
+]

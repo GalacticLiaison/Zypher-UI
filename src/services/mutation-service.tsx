@@ -1,8 +1,10 @@
+import { Rarity } from "./rarity-service";
+
 export interface Mutation {
   id: string;
   name: string;
   description: string;
-  rarity: string;
+  rarity: Rarity;
   geneId: string;
   strainId: string;
   discovered: boolean;
