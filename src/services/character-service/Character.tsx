@@ -5,6 +5,13 @@ export interface Character {
   level: number;
   health: number;
   maxHealth: number;
+  stats: {
+    strength: number;
+    fortitude: number;
+    agility: number;
+    will: number;
+    intelligence: number;
+  };
   morphology: {
     gender: string;
     head: {

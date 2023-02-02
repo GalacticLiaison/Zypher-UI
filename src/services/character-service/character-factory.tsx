@@ -25,6 +25,13 @@ export const createNewPlayer = (params: NewPlayerParams): Player => {
     level: 1,
     health: 100,
     maxHealth: 100,
+    stats: {
+      strength: 10,
+      fortitude: 10,
+      agility: 10,
+      will: 10,
+      intelligence: 10,
+    },
     morphology: {
       gender: params.gender,
       head: {

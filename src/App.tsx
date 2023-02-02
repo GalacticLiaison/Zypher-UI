@@ -1,58 +1,27 @@
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import "./App.css";
-import { GenePod } from "./features/GenePod/GenePod";
-import {
-  createNewPlayer,
-  Player,
-} from "./services/character-service/character-factory";
-import { Gene } from "./services/gene-service";
-import { Mutation } from "./services/mutation-service";
-import { Xenogen } from "./services/xenogen-service";
+import { Router } from "./Router";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { QueryClient, QueryClientProvider } from "react-query";
+// import { ParallaxProvider } from "react-scroll-parallax";
 
 function App() {
-  const [player, setPlayer] = useState<Player>(
-    createNewPlayer({
-      name: "Dude",
-      gender: "Male",
-      hairColor: "Brown",
-      hairStyle: "Short",
-      eyeColor: "Blue",
-      skinColor: "White",
-    })
-  );
-
-  const [xenogenLevels, setXenogenLevel] = useState<Xenogen>({
-    standard: 0,
-    rare: 0,
-    epic: 0,
-    legendary: 0,
-  });
-  const updateXenogenLevel = (xenogen: Xenogen) => {
-    setXenogenLevel(xenogen);
-  };
-
-  const [discoveredGenes, setDiscoveredGenes] = useState<Gene[]>([]);
-  const updateDiscoveredGenes = (genes: Gene[]) => {
-    setDiscoveredGenes([...discoveredGenes, ...genes]);
-  };
-
-  const [stableMutations, setStableMutations] = useState<Mutation[]>([]);
-  const updateStableMutations = (mutations: Mutation[]) => {
-    setStableMutations([...stableMutations, ...mutations]);
-  };
+  const [count, setCount] = useState(0);
+  const queryClient = new QueryClient();
+  const theme = createTheme();
 
   return (
-    <div>
-      <GenePod
-        player={player}
-        discoveredGenes={discoveredGenes}
-        updateDiscoveredGenes={updateDiscoveredGenes}
-        stableMutations={stableMutations}
-        updateStableMutations={updateStableMutations}
-        xenogenLevels={xenogenLevels}
-        updateXenogenLevel={updateXenogenLevel}
-      ></GenePod>
-    </div>
+    <>
+      <QueryClientProvider client={queryClient}>
+        {/* <ParallaxProvider> */}
+        <ThemeProvider theme={theme}>
+          <Router></Router>
+          <Outlet></Outlet>
+        </ThemeProvider>
+        {/* </ParallaxProvider> */}
+      </QueryClientProvider>
+    </>
   );
 }
 

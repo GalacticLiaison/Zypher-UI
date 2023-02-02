@@ -3,9 +3,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-import { Gene } from "../../../services/gene-service";
+import { Gene, getDiscoveredGenes } from "../../../../services/gene-service";
 import Grid from "@mui/material/Grid";
-import data from "./_data.json";
 import { GeneCard } from "./GeneCard/GeneCard";
 import { useState } from "react";
 
@@ -30,7 +29,7 @@ interface IDiscoveredGenesProps {
 }
 
 export const DiscoveredGenes = (props: IDiscoveredGenesProps) => {
-  const [genes, setGenes] = useState<Gene[]>(data as Gene[]);
+  const [genes, setGenes] = useState<Gene[]>(getDiscoveredGenes() as Gene[]);
 
   return (
     <Modal

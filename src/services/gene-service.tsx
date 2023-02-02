@@ -29,7 +29,9 @@ export interface Strain {
   image: string;
 }
 
-export const getDiscoveredGenes = () => {};
+export const getDiscoveredGenes = (): Gene[] => {
+  return [];
+};
 
 export const discoverGene = (geneId: number) => {};
 
