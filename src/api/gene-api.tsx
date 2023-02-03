@@ -17,14 +17,15 @@ const env = "dev";
 
 export const getGenes = (): Promise<Gene[]> =>
   axios.get(`${API_BASE_URL}/${env}/genes`).then((response) => {
-    console.log("RESPONSE", response);
+    console.log("GET GENES", response);
     return response.data;
   });
 
-export const createGene = (gene: Gene) =>
-  axios
-    .post(`${API_BASE_URL}/${env}/genes`, gene)
-    .then((response) => response.data);
+export const createGene = (gene: Gene): Promise<Gene[]> =>
+  axios.post(`${API_BASE_URL}/${env}/genes`, gene).then((response) => {
+    console.log("CREATE GENE", response);
+    return response.data;
+  });
 
 // export const createItem = (item: any) => {
 //   return axios

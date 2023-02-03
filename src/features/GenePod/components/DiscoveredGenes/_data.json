@@ -7,7 +7,7 @@
     "speciesId": "Human",
     "discovered": true,
     "xenogenCost": {
-      "standard": 3,
+      "common": 3,
       "rare": 0,
       "epic": 0,
       "legendary": 0
@@ -34,7 +34,7 @@
     "speciesId": "Human",
     "discovered": true,
     "xenogenCost": {
-      "standard": 3,
+      "common": 3,
       "rare": 3,
       "epic": 2,
       "legendary": 0
@@ -61,7 +61,7 @@
     "speciesId": "Human",
     "discovered": true,
     "xenogenCost": {
-      "standard": 3,
+      "common": 3,
       "rare": 5,
       "epic": 0,
       "legendary": 1

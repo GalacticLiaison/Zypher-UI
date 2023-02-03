@@ -1,50 +1,87 @@
-import { CardMedia, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardContent from "@mui/material/CardContent";
+import { Button, Grid } from "@mui/material";
 import { useState } from "react";
+import { saveNewGene } from "../../../api/hooks/saveNewGene";
+import { Gene } from "../../../services/gene-service";
+import { GeneCard } from "../../GenePod/components/GeneCard/GeneCard";
 
 interface IGeneDesignerProps {
-  item: any;
+  gene?: Gene;
 }
 
 export const GeneDesigner = (props: IGeneDesignerProps) => {
-  const [item, setItem] = useState(props.item);
+  const [gene, setGene] = useState(props.gene);
+  const [isEdit, setIsEdit] = useState(false);
+  const saveGene = saveNewGene();
+
+  const toggleIsEdit = () => {
+    setIsEdit(!isEdit);
+  };
+
+  const saveEditedGene = () => {
+    // HERE
+    // const gene: Gene = {
+    //   id: "1",
+    //   name: "Gene 1",
+    //   description: "Gene 1 Description",
+    //   rarity: "Common",
+    //   speciesId: "1",
+    //   discovered: true,
+    //   xenogenCost: {
+    //     common: 1,
+    //     rare: 2,
+    //     epic: 3,
+    //     legendary: 4,
+    //   },
+    //   strains: [
+    //     {
+    //       id: "1",
+    //       name: "Strain 1",
+    //       description: "Strain 1 Description",
+    //       rarity: "Common",
+    //       geneId: "1",
+    //       discovered: true,
+    //       possibleMutations: [],
+    //       image: "",
+    //     },
+    //   ],
+    //   image: "",
+    // };
+    // saveGene.mutate(gene);
+  };
 
   return (
-    <Card
-      sx={{
-        maxWidth: 345,
-        height: 480,
-        boxShadow:
-          "0px 3px 6px rgba(0, 0, 0, 0.16), 0px 3px 6px rgba(0, 0, 0, 0.23)" /* Shadow */,
-        overflow: "scroll",
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-        "&::MsOverflowStyle": "none",
-        "&::scrollbarWidth": "none",
-      }}
-    >
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          // height="400"
-          image={props.gene.image}
-          alt={props.gene.name}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {props.gene.name}
-            <Typography gutterBottom variant="subtitle1" component="div">
-              {createCostElement(props.gene)}
-            </Typography>
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {props.gene.description}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <GeneCard gene={gene} isEdit={isEdit}></GeneCard>
+      </Grid>
+      {!isEdit && (
+        <Grid item xs={5}>
+          <Button variant="outlined" color="info" onClick={toggleIsEdit}>
+            Edit
+          </Button>
+        </Grid>
+      )}
+      {isEdit && (
+        <Grid item xs={5}>
+          <Button variant="contained" color="success" onClick={saveEditedGene}>
+            Save
+          </Button>
+        </Grid>
+      )}
+      {isEdit && (
+        <Grid item xs={5}>
+          <Button variant="contained" color="error" onClick={toggleIsEdit}>
+            Cancel
+          </Button>
+        </Grid>
+      )}
+      {!isEdit && (
+        <Grid item xs={5}>
+          <Button variant="outlined" color="error">
+            Delete
+          </Button>
+        </Grid>
+      )}
+    </Grid>
   );
 };

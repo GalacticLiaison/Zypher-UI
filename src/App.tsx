@@ -4,6 +4,7 @@ import "./App.css";
 import { Router } from "./Router";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { NavBar } from "./features/NavBar/NavBar";
 // import { ParallaxProvider } from "react-scroll-parallax";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         {/* <ParallaxProvider> */}
         <ThemeProvider theme={theme}>
+          <NavBar></NavBar>
           <Router></Router>
           <Outlet></Outlet>
         </ThemeProvider>

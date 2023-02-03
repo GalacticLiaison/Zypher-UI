@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-import { Mutation } from "../../../services/mutation-service";
 import Grid from "@mui/material/Grid";
 import { MutationCard } from "./MutationCard/MutationCard";
+import { Mutation } from "../../../../services/mutation-service";
 
 const style = {
   position: "absolute" as "absolute",

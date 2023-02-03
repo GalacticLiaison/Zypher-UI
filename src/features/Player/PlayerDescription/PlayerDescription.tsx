@@ -23,7 +23,7 @@ export const PlayerDescription = (props: IPlayerDescriptionProps) => {
         <Typography variant="h3" component="div">
           {player.name}
         </Typography>
-        <Typography variant="body1">
+        <Typography>
           <Grid container spacing={3}>
             <Grid item xs={4}>
               <Card>
@@ -49,9 +49,9 @@ export const PlayerDescription = (props: IPlayerDescriptionProps) => {
                 <div>Style: {props.player.morphology.head.hair.style}</div>
                 <div>Color: {props.player.morphology.head.hair.color}</div>
                 <Typography variant="h6">-- Eyes --</Typography>
-                {props.player.morphology.head.eyes.map((eye) => {
+                {props.player.morphology.head.eyes.map((eye, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <div>Eye: {eye.type}</div>
                       <div>Color: {eye.color}</div>
                     </div>
@@ -75,9 +75,9 @@ export const PlayerDescription = (props: IPlayerDescriptionProps) => {
                 <div>Type: {props.player.morphology.head.face}</div>
                 <div>Back: {props.player.morphology.torso.back}</div>
                 <Typography variant="h6">-- Arms --</Typography>
-                {props.player.morphology.torso.arms.map((arm) => {
+                {props.player.morphology.torso.arms.map((arm, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <div>Type: {arm.type}</div>
                       <div>Hand: {arm.hand}</div>
                     </div>
@@ -90,9 +90,9 @@ export const PlayerDescription = (props: IPlayerDescriptionProps) => {
                 <Typography variant="h4">Bottom</Typography>
                 <div>Type: {props.player.morphology.bottom.type}</div>
                 <Typography variant="h6">-- Legs --</Typography>
-                {props.player.morphology.bottom.legs.map((leg) => {
+                {props.player.morphology.bottom.legs.map((leg, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <div>Type: {leg.type}</div>
                       <div>Foot: {leg.foot}</div>
                     </div>

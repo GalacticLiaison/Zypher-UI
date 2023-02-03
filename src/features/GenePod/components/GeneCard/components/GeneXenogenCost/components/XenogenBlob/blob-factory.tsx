@@ -1,4 +1,4 @@
-import { XenogenType } from "../../../../services/xenogen-service";
+import { XenogenType } from "../../../../../../../../services/xenogen-service";
 import "./XenogenBlob.css";
 
 interface IXenogenBlobProps {
@@ -8,7 +8,7 @@ interface IXenogenBlobProps {
 }
 
 // export interface Xenogen {
-//     standard: number;
+//     common: number;
 //     rare: number;
 //     epic: number;
 //     legendary: number;
@@ -51,7 +51,7 @@ export const XenogenBlob = (props: IXenogenBlobProps) => {
   }
 
   switch (props.type) {
-    case "standard":
+    case "common":
       gooStyles.blob.backgroundColor = "#32CD32";
       gooStyles.blobMiddle.backgroundColor = "#7FFF00";
       gooStyles.blobCenter.backgroundColor = "#00FF00";

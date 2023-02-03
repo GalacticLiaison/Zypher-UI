@@ -8,14 +8,16 @@ export interface Gene {
   rarity: Rarity;
   speciesId: string;
   discovered: boolean;
-  xenogenCost: {
-    standard: number;
-    rare: number;
-    epic: number;
-    legendary: number;
-  };
+  xenogenCost: XenogenCost;
   strains: Strain[];
   image: string;
+}
+
+export interface XenogenCost {
+  common: number;
+  rare: number;
+  epic: number;
+  legendary: number;
 }
 
 export interface Strain {
@@ -28,10 +30,6 @@ export interface Strain {
   possibleMutations: Mutation[];
   image: string;
 }
-
-export const getDiscoveredGenes = (): Gene[] => {
-  return [];
-};
 
 export const discoverGene = (geneId: number) => {};
 

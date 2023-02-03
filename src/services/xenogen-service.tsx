@@ -1,7 +1,7 @@
 //* Story: Player earns Xenogen by completing missions, stores, defeating enemies, etc.
 //* Story: Applying a gene or a specific mutation costs Xenogen
 export interface Xenogen {
-  standard: number;
+  common: number;
   rare: number;
   epic: number;
   legendary: number;

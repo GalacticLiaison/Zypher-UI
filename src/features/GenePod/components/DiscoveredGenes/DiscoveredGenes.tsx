@@ -3,10 +3,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-import { Gene, getDiscoveredGenes } from "../../../../services/gene-service";
+import { Gene } from "../../../../services/gene-service";
 import Grid from "@mui/material/Grid";
-import { GeneCard } from "./GeneCard/GeneCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GeneCard } from "../GeneCard/GeneCard";
+import { getAllGenes } from "../../../../api/hooks/getAllGenes";
 
 // import "./DiscoveredGenes.css";
 
@@ -29,7 +30,14 @@ interface IDiscoveredGenesProps {
 }
 
 export const DiscoveredGenes = (props: IDiscoveredGenesProps) => {
-  const [genes, setGenes] = useState<Gene[]>(getDiscoveredGenes() as Gene[]);
+  // data from API call
+  const { data, isLoading } = getAllGenes();
+  useEffect(() => {
+    if (!data) return;
+    setGenes(data);
+  }, [data]);
+
+  const [genes, setGenes] = useState<Gene[]>([] as Gene[]);
 
   return (
     <Modal
@@ -55,7 +63,7 @@ export const DiscoveredGenes = (props: IDiscoveredGenesProps) => {
           <Grid container spacing={3}>
             {genes.map((gene) => (
               <Grid item xs={4} key={gene.id}>
-                <GeneCard gene={gene}></GeneCard>
+                <GeneCard gene={gene} isEdit={false}></GeneCard>
               </Grid>
             ))}
           </Grid>

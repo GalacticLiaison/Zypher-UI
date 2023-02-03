@@ -24,7 +24,7 @@ export const STORY = () => {
   );
 
   const [xenogenLevels, setXenogenLevel] = useState<Xenogen>({
-    standard: 0,
+    common: 0,
     rare: 0,
     epic: 0,
     legendary: 0,
