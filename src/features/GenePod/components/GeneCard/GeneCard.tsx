@@ -8,15 +8,15 @@ import { GeneName } from "./components/GeneName/GeneName";
 import { GeneDescription } from "./components/GeneDescription/GeneDescription";
 import { Gene } from "../../../../services/gene-service";
 import {
-  SaveGeneImage,
-  SaveGeneProperty,
+  UpdateGeneImage,
+  UpdateGeneProperty,
 } from "../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 
 interface IGeneCardProps {
   gene?: Gene;
   isEdit?: boolean;
-  saveGeneProperty?: SaveGeneProperty;
-  saveGeneImage?: SaveGeneImage;
+  updatedGeneProperty?: UpdateGeneProperty;
+  updatedGeneImage?: UpdateGeneImage;
 }
 
 export const GeneCard = (props: IGeneCardProps) => {
@@ -53,23 +53,23 @@ export const GeneCard = (props: IGeneCardProps) => {
             image={gene?.image}
             name={gene?.name}
             isEdit={isEdit}
-            saveGeneImage={props.saveGeneProperty}
+            updateGeneImage={props.updatedGeneProperty}
           ></GeneImage>
           <CardContent>
             <GeneName
               name={gene?.name}
               isEdit={isEdit}
-              saveGeneName={props.saveGeneProperty}
+              updateGeneName={props.updatedGeneProperty}
             ></GeneName>
             <GeneXenogenCost
               gene={gene}
               isEdit={isEdit}
-              saveGeneXenogenCost={props.saveGeneProperty}
+              updateGeneXenogenCost={props.updatedGeneProperty}
             ></GeneXenogenCost>
             <GeneDescription
               isEdit={isEdit}
               description={gene?.description}
-              saveGeneDescription={props.saveGeneProperty}
+              updateGeneDescription={props.updatedGeneProperty}
             ></GeneDescription>
           </CardContent>
         </div>

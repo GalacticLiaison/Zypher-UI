@@ -2,13 +2,13 @@ import { PhotoCamera } from "@mui/icons-material";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import { useEffect, useState } from "react";
-import { SaveGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { UpdateGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 
 interface IGeneImageProps {
   image?: string;
   name?: string;
   isEdit?: boolean;
-  saveGeneImage?: SaveGeneProperty;
+  updateGeneImage?: UpdateGeneProperty;
 }
 
 export const GeneImage = (props: IGeneImageProps) => {
@@ -44,8 +44,8 @@ export const GeneImage = (props: IGeneImageProps) => {
     const url = URL.createObjectURL(event.target.files[0]);
     console.log({ url });
     setImage(url);
-    if (props.saveGeneImage)
-      props.saveGeneImage("image", `src/assets/genes/${image.name}`);
+    if (props.updateGeneImage)
+      props.updateGeneImage("image", `src/assets/genes/${image.name}`);
   };
 
   return (

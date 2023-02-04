@@ -1,44 +1,81 @@
-import Backdrop from "@mui/material/Backdrop";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Box from "@mui/material/Box";
 import { GeneCard } from "../../../../GenePod/components/GeneCard/GeneCard";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import Button from "@mui/material/Button";
+import DialogActions from "@mui/material/DialogActions";
+import { useState } from "react";
+import { Gene, GenePropertyTypes } from "../../../../../services/gene-service";
+import { Image } from "../../../../../api/image-api";
+import { updateObject } from "../../../../../_utils/global-helpers";
+import { _saveNewGene } from "../../../../../api/hooks/Genes/saveNewGene";
+import { _saveNewImage } from "../../../../../api/hooks/Image/saveNewImage";
+import { nanoid } from "nanoid";
 
 interface INewGeneProps {
   open: boolean;
   handleClose: any;
+  toggleSnackBar: () => void;
 }
 
 export const NewGene = (props: INewGeneProps) => {
+  const [geneToSave, setGeneToSave] = useState<Gene | undefined>({} as Gene);
+  const [imageToSave, setImageToSave] = useState<Image | undefined>(undefined);
+  const saveNewGene = _saveNewGene();
+  const saveNewImage = _saveNewImage();
+
+  function updatedGeneImage(geneImage: Image) {
+    if (imageToSave == undefined) return;
+    setImageToSave(geneImage);
+  }
+
+  function updatedGeneProperty(
+    propertyName: keyof Gene,
+    value: GenePropertyTypes
+  ) {
+    if (geneToSave == undefined) return;
+    setGeneToSave(updateObject(geneToSave, propertyName, value));
+  }
+
+  const handleSave = () => {
+    if (geneToSave != undefined) {
+      geneToSave.id = nanoid();
+      setGeneToSave(geneToSave);
+      console.log("SAVING THIS: ", geneToSave);
+      saveNewGene.mutate(geneToSave);
+    }
+
+    if (imageToSave != undefined) saveNewImage.mutate(imageToSave);
+
+    if (saveNewGene.isSuccess && saveNewImage.isSuccess) props.toggleSnackBar();
+    props.handleClose();
+  };
+
   return (
-    <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
-      open={props.open}
-      onClose={props.handleClose}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-    >
-      <Fade in={props.open}>
-        <Box sx={style}>
-          <GeneCard isEdit={true}></GeneCard>
-        </Box>
-      </Fade>
-    </Modal>
+    <div>
+      <Dialog open={props.open} onClose={props.handleClose}>
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here.
+            We will send updates occasionally.
+          </DialogContentText>
+          <GeneCard
+            isEdit={true}
+            updatedGeneProperty={updatedGeneProperty}
+            updatedGeneImage={updatedGeneImage}
+          ></GeneCard>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="error" onClick={props.handleClose}>
+            Cancel
+          </Button>
+          <Button variant="contained" color="success" onClick={handleSave}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 };

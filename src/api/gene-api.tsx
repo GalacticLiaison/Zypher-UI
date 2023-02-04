@@ -36,9 +36,9 @@ export const createGene = (gene: Gene): Promise<Gene[]> =>
 //     });
 // };
 
-export const updateGene = (id: string, gene: Gene) =>
+export const updateGene = (gene: Gene) =>
   axios
-    .put(`${API_BASE_URL}/${env}/genes/${id}`, gene)
+    .put(`${API_BASE_URL}/${env}/genes/${gene.id}`, gene)
     .then((response) => response.data);
 
 // export const updateItem = (id: string, item: any) => {

@@ -38,6 +38,8 @@ https://mui.com/material-ui/react-image-list/
 
 - collect transformation genes of different races
 
+  - ULTRA RARE SHINIES!!!!
+
   - genes start unstable and their transformations are random
     - once an evolution has been mapped it can be used at will
   - each race has at least one unique powerful evolution in their gene
@@ -47,6 +49,8 @@ https://mui.com/material-ui/react-image-list/
 - can alter you and crew mates
 - can alter prisoners!
 - can be upgraded
+
+- TODO: leanr more about genetic terms (Genotype/Phenotype)
 
 # Combat
 

@@ -1,11 +1,11 @@
 import { TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { SaveGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { UpdateGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 
 interface IGeneNameProps {
   isEdit?: boolean;
   name?: string;
-  saveGeneName?: SaveGeneProperty;
+  updateGeneName?: UpdateGeneProperty;
 }
 
 export const GeneName = (props: IGeneNameProps) => {
@@ -23,7 +23,7 @@ export const GeneName = (props: IGeneNameProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
-    if (props.saveGeneName) props.saveGeneName("name", event.target.value);
+    if (props.updateGeneName) props.updateGeneName("name", event.target.value);
   };
 
   return isEdit ? (

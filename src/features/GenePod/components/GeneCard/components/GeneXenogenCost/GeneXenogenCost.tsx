@@ -1,18 +1,18 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { Gene } from "../../../../../../services/gene-service";
-import { SaveGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { Gene, XenogenCost } from "../../../../../../services/gene-service";
+import { UpdateGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 import { XenoTypeCost } from "./components/XenoTypeCost/XenoTypeCost";
 
 interface IXenogenCostProps {
   gene?: Gene;
   isEdit?: boolean;
-  saveGeneXenogenCost?: SaveGeneProperty;
+  updateGeneXenogenCost?: UpdateGeneProperty;
 }
 
 export const GeneXenogenCost = (props: IXenogenCostProps) => {
-  console.log("GeneXenogenCost: ", props.gene?.xenogenCost);
+  console.log(props);
   const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
   useEffect(() => {
     if (!props.isEdit) return;
@@ -23,6 +23,7 @@ export const GeneXenogenCost = (props: IXenogenCostProps) => {
 
   const updateXenogenCost = (value: number, type: string) => {
     if (gene == undefined) return;
+    if (gene.xenogenCost == undefined) gene.xenogenCost = {} as XenogenCost;
     switch (type) {
       case "common":
         gene.xenogenCost.common = value;
@@ -39,8 +40,8 @@ export const GeneXenogenCost = (props: IXenogenCostProps) => {
     }
     setGene(gene);
 
-    if (props.saveGeneXenogenCost)
-      props.saveGeneXenogenCost("xenogenCost", gene.xenogenCost);
+    if (props.updateGeneXenogenCost)
+      props.updateGeneXenogenCost("xenogenCost", gene.xenogenCost);
   };
 
   return (
@@ -54,41 +55,41 @@ export const GeneXenogenCost = (props: IXenogenCostProps) => {
         <Grid item xs={3}>
           Cost:
         </Grid>
-        {((gene && gene.xenogenCost.common > 0) || isEdit) && (
+        {((gene && gene.xenogenCost?.common > 0) || isEdit) && (
           <Grid item xs={isEdit ? 12 : 2}>
             <XenoTypeCost
               isEdit={isEdit}
-              cost={gene?.xenogenCost}
+              cost={gene?.xenogenCost?.common}
               type="common"
               updateXenogenCost={updateXenogenCost}
             ></XenoTypeCost>
           </Grid>
         )}
-        {((gene && gene.xenogenCost.rare > 0) || isEdit) && (
+        {((gene && gene.xenogenCost?.rare > 0) || isEdit) && (
           <Grid item xs={isEdit ? 12 : 2}>
             <XenoTypeCost
               isEdit={isEdit}
-              cost={gene?.xenogenCost}
+              cost={gene?.xenogenCost?.rare}
               type="rare"
               updateXenogenCost={updateXenogenCost}
             ></XenoTypeCost>
           </Grid>
         )}
-        {((gene && gene.xenogenCost.epic > 0) || isEdit) && (
+        {((gene && gene.xenogenCost?.epic > 0) || isEdit) && (
           <Grid item xs={isEdit ? 12 : 2}>
             <XenoTypeCost
               isEdit={isEdit}
-              cost={gene?.xenogenCost}
+              cost={gene?.xenogenCost?.epic}
               type="epic"
               updateXenogenCost={updateXenogenCost}
             ></XenoTypeCost>
           </Grid>
         )}
-        {((gene && gene.xenogenCost.legendary > 0) || isEdit) && (
+        {((gene && gene.xenogenCost?.legendary > 0) || isEdit) && (
           <Grid item xs={isEdit ? 12 : 2}>
             <XenoTypeCost
               isEdit={isEdit}
-              cost={gene?.xenogenCost}
+              cost={gene?.xenogenCost?.legendary}
               type="legendary"
               updateXenogenCost={updateXenogenCost}
             ></XenoTypeCost>

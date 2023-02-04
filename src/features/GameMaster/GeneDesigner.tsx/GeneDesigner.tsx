@@ -1,21 +1,23 @@
 import { Button, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
-import { saveNewGene } from "../../../api/hooks/saveNewGene";
-import { saveNewImage } from "../../../api/hooks/saveNewImage";
 import { Gene, GenePropertyTypes } from "../../../services/gene-service";
 import { GeneCard } from "../../GenePod/components/GeneCard/GeneCard";
 import { Image } from "../../../api/image-api";
+import { _updateGene } from "../../../api/hooks/Genes/updateGene";
+import { _saveNewImage } from "../../../api/hooks/Image/saveNewImage";
+import { updateObject } from "../../../_utils/global-helpers";
 
-interface IGeneDesignerProps {
-  gene?: Gene;
-}
-
-export type SaveGeneProperty = (
+export type UpdateGeneProperty = (
   propertyName: keyof Gene,
   value: GenePropertyTypes
 ) => void;
 
-export type SaveGeneImage = (image: any) => void;
+export type UpdateGeneImage = (image: any) => void;
+
+interface IGeneDesignerProps {
+  gene?: Gene;
+  toggleSnackBar: () => void;
+}
 
 export const GeneDesigner = (props: IGeneDesignerProps) => {
   const [gene, setGene] = useState(props.gene);
@@ -26,34 +28,27 @@ export const GeneDesigner = (props: IGeneDesignerProps) => {
 
   // ----- Edit mode
   const [isEdit, setIsEdit] = useState(false);
-  const [geneToSave, setGeneToSave] = useState<Gene | undefined>(props.gene);
-  const [imageToSave, setImageToSave] = useState<Image | undefined>(undefined);
-  const saveGene = saveNewGene();
-  const saveImage = saveNewImage();
+  const [geneToUpdate, setGeneToUpdate] = useState<Gene | undefined>(
+    props.gene
+  );
+  const [imageToUpdate, setImageToUpdate] = useState<Image | undefined>(
+    undefined
+  );
+  const updateGene = _updateGene();
+  const saveNewImage = _saveNewImage();
   // ---------------
 
-  function saveGeneProperty(
+  function updatedGeneImage(geneImage: Image) {
+    if (imageToUpdate == undefined) return;
+    setImageToUpdate(geneImage);
+  }
+
+  function updatedGeneProperty(
     propertyName: keyof Gene,
     value: GenePropertyTypes
   ) {
-    if (geneToSave == undefined) return;
-    setGeneToSave(updateObject(geneToSave, propertyName, value));
-  }
-
-  function updateObject<T, K extends keyof T>(
-    obj: T,
-    propertyName: K,
-    value: T[K]
-  ): T {
-    return {
-      ...obj,
-      [propertyName]: value,
-    };
-  }
-
-  function saveGeneImage(geneImage: Image) {
-    if (imageToSave == undefined) return;
-    setImageToSave(geneImage);
+    if (geneToUpdate == undefined) return;
+    setGeneToUpdate(updateObject(geneToUpdate, propertyName, value));
   }
 
   const toggleIsEdit = () => {
@@ -61,10 +56,11 @@ export const GeneDesigner = (props: IGeneDesignerProps) => {
   };
 
   const saveEditedGene = () => {
-    console.log("Saving gene: ", geneToSave);
-    if (imageToSave != undefined) saveImage.mutate(imageToSave);
-    if (geneToSave != undefined) saveGene.mutate(geneToSave);
+    if (geneToUpdate != undefined) updateGene.mutate(geneToUpdate);
+    if (imageToUpdate != undefined) saveNewImage.mutate(imageToUpdate);
     setIsEdit(false);
+
+    if (updateGene.isSuccess && saveNewImage.isSuccess) props.toggleSnackBar();
   };
 
   return (
@@ -73,8 +69,8 @@ export const GeneDesigner = (props: IGeneDesignerProps) => {
         <GeneCard
           gene={gene}
           isEdit={isEdit}
-          saveGeneProperty={saveGeneProperty}
-          saveGeneImage={saveGeneImage}
+          updatedGeneProperty={updatedGeneProperty}
+          updatedGeneImage={updatedGeneImage}
         ></GeneCard>
       </Grid>
       {!isEdit && (

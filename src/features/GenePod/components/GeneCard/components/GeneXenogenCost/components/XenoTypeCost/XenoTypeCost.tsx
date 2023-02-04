@@ -7,7 +7,7 @@ import { XenogenBlob } from "../XenogenBlob/blob-factory";
 
 interface IXenoTypeCostProps {
   isEdit?: boolean;
-  cost?: XenogenCost;
+  cost?: number;
   type?: XenogenType;
   updateXenogenCost: (value: number, type: string) => void;
 }
@@ -19,14 +19,19 @@ export const XenoTypeCost = (props: IXenoTypeCostProps) => {
     setIsEdit(props.isEdit);
   }, [props.isEdit]);
 
-  const [cost, setCost] = useState<XenogenCost | undefined>(props.cost);
+  const [cost, setCost] = useState<number | undefined>(props.cost ?? 0);
   const [type, setType] = useState<XenogenType | undefined>(props.type);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!cost || !type) return;
-    cost[type] = parseInt(event.target.value);
-    setCost(cost);
-    props.updateXenogenCost(parseInt(event.target.value), type);
+    console.log({
+      cost,
+      type,
+      newCost: event.target.value,
+    });
+    if (cost == undefined || !type) return;
+    const newCost = parseInt(event.target.value);
+    setCost(newCost);
+    props.updateXenogenCost(newCost, type);
   };
 
   return (
@@ -37,17 +42,15 @@ export const XenoTypeCost = (props: IXenoTypeCostProps) => {
             id="standard-number"
             label="Cost"
             type="number"
-            defaultValue={cost && type ? cost[type] : 0}
+            defaultValue={cost ?? 0}
             InputLabelProps={{
               shrink: true,
             }}
             variant="standard"
             onChange={handleChange}
           />
-        ) : cost && type ? (
-          cost[type]
         ) : (
-          0
+          cost ?? 0
         )}
       </Grid>
       <Grid item xs={6}>

@@ -7,9 +7,7 @@ import { Gene } from "../../../../services/gene-service";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import { GeneCard } from "../GeneCard/GeneCard";
-import { getAllGenes } from "../../../../api/hooks/getAllGenes";
-
-// import "./DiscoveredGenes.css";
+import { _getAllGenes } from "../../../../api/hooks/Genes/getAllGenes";
 
 const style = {
   position: "absolute" as "absolute",
@@ -31,7 +29,7 @@ interface IDiscoveredGenesProps {
 
 export const DiscoveredGenes = (props: IDiscoveredGenesProps) => {
   // data from API call
-  const { data, isLoading } = getAllGenes();
+  const { data, isLoading } = _getAllGenes();
   useEffect(() => {
     if (!data) return;
     setGenes(data);
