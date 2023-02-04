@@ -3,15 +3,13 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
-import { Eye } from "../../../services/character-service/Character";
-import { Player } from "../../../services/character-service/character-factory";
-import { describeEyeTypes } from "./Eyes/Eyes";
+import { Player } from "../../../../services/character-service/character-factory";
 
-interface IPlayerDescriptionProps {
+interface IPlayerMorphologyProps {
   player: Player;
 }
 
-export const PlayerDescription = (props: IPlayerDescriptionProps) => {
+export const PlayerMorphology = (props: IPlayerMorphologyProps) => {
   const [player, setPlayer] = useState<Player>(props.player);
 
   return (
@@ -103,56 +101,6 @@ export const PlayerDescription = (props: IPlayerDescriptionProps) => {
           </Grid>
 
           <div>name {props.player.name}</div>
-          {/* `name: string;
-        morphology: {
-          gender: string;
-          head: {
-            face: FaceType;
-            eyes: Eye[];
-            ears: EarType;
-            hair: Hair;
-          };
-          torso: {
-            type: TorsoType;
-            arms: Arm[];
-            back: BackType;
-          };
-          bottom: {
-            type: BottomType;
-            legs: Leg[];
-          };
-          skin: {
-            type: SkinType;
-            color: SkinColor;
-          };
-          muscle: {
-            size: number;
-            tone: number;
-            type: MuscleType;
-          };
-        };` */}
-        </Typography>
-        <Typography variant="body2">
-          {/* HEAD */}
-          You are a {player.morphology.gender} """Human""". Your face looks{" "}
-          {player.morphology.head.face}. You have{" "}
-          {player.morphology.head.eyes.length}{" "}
-          {describeEyeTypes(player.morphology.head.eyes)} eyes,{" "}
-          {player.morphology.head.ears} ears, and{" "}
-          {player.morphology.head.hair.color}{" "}
-          {player.morphology.head.hair.style} hair.
-          {/* TORSO */}
-          Your torso is {player.morphology.torso.type}. You have{" "}
-          {player.morphology.torso.arms.length} arms, and a{" "}
-          {player.morphology.torso.back} back.
-          {/* BOTTOM */}
-          Your bottom is {player.morphology.bottom.type}. You have{" "}
-          {player.morphology.bottom.legs.length} legs.
-          {/* SKIN */}
-          Your skin is {player.morphology.skin.color} and{" "}
-          {player.morphology.skin.type}.{/* MUSCLE */}
-          Your muscles are {player.morphology.muscle.size} and{" "}
-          {player.morphology.muscle.tone} toned.
         </Typography>
       </CardContent>
     </Card>

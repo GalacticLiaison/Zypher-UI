@@ -1,4 +1,4 @@
-import { Eye } from "../../../../services/character-service/Character";
+import { Eye } from "../../../../../services/character-service/Character";
 
 export const describeEyeTypes = (eyes: Eye[]): string => {
   const uniqueEyeTypes = new Set(eyes.map((eye) => eye.type));

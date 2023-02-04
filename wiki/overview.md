@@ -31,7 +31,7 @@ https://mui.com/material-ui/react-image-list/
 - armors of rarity levels
   - appeal vs armor vs agility balance
   - fully modular legendary ai powered parts
-    - each piece interacts with the other pieces
+    - each piece interacts with the other pieces in conversation
   - zergish bio armor
 
 # Gene Tank

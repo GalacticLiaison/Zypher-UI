@@ -4,7 +4,7 @@ import { Player } from "../../services/character-service/character-factory";
 import { Gene } from "../../services/gene-service";
 import { Mutation } from "../../services/mutation-service";
 import { Xenogen } from "../../services/xenogen-service";
-import { PlayerDescription } from "../Player/PlayerDescription/PlayerDescription";
+import { PlayerSheet } from "../Player/PlayerSheet";
 import { DiscoveredGenes } from "./components/DiscoveredGenes/DiscoveredGenes";
 import { StableMutations } from "./components/StableMutations/StableMutations";
 
@@ -52,7 +52,7 @@ export const GenePod = (props: IGenePodProps) => {
 
   return (
     <div>
-      <PlayerDescription player={props.player}></PlayerDescription>
+      <PlayerSheet player={props.player}></PlayerSheet>
       <div>
         <Button
           variant="outlined"
