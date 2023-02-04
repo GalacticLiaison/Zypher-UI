@@ -2,7 +2,7 @@ import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Box from "@mui/material/Box";
-import { GeneCard } from "../../../GenePod/components/GeneCard/GeneCard";
+import { GeneCard } from "../../../../GenePod/components/GeneCard/GeneCard";
 
 const style = {
   position: "absolute" as "absolute",

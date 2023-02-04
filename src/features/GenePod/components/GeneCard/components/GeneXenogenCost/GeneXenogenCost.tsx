@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { Gene } from "../../../../../../services/gene-service";
-import { SaveGeneProperty } from "../../GeneCard";
+import { SaveGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 import { XenoTypeCost } from "./components/XenoTypeCost/XenoTypeCost";
 
 interface IXenogenCostProps {
@@ -12,6 +12,7 @@ interface IXenogenCostProps {
 }
 
 export const GeneXenogenCost = (props: IXenogenCostProps) => {
+  console.log("GeneXenogenCost: ", props.gene?.xenogenCost);
   const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
   useEffect(() => {
     if (!props.isEdit) return;
@@ -37,7 +38,9 @@ export const GeneXenogenCost = (props: IXenogenCostProps) => {
         break;
     }
     setGene(gene);
-    props.saveGeneXenogenCost?.(gene.xenogenCost);
+
+    if (props.saveGeneXenogenCost)
+      props.saveGeneXenogenCost("xenogenCost", gene.xenogenCost);
   };
 
   return (

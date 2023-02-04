@@ -1,6 +1,6 @@
 import { TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { SaveGeneProperty } from "../../GeneCard";
+import { SaveGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 
 interface IGeneNameProps {
   isEdit?: boolean;
@@ -16,10 +16,14 @@ export const GeneName = (props: IGeneNameProps) => {
   }, [props.isEdit]);
 
   const [name, setName] = useState<string | undefined>(props.name);
+  useEffect(() => {
+    if (!props.name) return;
+    setName(props.name);
+  }, [props.name]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
-    if (props.saveGeneName) props.saveGeneName<"name">(event.target.value);
+    if (props.saveGeneName) props.saveGeneName("name", event.target.value);
   };
 
   return isEdit ? (
@@ -27,6 +31,7 @@ export const GeneName = (props: IGeneNameProps) => {
       required
       id="standard-required"
       label="Gene Name"
+      defaultValue={name}
       variant="standard"
       onChange={handleChange}
     />

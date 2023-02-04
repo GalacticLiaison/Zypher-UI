@@ -12,6 +12,13 @@ export interface Gene {
   strains: Strain[];
   image: string;
 }
+export type GeneProperties = keyof Gene;
+export type GenePropertyTypes =
+  | string
+  | Rarity
+  | boolean
+  | XenogenCost
+  | Strain[];
 
 export interface XenogenCost {
   common: number;

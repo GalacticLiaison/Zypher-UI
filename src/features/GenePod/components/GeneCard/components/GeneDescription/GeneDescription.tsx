@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { SaveGeneProperty } from "../../GeneCard";
+import { SaveGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 
 interface IGeneDescriptionProps {
   isEdit?: boolean;
@@ -23,7 +23,7 @@ export const GeneDescription = (props: IGeneDescriptionProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(event.target.value);
     if (props.saveGeneDescription)
-      props.saveGeneDescription<"description">(event.target.value);
+      props.saveGeneDescription("description", event.target.value);
   };
 
   return isEdit ? (
@@ -32,6 +32,7 @@ export const GeneDescription = (props: IGeneDescriptionProps) => {
       color="secondary"
       focused
       multiline
+      defaultValue={description}
       rows={4}
       sx={{ marginTop: 2 }}
       onChange={handleChange}

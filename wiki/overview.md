@@ -4,6 +4,8 @@ https://mui.com/material-ui/react-image-list/
 
 # Ai scene generation
 
+## Album premium feature!!
+
 # RogueLite!
 
 # Stats

@@ -5,6 +5,8 @@ import { Router } from "./Router";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { NavBar } from "./features/NavBar/NavBar";
+import { ReactQueryDevtools } from "react-query/devtools";
+
 // import { ParallaxProvider } from "react-scroll-parallax";
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
           <Router></Router>
           <Outlet></Outlet>
         </ThemeProvider>
+        <ReactQueryDevtools initialIsOpen />
         {/* </ParallaxProvider> */}
       </QueryClientProvider>
     </>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getAllGenes } from "../../api/hooks/getAllGenes";
 import { Gene } from "../../services/gene-service";
 import { GeneDesigner } from "./GeneDesigner.tsx/GeneDesigner";
-import { NewGene } from "./GeneDesigner.tsx/NewGene/NewGene";
+import { NewGene } from "./GeneDesigner.tsx/components/NewGene/NewGene";
 
 interface IGameMasterProps {}
 

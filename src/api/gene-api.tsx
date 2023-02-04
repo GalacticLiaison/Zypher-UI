@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useQuery } from "react-query";
 import { Gene } from "../services/gene-service";
 
 const API_BASE_URL = "http://localhost:3000";

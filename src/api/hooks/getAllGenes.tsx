@@ -1,5 +1,5 @@
-import { useQuery, QueryCache } from "react-query";
-import { createGene, getGenes } from "../gene-api";
+import { useQuery } from "react-query";
+import { getGenes } from "../gene-api";
 
 export function getAllGenes() {
   return useQuery("genes", getGenes, {

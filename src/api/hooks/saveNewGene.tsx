@@ -1,28 +1,34 @@
-import { useQuery, QueryClient, useMutation } from "react-query";
-import { createGene, getGenes } from "../gene-api";
+import { QueryClient, useMutation } from "react-query";
+import { Gene } from "../../services/gene-service";
+import { createGene } from "../gene-api";
 
 export function saveNewGene() {
   const queryClient = new QueryClient();
   return useMutation(createGene, {
-    onMutate: (newGene) => {
-      // take snapshot of old genes
-      const oldGenes = queryClient.getQueryData("genes");
+    onMutate: async (newGene) => {
+      console.log("MUTATE: ", newGene);
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries("genes");
+
+      // Snapshot the previous value
+      const previousGenes = queryClient.getQueryData<Gene[]>("genes");
 
       // optimistically add new gene to cache
-      if (queryClient.getQueryData("genes")) {
-        queryClient.setQueryData("genes", (old: any) => [...old, newGene]);
+      if (previousGenes) {
+        queryClient.setQueryData<Gene[]>("genes", previousGenes);
       }
 
       // return rollback function
-      return () => queryClient.setQueryData("genes", oldGenes);
+      return { previousGenes };
     },
-    onError: (error, _newGene, rollback) => {
-      // value of "rollback" is the return value of onMutate
-      console.error(error);
-      // notice rollback is passed as a function above so we can just execute it here.
-      if (rollback) rollback();
+    // If the mutation fails, use the context returned from onMutate to roll back
+    onError: (err, variables, context) => {
+      if (context?.previousGenes) {
+        queryClient.setQueryData<Gene[]>("genes", context.previousGenes);
+      }
     },
     onSettled: () => {
+      console.log("SETTLED");
       queryClient.invalidateQueries("genes");
     },
   });

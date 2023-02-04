@@ -1,58 +1,81 @@
 import { Button, Grid } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { saveNewGene } from "../../../api/hooks/saveNewGene";
-import { Gene } from "../../../services/gene-service";
+import { saveNewImage } from "../../../api/hooks/saveNewImage";
+import { Gene, GenePropertyTypes } from "../../../services/gene-service";
 import { GeneCard } from "../../GenePod/components/GeneCard/GeneCard";
+import { Image } from "../../../api/image-api";
 
 interface IGeneDesignerProps {
   gene?: Gene;
 }
 
+export type SaveGeneProperty = (
+  propertyName: keyof Gene,
+  value: GenePropertyTypes
+) => void;
+
+export type SaveGeneImage = (image: any) => void;
+
 export const GeneDesigner = (props: IGeneDesignerProps) => {
   const [gene, setGene] = useState(props.gene);
+  useEffect(() => {
+    if (props.gene == undefined) return;
+    setGene(props.gene);
+  }, [props.gene]);
+
+  // ----- Edit mode
   const [isEdit, setIsEdit] = useState(false);
+  const [geneToSave, setGeneToSave] = useState<Gene | undefined>(props.gene);
+  const [imageToSave, setImageToSave] = useState<Image | undefined>(undefined);
   const saveGene = saveNewGene();
+  const saveImage = saveNewImage();
+  // ---------------
+
+  function saveGeneProperty(
+    propertyName: keyof Gene,
+    value: GenePropertyTypes
+  ) {
+    if (geneToSave == undefined) return;
+    setGeneToSave(updateObject(geneToSave, propertyName, value));
+  }
+
+  function updateObject<T, K extends keyof T>(
+    obj: T,
+    propertyName: K,
+    value: T[K]
+  ): T {
+    return {
+      ...obj,
+      [propertyName]: value,
+    };
+  }
+
+  function saveGeneImage(geneImage: Image) {
+    if (imageToSave == undefined) return;
+    setImageToSave(geneImage);
+  }
 
   const toggleIsEdit = () => {
     setIsEdit(!isEdit);
   };
 
   const saveEditedGene = () => {
-    // HERE
-    // const gene: Gene = {
-    //   id: "1",
-    //   name: "Gene 1",
-    //   description: "Gene 1 Description",
-    //   rarity: "Common",
-    //   speciesId: "1",
-    //   discovered: true,
-    //   xenogenCost: {
-    //     common: 1,
-    //     rare: 2,
-    //     epic: 3,
-    //     legendary: 4,
-    //   },
-    //   strains: [
-    //     {
-    //       id: "1",
-    //       name: "Strain 1",
-    //       description: "Strain 1 Description",
-    //       rarity: "Common",
-    //       geneId: "1",
-    //       discovered: true,
-    //       possibleMutations: [],
-    //       image: "",
-    //     },
-    //   ],
-    //   image: "",
-    // };
-    // saveGene.mutate(gene);
+    console.log("Saving gene: ", geneToSave);
+    if (imageToSave != undefined) saveImage.mutate(imageToSave);
+    if (geneToSave != undefined) saveGene.mutate(geneToSave);
+    setIsEdit(false);
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <GeneCard gene={gene} isEdit={isEdit}></GeneCard>
+        <GeneCard
+          gene={gene}
+          isEdit={isEdit}
+          saveGeneProperty={saveGeneProperty}
+          saveGeneImage={saveGeneImage}
+        ></GeneCard>
       </Grid>
       {!isEdit && (
         <Grid item xs={5}>

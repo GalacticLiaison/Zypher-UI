@@ -6,35 +6,31 @@ import { useEffect, useState } from "react";
 import { GeneImage } from "./components/GeneImage/GeneImage";
 import { GeneName } from "./components/GeneName/GeneName";
 import { GeneDescription } from "./components/GeneDescription/GeneDescription";
-import { Gene, XenogenCost } from "../../../../services/gene-service";
+import { Gene } from "../../../../services/gene-service";
+import {
+  SaveGeneImage,
+  SaveGeneProperty,
+} from "../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 
 interface IGeneCardProps {
   gene?: Gene;
   isEdit?: boolean;
+  saveGeneProperty?: SaveGeneProperty;
+  saveGeneImage?: SaveGeneImage;
 }
-
-export type SaveGeneProperty = <K extends keyof Gene>(
-  value: Gene[K],
-  key?: K
-) => void;
 
 export const GeneCard = (props: IGeneCardProps) => {
   const [gene, setGene] = useState<Gene | undefined>(props.gene);
-  const [geneToSave, setGeneToSave] = useState<Gene | undefined>(props.gene);
+  useEffect(() => {
+    if (props.gene == undefined) return;
+    setGene(props.gene);
+  }, [props.gene]);
+
   const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
   useEffect(() => {
     if (props.isEdit == undefined) return;
     setIsEdit(props.isEdit);
   }, [props.isEdit]);
-
-  function saveGeneProperty<K extends keyof Gene>(value: Gene[K], key?: K) {
-    if (geneToSave == undefined) return;
-    console.log("Key: ", key);
-    console.log("Value: ", value);
-    const theKey = key || (value as unknown as K);
-    geneToSave[theKey] = value;
-    setGeneToSave(geneToSave);
-  }
 
   return (
     <Card
@@ -57,23 +53,23 @@ export const GeneCard = (props: IGeneCardProps) => {
             image={gene?.image}
             name={gene?.name}
             isEdit={isEdit}
-            saveGeneImage={saveGeneProperty}
+            saveGeneImage={props.saveGeneProperty}
           ></GeneImage>
           <CardContent>
             <GeneName
               name={gene?.name}
               isEdit={isEdit}
-              saveGeneName={saveGeneProperty}
+              saveGeneName={props.saveGeneProperty}
             ></GeneName>
             <GeneXenogenCost
               gene={gene}
               isEdit={isEdit}
-              saveGeneXenogenCost={saveGeneProperty}
+              saveGeneXenogenCost={props.saveGeneProperty}
             ></GeneXenogenCost>
             <GeneDescription
               isEdit={isEdit}
               description={gene?.description}
-              saveGeneDescription={saveGeneProperty}
+              saveGeneDescription={props.saveGeneProperty}
             ></GeneDescription>
           </CardContent>
         </div>
