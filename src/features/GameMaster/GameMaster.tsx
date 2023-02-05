@@ -7,6 +7,7 @@ import { NewGene } from "./GeneDesigner.tsx/components/NewGene/NewGene";
 import { _getAllGenes } from "../../api/hooks/Genes/getAllGenes";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { GeneCardSkeleton } from "../GenePod/components/GeneCard/components/GeneCardSkeleton/GeneCardSkeleton";
 
 interface IGameMasterProps {}
 
@@ -35,8 +36,9 @@ export const GameMaster = (props: IGameMasterProps) => {
     setSnackBarIsOpen(false);
   };
 
-  const toggleSnackBar = () => {
-    setSnackBarIsOpen(!snackBarIsOpen);
+  const toggleSnackBar = (isOpen?: boolean) => {
+    console.log("toggle snackbar");
+    setSnackBarIsOpen(isOpen ?? !snackBarIsOpen);
   };
 
   return (
@@ -57,18 +59,25 @@ export const GameMaster = (props: IGameMasterProps) => {
           ></NewGene>
         </Grid>
 
-        {genes.map((gene) => (
-          <Grid item xs={4} key={gene.id}>
-            <GeneDesigner
-              gene={gene}
-              toggleSnackBar={toggleSnackBar}
-            ></GeneDesigner>
-          </Grid>
-        ))}
+        {isLoading
+          ? [...Array(6)].map((value, index) => (
+              <Grid item xs={4} key={index}>
+                <GeneCardSkeleton></GeneCardSkeleton>
+              </Grid>
+            ))
+          : genes.map((gene) => (
+              <Grid item xs={4} key={gene.id}>
+                <GeneDesigner
+                  gene={gene}
+                  toggleSnackBar={toggleSnackBar}
+                ></GeneDesigner>
+              </Grid>
+            ))}
       </Grid>
       <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={snackBarIsOpen}
-        autoHideDuration={6000}
+        autoHideDuration={4000}
         onClose={handleSnackBarClose}
       >
         <Alert

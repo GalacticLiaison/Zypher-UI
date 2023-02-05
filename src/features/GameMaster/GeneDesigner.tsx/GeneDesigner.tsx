@@ -60,7 +60,7 @@ export const GeneDesigner = (props: IGeneDesignerProps) => {
     if (imageToUpdate != undefined) saveNewImage.mutate(imageToUpdate);
     setIsEdit(false);
 
-    if (updateGene.isSuccess && saveNewImage.isSuccess) props.toggleSnackBar();
+    props.toggleSnackBar();
   };
 
   return (

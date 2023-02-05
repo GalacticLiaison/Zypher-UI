@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import { GeneCard } from "../GeneCard/GeneCard";
 import { _getAllGenes } from "../../../../api/hooks/Genes/getAllGenes";
+import { GeneCardSkeleton } from "../GeneCard/components/GeneCardSkeleton/GeneCardSkeleton";
 
 const style = {
   position: "absolute" as "absolute",
@@ -59,11 +60,17 @@ export const DiscoveredGenes = (props: IDiscoveredGenesProps) => {
             following Genes.
           </Typography>
           <Grid container spacing={3}>
-            {genes.map((gene) => (
-              <Grid item xs={4} key={gene.id}>
-                <GeneCard gene={gene} isEdit={false}></GeneCard>
-              </Grid>
-            ))}
+            {isLoading
+              ? [...Array(3)].map((value, index) => (
+                  <Grid item xs={4} key={index}>
+                    <GeneCardSkeleton></GeneCardSkeleton>
+                  </Grid>
+                ))
+              : genes.map((gene) => (
+                  <Grid item xs={4} key={gene.id}>
+                    <GeneCard gene={gene} isEdit={false}></GeneCard>
+                  </Grid>
+                ))}
           </Grid>
         </Box>
       </Fade>

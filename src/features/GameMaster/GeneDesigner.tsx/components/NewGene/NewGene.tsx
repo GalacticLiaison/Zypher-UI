@@ -16,7 +16,7 @@ import { nanoid } from "nanoid";
 interface INewGeneProps {
   open: boolean;
   handleClose: any;
-  toggleSnackBar: () => void;
+  toggleSnackBar: (isOpen?: boolean) => void;
 }
 
 export const NewGene = (props: INewGeneProps) => {
@@ -42,27 +42,42 @@ export const NewGene = (props: INewGeneProps) => {
     if (geneToSave != undefined) {
       geneToSave.id = nanoid();
       setGeneToSave(geneToSave);
-      console.log("SAVING THIS: ", geneToSave);
       saveNewGene.mutate(geneToSave);
     }
 
     if (imageToSave != undefined) saveNewImage.mutate(imageToSave);
-
-    if (saveNewGene.isSuccess && saveNewImage.isSuccess) props.toggleSnackBar();
+    props.toggleSnackBar();
     props.handleClose();
+  };
+
+  const newGene: Gene = {
+    id: "",
+    name: "",
+    description: "",
+    rarity: "Common",
+    speciesId: "",
+    discovered: false,
+    xenogenCost: {
+      common: 0,
+      rare: 0,
+      epic: 0,
+      legendary: 0,
+    },
+    strains: [],
+    image: "src/assets/genes/UnknownGene.png",
   };
 
   return (
     <div>
       <Dialog open={props.open} onClose={props.handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>Create New Gene</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
+            Enter the details for the new gene.
           </DialogContentText>
           <GeneCard
             isEdit={true}
+            gene={newGene}
             updatedGeneProperty={updatedGeneProperty}
             updatedGeneImage={updatedGeneImage}
           ></GeneCard>

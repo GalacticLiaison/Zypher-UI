@@ -12,7 +12,6 @@ interface IXenogenCostProps {
 }
 
 export const GeneXenogenCost = (props: IXenogenCostProps) => {
-  console.log(props);
   const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
   useEffect(() => {
     if (!props.isEdit) return;
