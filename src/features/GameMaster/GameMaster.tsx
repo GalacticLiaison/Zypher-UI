@@ -37,7 +37,6 @@ export const GameMaster = (props: IGameMasterProps) => {
   };
 
   const toggleSnackBar = (isOpen?: boolean) => {
-    console.log("toggle snackbar");
     setSnackBarIsOpen(isOpen ?? !snackBarIsOpen);
   };
 

@@ -53,7 +53,7 @@ export const GeneCard = (props: IGeneCardProps) => {
             image={gene?.image}
             name={gene?.name}
             isEdit={isEdit}
-            updateGeneImage={props.updatedGeneProperty}
+            updateGeneImage={props?.updatedGeneImage}
           ></GeneImage>
           <CardContent>
             <GeneName

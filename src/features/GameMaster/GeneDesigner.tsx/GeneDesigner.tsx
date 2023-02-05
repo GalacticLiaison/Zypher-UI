@@ -12,7 +12,7 @@ export type UpdateGeneProperty = (
   value: GenePropertyTypes
 ) => void;
 
-export type UpdateGeneImage = (image: any) => void;
+export type UpdateGeneImage = (image: FormData) => void;
 
 interface IGeneDesignerProps {
   gene?: Gene;
@@ -31,14 +31,14 @@ export const GeneDesigner = (props: IGeneDesignerProps) => {
   const [geneToUpdate, setGeneToUpdate] = useState<Gene | undefined>(
     props.gene
   );
-  const [imageToUpdate, setImageToUpdate] = useState<Image | undefined>(
+  const [imageToUpdate, setImageToUpdate] = useState<FormData | undefined>(
     undefined
   );
   const updateGene = _updateGene();
   const saveNewImage = _saveNewImage();
   // ---------------
 
-  function updatedGeneImage(geneImage: Image) {
+  function updatedGeneImage(geneImage: FormData) {
     if (imageToUpdate == undefined) return;
     setImageToUpdate(geneImage);
   }

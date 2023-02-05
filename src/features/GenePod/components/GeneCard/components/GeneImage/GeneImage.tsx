@@ -1,14 +1,14 @@
 import { PhotoCamera } from "@mui/icons-material";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
-import { useEffect, useState } from "react";
-import { UpdateGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { ChangeEvent, useEffect, useState } from "react";
+import { UpdateGeneImage } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
 
 interface IGeneImageProps {
   image?: string;
   name?: string;
   isEdit?: boolean;
-  updateGeneImage?: UpdateGeneProperty;
+  updateGeneImage?: UpdateGeneImage;
 }
 
 export const GeneImage = (props: IGeneImageProps) => {
@@ -38,14 +38,28 @@ export const GeneImage = (props: IGeneImageProps) => {
     webkitRelativePath: string;
   }
 
+  // Q: what type is event param below?
+  // A: event is of type ChangeEvent<HTMLInputElement>
   const handleChange = (event: any) => {
-    const image: File = event.target.files[0];
-    console.log({ image });
+    if (!event.target.files) return;
+    const image = event.target.files[0];
+
     const url = URL.createObjectURL(event.target.files[0]);
-    console.log({ url });
     setImage(url);
-    if (props.updateGeneImage)
-      props.updateGeneImage("image", `src/assets/genes/${image.name}`);
+
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("name", image.name);
+    formData.append("subFolderName", "src/assets/genes/");
+
+    console.log("formData:", formData);
+    if (props.updateGeneImage) {
+      props.updateGeneImage({
+        subFolderName: `src/assets/genes/`,
+        name: image.name,
+        image: image,
+      });
+    }
   };
 
   return (

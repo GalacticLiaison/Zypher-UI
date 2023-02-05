@@ -38,7 +38,9 @@ https://mui.com/material-ui/react-image-list/
 
 - collect transformation genes of different races
 
-  - ULTRA RARE SHINIES!!!!
+  - ULTRA RARE SHINIES - Mutation Sub type: Phenotype
+
+    - kind of like what strains are to mutations
 
   - genes start unstable and their transformations are random
     - once an evolution has been mapped it can be used at will

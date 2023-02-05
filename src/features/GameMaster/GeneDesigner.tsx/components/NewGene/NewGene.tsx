@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import { useState } from "react";
 import { Gene, GenePropertyTypes } from "../../../../../services/gene-service";
-import { Image } from "../../../../../api/image-api";
 import { updateObject } from "../../../../../_utils/global-helpers";
 import { _saveNewGene } from "../../../../../api/hooks/Genes/saveNewGene";
 import { _saveNewImage } from "../../../../../api/hooks/Image/saveNewImage";
@@ -21,12 +20,15 @@ interface INewGeneProps {
 
 export const NewGene = (props: INewGeneProps) => {
   const [geneToSave, setGeneToSave] = useState<Gene | undefined>({} as Gene);
-  const [imageToSave, setImageToSave] = useState<Image | undefined>(undefined);
+  const [imageToSave, setImageToSave] = useState<FormData | undefined>(
+    {} as FormData
+  );
   const saveNewGene = _saveNewGene();
   const saveNewImage = _saveNewImage();
 
-  function updatedGeneImage(geneImage: Image) {
-    if (imageToSave == undefined) return;
+  function updatedGeneImage(geneImage: FormData) {
+    console.log("updatedGeneImage: ", geneImage);
+
     setImageToSave(geneImage);
   }
 
@@ -44,8 +46,10 @@ export const NewGene = (props: INewGeneProps) => {
       setGeneToSave(geneToSave);
       saveNewGene.mutate(geneToSave);
     }
-
-    if (imageToSave != undefined) saveNewImage.mutate(imageToSave);
+    if (imageToSave != undefined) {
+      console.log("imageToSave: ", imageToSave);
+      saveNewImage.mutate(imageToSave);
+    }
     props.toggleSnackBar();
     props.handleClose();
   };

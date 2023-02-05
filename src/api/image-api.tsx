@@ -17,11 +17,17 @@ const env = "dev";
 export interface Image {
   name: string;
   data: any;
-  subFolderName?: string;
+  subFolderName: string;
 }
 
-export const saveImage = (image: Image): Promise<void> =>
-  axios.post(`${API_BASE_URL}/${env}/image`, image).then((response) => {
-    console.log("SAVE IMAGE: ", response);
-    return response.data;
-  });
+export const saveImage = (image: FormData): Promise<void> =>
+  axios
+    .post(`${API_BASE_URL}/${env}/images`, image, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => {
+      console.log("SAVE IMAGE: ", response);
+      return response.data;
+    });

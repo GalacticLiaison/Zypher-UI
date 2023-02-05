@@ -23,11 +23,6 @@ export const XenoTypeCost = (props: IXenoTypeCostProps) => {
   const [type, setType] = useState<XenogenType | undefined>(props.type);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log({
-      cost,
-      type,
-      newCost: event.target.value,
-    });
     if (cost == undefined || !type) return;
     const newCost = parseInt(event.target.value);
     setCost(newCost);
