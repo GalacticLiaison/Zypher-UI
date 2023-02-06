@@ -8,6 +8,7 @@ export interface Mutation {
   geneId: string;
   strainId: string;
   discovered: boolean;
+  image: string;
   affectedBodyPart: string;
   bodyPartMutations: [];
   appliedStatBonuses: [];

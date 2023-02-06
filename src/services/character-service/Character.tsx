@@ -79,3 +79,17 @@ export type HandType = "Human" | "Animal" | "Robot";
 export type LegType = "Human" | "Animal" | "Robot";
 export type FootType = "Human" | "Animal" | "Robot";
 export type BackType = "Human" | "Animal" | "Robot";
+
+export type MutatableFeature =
+  | "FaceType"
+  | "TorsoType"
+  | "BottomType"
+  | "SkinType"
+  | "MuscleType"
+  | "EyeType"
+  | "EyeColo"
+  | "EarType"
+  | "ArmType"
+  | "HandType"
+  | "LegType"
+  | "FootType";

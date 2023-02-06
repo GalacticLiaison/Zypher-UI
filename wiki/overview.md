@@ -38,9 +38,13 @@ https://mui.com/material-ui/react-image-list/
 
 - collect transformation genes of different races
 
-  - ULTRA RARE SHINIES - Mutation Sub type: Phenotype
+  - ULTRA RARE SHINIES
 
+    - Mutation Sub type: Phenotype
     - kind of like what strains are to mutations
+    - the codex will have a number of known phenotypes like 5/5. However "Shinies" will appear as
+      unregistered phenotypes 6/5. Like pokemon some kind of indicator will appear that you've encountered one.
+    - Some characters will tell you of their existence and they will appears as fogged panels in the codex
 
   - genes start unstable and their transformations are random
     - once an evolution has been mapped it can be used at will
@@ -203,6 +207,7 @@ https://mui.com/material-ui/react-image-list/
 - Not just one alliance, but a few different groupings of races
   - no paragon alliance but at least a couple reasonable ones pushing back against the empire
 - AI robot collective
+- Evil group of 13 elites
 
 ### Races
 

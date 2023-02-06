@@ -54,11 +54,7 @@ export const GeneImage = (props: IGeneImageProps) => {
 
     console.log("formData:", formData);
     if (props.updateGeneImage) {
-      props.updateGeneImage({
-        subFolderName: `src/assets/genes/`,
-        name: image.name,
-        image: image,
-      });
+      props.updateGeneImage(formData);
     }
   };
 

@@ -6,13 +6,15 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { MutationCard } from "./MutationCard/MutationCard";
 import { Mutation } from "../../../../services/mutation-service";
+import { useEffect, useState } from "react";
+import { _getAllMutations } from "../../../../api/hooks/Mutations/getAllMutations";
 
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "30%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -26,6 +28,15 @@ interface IStableMutationsProps {
 }
 
 export const StableMutations = (props: IStableMutationsProps) => {
+  // data from API call
+  const { data, isLoading } = _getAllMutations();
+  useEffect(() => {
+    if (!data) return;
+    setMutations(data);
+  }, [data]);
+
+  const [mutations, setMutations] = useState<Mutation[]>([] as Mutation[]);
+
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -48,9 +59,9 @@ export const StableMutations = (props: IStableMutationsProps) => {
             perfect consistency.
           </Typography>
           <Grid container spacing={3}>
-            {[1, 2].map((value) => (
-              <Grid item xs={6} key={value}>
-                <MutationCard mutation={props.mutations[value]} />
+            {mutations.map((mutation) => (
+              <Grid item xs={4} key={mutation.id}>
+                <MutationCard mutation={mutation} />
               </Grid>
             ))}
           </Grid>
