@@ -5,13 +5,7 @@ export interface Character {
   level: number;
   health: number;
   maxHealth: number;
-  stats: {
-    strength: number;
-    fortitude: number;
-    agility: number;
-    will: number;
-    intelligence: number;
-  };
+  stats: PlayerStats;
   morphology: {
     gender: string;
     head: {
@@ -40,6 +34,20 @@ export interface Character {
     };
     mutations: Mutation[];
   };
+}
+
+export type PlayerStat =
+  | "strength"
+  | "fortitude"
+  | "agility"
+  | "will"
+  | "intelligence";
+export interface PlayerStats {
+  strength: number;
+  fortitude: number;
+  agility: number;
+  will: number;
+  intelligence: number;
 }
 
 export interface Eye {

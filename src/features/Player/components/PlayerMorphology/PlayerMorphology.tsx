@@ -58,16 +58,6 @@ export const PlayerMorphology = (props: IPlayerMorphologyProps) => {
           </Grid>
           <Grid item xs={4}>
             <Card>
-              <Typography variant="h4">Stats</Typography>
-              <div>Strength: {props.player.stats.strength}</div>
-              <div>Fortitude: {props.player.stats.fortitude}</div>
-              <div>Agility: {props.player.stats.agility}</div>
-              <div>Will: {props.player.stats.will}</div>
-              <div>Intelligence: {props.player.stats.intelligence}</div>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card>
               <Typography variant="h4">Torso</Typography>
               <div>Type: {props.player.morphology.head.face}</div>
               <div>Back: {props.player.morphology.torso.back}</div>
