@@ -34,6 +34,8 @@ export interface Character {
     };
     mutations: Mutation[];
   };
+  perks: Perk[];
+  statChanges: StatChange[];
 }
 
 export type PlayerStat =
@@ -41,13 +43,30 @@ export type PlayerStat =
   | "fortitude"
   | "agility"
   | "will"
-  | "intelligence";
+  | "intelligence"
+  | "charisma"
+  | "luck";
 export interface PlayerStats {
   strength: number;
   fortitude: number;
   agility: number;
   will: number;
   intelligence: number;
+  charisma: number;
+  luck: number;
+}
+
+export interface Perk {
+  id: string;
+  name: string;
+  description: string;
+  appliedStatBonuses: StatChange[];
+  image: string;
+}
+
+export interface StatChange {
+  stat: PlayerStat;
+  value: number;
 }
 
 export interface Eye {

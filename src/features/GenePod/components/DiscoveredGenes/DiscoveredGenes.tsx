@@ -26,6 +26,7 @@ interface IDiscoveredGenesProps {
   open: boolean;
   handleClose: any;
   genes: Gene[];
+  // updatePlayer: (player: any) => void;
 }
 
 export const DiscoveredGenes = (props: IDiscoveredGenesProps) => {

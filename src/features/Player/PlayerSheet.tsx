@@ -1,13 +1,11 @@
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { StatChange } from "../../services/character-service/Character";
 import { Player } from "../../services/character-service/character-factory";
 import { PlayerDescription } from "./components/PlayerDescription/PlayerDescription";
 import { PlayerMorphology } from "./components/PlayerMorphology/PlayerMorphology";
-import { Perk, PlayerPerks } from "./components/PlayerPerks/PlayerPerks";
-import {
-  PlayerStatistics,
-  StatChange,
-} from "./components/PlayerStats/PlayerStats";
+import { PlayerPerks } from "./components/PlayerPerks/PlayerPerks";
+import { PlayerStatistics } from "./components/PlayerStats/PlayerStats";
 
 interface IPlayerSheetProps {
   player: Player;
@@ -15,10 +13,14 @@ interface IPlayerSheetProps {
 
 export const PlayerSheet = (props: IPlayerSheetProps) => {
   const [player, setPlayer] = useState<Player>(props.player);
+  const [statChanges, setStatChanges] = useState<StatChange[]>(
+    player.statChanges
+  );
 
-  // todo:
-  const statChanges: StatChange[] = [];
-  const playerPerks: Perk[] = [];
+  useEffect(() => {
+    setPlayer(props.player);
+    setStatChanges(props.player.statChanges);
+  }, [props.player]);
 
   return (
     <Grid container spacing={3}>
@@ -35,7 +37,7 @@ export const PlayerSheet = (props: IPlayerSheetProps) => {
         ></PlayerStatistics>
       </Grid>
       <Grid item xs={12}>
-        <PlayerPerks perks={playerPerks}></PlayerPerks>
+        <PlayerPerks perks={player.perks}></PlayerPerks>
       </Grid>
     </Grid>
   );

@@ -4,18 +4,25 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, Chip } from "@mui/material";
 import { Mutation } from "../../../../../services/mutation-service";
+import { useEffect, useState } from "react";
 
 interface IMutationCardProps {
   mutation: Mutation;
+  selectMutation: (mutation: Mutation) => void;
 }
 
 export const MutationCard = (props: IMutationCardProps) => {
+  const [mutation, setMutation] = useState<Mutation>(props.mutation);
+  useEffect(() => {
+    setMutation(props.mutation);
+  }, [props.mutation]);
+
   const handleClick = () => {
-    console.log("CLICKED");
+    props.selectMutation(mutation);
   };
 
   const rarityColor = () => {
-    switch (props.mutation.rarity) {
+    switch (mutation.rarity) {
       case "Common":
         return "success";
       case "Rare":
@@ -44,24 +51,20 @@ export const MutationCard = (props: IMutationCardProps) => {
       onClick={handleClick}
     >
       <CardActionArea>
-        <CardMedia
-          component="img"
-          image={props.mutation.image}
-          alt="Human Hand"
-        />
+        <CardMedia component="img" image={mutation.image} alt="Human Hand" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            {props.mutation.name}
+            {mutation.name}
           </Typography>
           <Typography gutterBottom variant="caption" component="div">
             <Chip
-              label={props.mutation.rarity}
+              label={mutation.rarity}
               color={rarityColor()}
               variant="outlined"
             />
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {props.mutation.description}
+            {mutation.description}
           </Typography>
         </CardContent>
       </CardActionArea>

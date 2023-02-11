@@ -5,16 +5,12 @@ import { useEffect, useState } from "react";
 import {
   PlayerStat,
   PlayerStats,
+  StatChange,
 } from "../../../../services/character-service/Character";
 
 interface IPlayerStats {
   playerStats: PlayerStats;
   statChanges?: StatChange[];
-}
-
-export interface StatChange {
-  stat: PlayerStat;
-  value: number;
 }
 
 export const PlayerStatistics = (props: IPlayerStats) => {
@@ -29,6 +25,7 @@ export const PlayerStatistics = (props: IPlayerStats) => {
     props.statChanges ?? []
   );
   useEffect(() => {
+    console.log("stat changes changed", props.statChanges);
     setStatChanges(props.statChanges ?? []);
   }, [props.statChanges]);
 
@@ -36,14 +33,18 @@ export const PlayerStatistics = (props: IPlayerStats) => {
     return (
       <div>
         {stat}: {playerStats[stat] + determineStatBonus(stat)}{" "}
-        {displayBonus(determineStatBonus("strength"))}
+        {displayBonus(determineStatBonus(stat))}
       </div>
     );
   };
 
   const determineStatBonus = (stat: PlayerStat) => {
     const bonusesForThisStat = statChanges.filter((x) => x.stat === stat);
-    let totalChange = bonusesForThisStat.reduce((a, b) => a + b.value, 0);
+
+    let totalChange = 0;
+    bonusesForThisStat.forEach((x) => {
+      totalChange += x.value;
+    });
     return totalChange;
   };
 
@@ -72,6 +73,8 @@ export const PlayerStatistics = (props: IPlayerStats) => {
         <div>{displayStat("agility")}</div>
         <div>{displayStat("intelligence")}</div>
         <div>{displayStat("will")}</div>
+        <div>{displayStat("charisma")}</div>
+        <div>{displayStat("luck")}</div>
       </Card>
     </Grid>
   );

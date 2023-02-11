@@ -2,7 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Player } from "../../../../services/character-service/character-factory";
 
 interface IPlayerMorphologyProps {
@@ -11,6 +11,9 @@ interface IPlayerMorphologyProps {
 
 export const PlayerMorphology = (props: IPlayerMorphologyProps) => {
   const [player, setPlayer] = useState<Player>(props.player);
+  useEffect(() => {
+    setPlayer(props.player);
+  }, [props.player]);
 
   return (
     <Card sx={{ minWidth: 275 }}>

@@ -3,36 +3,18 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { Player } from "../../../../services/character-service/character-factory";
-
-export interface Perk {
-  id: string;
-  name: string;
-  description: string;
-  bonuses: any[];
-}
+import { Perk } from "../../../../services/character-service/Character";
 
 interface IPlayerPerksProps {
   perks: Perk[];
 }
 
 export const PlayerPerks = (props: IPlayerPerksProps) => {
-  const [perks, setPerks] = useState<Perk[]>([
-    {
-      id: "1",
-      name: "Lucky Rabbit's Foot",
-      description: "You have a rabbit's foot. how lucky!",
-      bonuses: [
-        {
-          stat: "luck",
-          value: 5,
-        },
-      ],
-    },
-  ]);
-  //   useEffect(() => {
-  //     setPerks(props.perks);
-  //   }, [props.perks]);
+  const [perks, setPerks] = useState<Perk[]>(props.perks);
+  useEffect(() => {
+    console.log("perks changed");
+    setPerks(props.perks);
+  }, [props.perks]);
 
   return (
     <Card sx={{ minWidth: 275 }}>
@@ -41,8 +23,8 @@ export const PlayerPerks = (props: IPlayerPerksProps) => {
           Perks:
         </Typography>
         <Grid container spacing={3}>
-          {perks.map((perk) => (
-            <Grid item xs={4} key={perk.id}>
+          {perks.map((perk, index) => (
+            <Grid item xs={4} key={index}>
               <Typography variant="h5" component="div">
                 {perk.name}
               </Typography>

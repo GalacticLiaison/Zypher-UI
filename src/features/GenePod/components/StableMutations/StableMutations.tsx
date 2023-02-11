@@ -25,6 +25,7 @@ interface IStableMutationsProps {
   open: boolean;
   handleClose: any;
   mutations: Mutation[];
+  applyMutation: (player: any) => void;
 }
 
 export const StableMutations = (props: IStableMutationsProps) => {
@@ -36,6 +37,10 @@ export const StableMutations = (props: IStableMutationsProps) => {
   }, [data]);
 
   const [mutations, setMutations] = useState<Mutation[]>([] as Mutation[]);
+
+  const selectMutation = (mutation: Mutation) => {
+    props.applyMutation(mutation);
+  };
 
   return (
     <Modal
@@ -61,7 +66,10 @@ export const StableMutations = (props: IStableMutationsProps) => {
           <Grid container spacing={3}>
             {mutations.map((mutation) => (
               <Grid item xs={4} key={mutation.id}>
-                <MutationCard mutation={mutation} />
+                <MutationCard
+                  mutation={mutation}
+                  selectMutation={selectMutation}
+                />
               </Grid>
             ))}
           </Grid>

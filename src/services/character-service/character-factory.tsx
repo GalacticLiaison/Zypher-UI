@@ -31,6 +31,8 @@ export const createNewPlayer = (params: NewPlayerParams): Player => {
       agility: 10,
       will: 10,
       intelligence: 10,
+      charisma: 10,
+      luck: 5,
     },
     morphology: {
       gender: params.gender,
@@ -91,5 +93,7 @@ export const createNewPlayer = (params: NewPlayerParams): Player => {
       mutations: [],
     },
     inventory: {},
+    perks: [],
+    statChanges: [],
   };
 };

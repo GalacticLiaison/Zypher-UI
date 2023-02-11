@@ -1,3 +1,4 @@
+import { Perk, StatChange } from "./character-service/Character";
 import { Rarity } from "./rarity-service";
 
 export interface Mutation {
@@ -11,9 +12,9 @@ export interface Mutation {
   image: string;
   affectedBodyPart: string;
   bodyPartMutations: [];
-  appliedStatBonuses: [];
+  appliedStatBonuses: StatChange[];
   appliedStatuses: [];
-  appliedPerks: [];
+  appliedPerks: Perk[];
   requiredMutationIds: string[];
 }
 

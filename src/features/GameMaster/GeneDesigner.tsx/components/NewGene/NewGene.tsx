@@ -27,8 +27,6 @@ export const NewGene = (props: INewGeneProps) => {
   const saveNewImage = _saveNewImage();
 
   function updatedGeneImage(geneImage: FormData) {
-    console.log("updatedGeneImage: ", geneImage);
-
     setImageToSave(geneImage);
   }
 
@@ -47,7 +45,6 @@ export const NewGene = (props: INewGeneProps) => {
       saveNewGene.mutate(geneToSave);
     }
     if (imageToSave != undefined) {
-      console.log("imageToSave: ", imageToSave);
       saveNewImage.mutate(imageToSave);
     }
     props.toggleSnackBar();

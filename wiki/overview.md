@@ -259,3 +259,9 @@ https://mui.com/material-ui/react-image-list/
 ### Parasites
 
 - collecting enough competing mental manipulating ones could lead to secret "collective" profession
+
+### Late Game content
+
+- maybe achieve immortality
+  - able to fast forward years and simulate the galaxy!
+    - essentially allows you to run a eugenics program where you start a colony and age it.
