@@ -31,7 +31,7 @@ export const PlayerPerks = (props: IPlayerPerksProps) => {
               <Typography variant="caption" component="div">
                 {perk.description}
               </Typography>
-              {perk.bonuses?.map((bonus, index) => {
+              {perk.appliedStatBonuses?.map((bonus, index) => {
                 return (
                   <Typography variant="subtitle1" component="div" key={index}>
                     {bonus.stat}: {bonus.value}

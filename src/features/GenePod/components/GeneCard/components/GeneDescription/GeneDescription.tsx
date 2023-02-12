@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { UpdateGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { UpdateGeneProperty } from "../../GeneCard";
 
 interface IGeneDescriptionProps {
   isEdit?: boolean;

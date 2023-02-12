@@ -2,27 +2,29 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import { Gene } from "../../services/gene-service";
-import { GeneDesigner } from "./GeneDesigner.tsx/GeneDesigner";
-import { NewGene } from "./GeneDesigner.tsx/components/NewGene/NewGene";
 import { _getAllGenes } from "../../api/hooks/Genes/getAllGenes";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { GeneCardSkeleton } from "../GenePod/components/GeneCard/components/GeneCardSkeleton/GeneCardSkeleton";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import {
+  ContentShowcase,
+  ContentTypeName,
+} from "./ContentShowcase/ContentShowcase";
 
 interface IGameMasterProps {}
 
 export const GameMaster = (props: IGameMasterProps) => {
-  const { data, isLoading } = _getAllGenes();
-  useEffect(() => {
-    if (!data) return;
-    setGenes(data);
-  }, [data]);
+  // const { data, isLoading } = _getAllGenes();
+  // useEffect(() => {
+  //   if (!data) return;
+  //   setGenes(data);
+  // }, [data]);
 
   const [genes, setGenes] = useState<Gene[]>([] as Gene[]);
 
-  const [openNewGene, setOpenNewGene] = useState(false);
-  const handleGeneModalOpen = () => setOpenNewGene(true);
-  const handleGeneModalClose = () => setOpenNewGene(false);
+  // const [openNewGene, setOpenNewGene] = useState(false);
+  // const handleGeneModalOpen = () => setOpenNewGene(true);
+  // const handleGeneModalClose = () => setOpenNewGene(false);
 
   const [snackBarIsOpen, setSnackBarIsOpen] = useState(false);
   const handleSnackBarClose = (
@@ -40,38 +42,37 @@ export const GameMaster = (props: IGameMasterProps) => {
     setSnackBarIsOpen(isOpen ?? !snackBarIsOpen);
   };
 
+  const [contentType, setContentType] = useState<ContentTypeName>("Gene");
+  const selectContentType = (contentType: ContentTypeName) => {
+    setContentType(contentType);
+  };
+
+  const contentTypeButtons = [
+    <Button key="gene" onClick={() => selectContentType("Gene")}>
+      Genes
+    </Button>,
+    <Button key="mutation" onClick={() => selectContentType("Mutation")}>
+      Mutations
+    </Button>,
+    <Button key="perk" onClick={() => selectContentType("Perk")}>
+      Perks
+    </Button>,
+  ];
+
   return (
     <div>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="info"
-            onClick={handleGeneModalOpen}
-          >
-            + Add Gene
-          </Button>
-          <NewGene
-            open={openNewGene}
-            handleClose={handleGeneModalClose}
-            toggleSnackBar={toggleSnackBar}
-          ></NewGene>
+          <ButtonGroup size="large" aria-label="large button group">
+            {contentTypeButtons}
+          </ButtonGroup>
         </Grid>
-
-        {isLoading
-          ? [...Array(6)].map((value, index) => (
-              <Grid item xs={4} key={index}>
-                <GeneCardSkeleton></GeneCardSkeleton>
-              </Grid>
-            ))
-          : genes.map((gene) => (
-              <Grid item xs={4} key={gene.id}>
-                <GeneDesigner
-                  gene={gene}
-                  toggleSnackBar={toggleSnackBar}
-                ></GeneDesigner>
-              </Grid>
-            ))}
+        <Grid item xs={12}>
+          <ContentShowcase
+            contentType={contentType}
+            toggleSnackBar={toggleSnackBar}
+          ></ContentShowcase>
+        </Grid>
       </Grid>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

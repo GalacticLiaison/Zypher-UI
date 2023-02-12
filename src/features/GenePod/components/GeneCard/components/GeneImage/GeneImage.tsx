@@ -1,8 +1,8 @@
 import { PhotoCamera } from "@mui/icons-material";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
-import { ChangeEvent, useEffect, useState } from "react";
-import { UpdateGeneImage } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { useEffect, useState } from "react";
+import { UpdateGeneImage } from "../../GeneCard";
 
 interface IGeneImageProps {
   image?: string;

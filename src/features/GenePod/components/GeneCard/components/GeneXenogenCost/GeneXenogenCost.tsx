@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { Gene, XenogenCost } from "../../../../../../services/gene-service";
-import { UpdateGeneProperty } from "../../../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { UpdateGeneProperty } from "../../GeneCard";
 import { XenoTypeCost } from "./components/XenoTypeCost/XenoTypeCost";
 
 interface IXenogenCostProps {

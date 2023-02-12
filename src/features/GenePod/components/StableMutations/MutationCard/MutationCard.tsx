@@ -7,8 +7,9 @@ import { Mutation } from "../../../../../services/mutation-service";
 import { useEffect, useState } from "react";
 
 interface IMutationCardProps {
+  isEdit: boolean;
   mutation: Mutation;
-  selectMutation: (mutation: Mutation) => void;
+  selectMutation?: (mutation: Mutation) => void;
 }
 
 export const MutationCard = (props: IMutationCardProps) => {
@@ -18,6 +19,7 @@ export const MutationCard = (props: IMutationCardProps) => {
   }, [props.mutation]);
 
   const handleClick = () => {
+    if (props.selectMutation == undefined) return;
     props.selectMutation(mutation);
   };
 

@@ -2,7 +2,7 @@ import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { Gene } from "../../../services/gene-service";
 import { Mutation } from "../../../services/mutation-service";
 
-export type QueryKeys = "genes" | "image" | "mutations";
+export type QueryKeys = "genes" | "image" | "mutations" | "perks";
 export type MutationItemTypes = Gene | Mutation;
 
 type optimisticTypes = "SaveNew" | "Delete" | "Update";

@@ -6,11 +6,31 @@ import { useEffect, useState } from "react";
 import { GeneImage } from "./components/GeneImage/GeneImage";
 import { GeneName } from "./components/GeneName/GeneName";
 import { GeneDescription } from "./components/GeneDescription/GeneDescription";
-import { Gene } from "../../../../services/gene-service";
-import {
-  UpdateGeneImage,
-  UpdateGeneProperty,
-} from "../../../GameMaster/GeneDesigner.tsx/GeneDesigner";
+import { Gene, GenePropertyTypes } from "../../../../services/gene-service";
+
+const newGene: Gene = {
+  id: "",
+  name: "",
+  description: "",
+  rarity: "Common",
+  speciesId: "",
+  discovered: false,
+  xenogenCost: {
+    common: 0,
+    rare: 0,
+    epic: 0,
+    legendary: 0,
+  },
+  strains: [],
+  image: "src/assets/genes/UnknownGene.png",
+};
+
+export type UpdateGeneProperty = (
+  propertyName: keyof Gene,
+  value: GenePropertyTypes
+) => void;
+
+export type UpdateGeneImage = (image: FormData) => void;
 
 interface IGeneCardProps {
   gene?: Gene;
@@ -20,7 +40,7 @@ interface IGeneCardProps {
 }
 
 export const GeneCard = (props: IGeneCardProps) => {
-  const [gene, setGene] = useState<Gene | undefined>(props.gene);
+  const [gene, setGene] = useState<Gene>(props.gene ?? newGene);
   useEffect(() => {
     if (props.gene == undefined) return;
     setGene(props.gene);
