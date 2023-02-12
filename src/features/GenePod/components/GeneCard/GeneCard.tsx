@@ -7,6 +7,12 @@ import { GeneImage } from "./components/GeneImage/GeneImage";
 import { GeneName } from "./components/GeneName/GeneName";
 import { GeneDescription } from "./components/GeneDescription/GeneDescription";
 import { Gene, GenePropertyTypes } from "../../../../services/gene-service";
+import {
+  ContentImage,
+  UpdateImage,
+} from "../../../../global-components/ContentImage/ContentImage";
+import { ContentName } from "../../../../global-components/ContentName/ContentName";
+import { ContentDescription } from "../../../../global-components/ContentDescription/ContentDescription";
 
 const newGene: Gene = {
   id: "",
@@ -30,13 +36,11 @@ export type UpdateGeneProperty = (
   value: GenePropertyTypes
 ) => void;
 
-export type UpdateGeneImage = (image: FormData) => void;
-
 interface IGeneCardProps {
   gene?: Gene;
   isEdit?: boolean;
-  updatedGeneProperty?: UpdateGeneProperty;
-  updatedGeneImage?: UpdateGeneImage;
+  updateGeneProperty?: UpdateGeneProperty;
+  updateGeneImage?: UpdateImage;
 }
 
 export const GeneCard = (props: IGeneCardProps) => {
@@ -69,28 +73,31 @@ export const GeneCard = (props: IGeneCardProps) => {
     >
       {isEdit ? (
         <div>
-          <GeneImage
+          <ContentImage
             image={gene?.image}
             name={gene?.name}
             isEdit={isEdit}
-            updateGeneImage={props?.updatedGeneImage}
-          ></GeneImage>
+            updateImage={props?.updateGeneImage}
+            contentType="Gene"
+          ></ContentImage>
           <CardContent>
-            <GeneName
+            <ContentName
               name={gene?.name}
               isEdit={isEdit}
-              updateGeneName={props.updatedGeneProperty}
-            ></GeneName>
+              updateName={props.updateGeneProperty}
+              contentType="Gene"
+            ></ContentName>
             <GeneXenogenCost
               gene={gene}
               isEdit={isEdit}
-              updateGeneXenogenCost={props.updatedGeneProperty}
+              updateGeneXenogenCost={props.updateGeneProperty}
             ></GeneXenogenCost>
-            <GeneDescription
+            <ContentDescription
               isEdit={isEdit}
               description={gene?.description}
-              updateGeneDescription={props.updatedGeneProperty}
-            ></GeneDescription>
+              updateDescription={props.updateGeneProperty}
+              contentType="Gene"
+            ></ContentDescription>
           </CardContent>
         </div>
       ) : (

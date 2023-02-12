@@ -8,13 +8,13 @@ import { ContentType, ContentTypeName } from "../ContentShowcase";
 import { saveNewImage, _updateContent } from "../services/content-data-service";
 import { determineContentItem } from "../services/component-picker-service";
 
-interface IDesignerProps {
+interface IContentDesignerProps {
   contentTypeName: ContentTypeName;
   contentItem?: ContentType;
   toggleSnackBar: () => void;
 }
 
-export const Designer = (props: IDesignerProps) => {
+export const ContentDesigner = (props: IContentDesignerProps) => {
   const [contentItem, setContentItem] = useState(props.contentItem);
   useEffect(() => {
     if (props.contentItem == undefined) return;
@@ -40,6 +40,7 @@ export const Designer = (props: IDesignerProps) => {
   }
 
   function updateProperty<T>(propertyName: keyof T, value: GenePropertyTypes) {
+    console.log({ propertyName, value });
     if (itemToUpdate == undefined) return;
 
     switch (props.contentTypeName) {

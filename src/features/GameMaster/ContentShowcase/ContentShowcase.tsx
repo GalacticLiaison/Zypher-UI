@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { Perk } from "../../../services/character-service/Character";
 import { Gene } from "../../../services/gene-service";
 import { Mutation } from "../../../services/mutation-service";
-import { Designer } from "./components/Designer";
 import { getContent } from "./services/content-data-service";
 import { ContentSkeleton } from "./components/ContentSkeleton";
 import { NewContentItem } from "./components/NewContentItem";
+import { ContentDesigner } from "./components/ContentDesigner";
 
 interface IContentShowcaseProps {
   contentType: ContentTypeName;
@@ -54,11 +54,11 @@ export const ContentShowcase = (props: IContentShowcaseProps) => {
               ))
             : content.map((contentItem) => (
                 <Grid item xs={4} key={contentItem.id}>
-                  <Designer
+                  <ContentDesigner
                     contentTypeName={props.contentType}
                     contentItem={contentItem}
                     toggleSnackBar={props.toggleSnackBar}
-                  ></Designer>
+                  ></ContentDesigner>
                 </Grid>
               ))}
         </Grid>

@@ -1,0 +1,95 @@
+import { PhotoCamera } from "@mui/icons-material";
+import CardMedia from "@mui/material/CardMedia";
+import IconButton from "@mui/material/IconButton";
+import { useEffect, useState } from "react";
+import { ContentTypeName } from "../../features/GameMaster/ContentShowcase/ContentShowcase";
+import { determineDefaultImage } from "./services/image-utilities";
+
+export type UpdateImage = (image: FormData) => void;
+
+interface IContentImageProps {
+  image?: string;
+  name?: string;
+  isEdit?: boolean;
+  updateImage?: UpdateImage;
+  contentType?: ContentTypeName;
+}
+
+export const ContentImage = (props: IContentImageProps) => {
+  const [isEdit, setIsEdit] = useState<boolean | undefined>(
+    props.isEdit ?? false
+  );
+  useEffect(() => {
+    if (!props.isEdit) return;
+    setIsEdit(props.isEdit);
+  }, [props.isEdit]);
+
+  const [image, setImage] = useState<string | undefined>(props.image);
+  const [name, setName] = useState<string | undefined>(props.name);
+
+  // const classes = useStyles();
+  // const [image, setImage] = useState(null);
+  const style = {
+    display: "none",
+  };
+
+  interface File {
+    lastModified: number;
+    lastModifiedDate: string;
+    name: string;
+    size: number;
+    type: string;
+    webkitRelativePath: string;
+  }
+
+  const handleChange = (event: any) => {
+    if (!event.target.files) return;
+    const image = event.target.files[0];
+
+    const url = URL.createObjectURL(event.target.files[0]);
+    setImage(url);
+
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("name", image.name);
+    formData.append("subFolderName", `src/assets/${props.contentType}s/`);
+
+    console.log("formData:", formData);
+    if (props.updateImage) {
+      props.updateImage(formData);
+    }
+  };
+
+  return (
+    <div>
+      {isEdit ? (
+        <div>
+          <input
+            accept="image/*"
+            style={style}
+            id="icon-button-file"
+            type="file"
+            onChange={handleChange}
+          />
+          <label htmlFor="icon-button-file">
+            <IconButton
+              color="primary"
+              component="span"
+              aria-label="upload picture"
+              edge="end"
+            >
+              <PhotoCamera />
+            </IconButton>
+          </label>
+        </div>
+      ) : null}
+
+      <CardMedia
+        component="img"
+        // height="400"
+        image={image ?? determineDefaultImage(props.contentType ?? "Gene")}
+        alt={name ?? `Unknown ${props.contentType ?? "Gene"}`}
+      />
+    </div>
+  );
+};

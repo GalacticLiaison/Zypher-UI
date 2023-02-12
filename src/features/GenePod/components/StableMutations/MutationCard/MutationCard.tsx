@@ -3,8 +3,15 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, Chip } from "@mui/material";
-import { Mutation } from "../../../../../services/mutation-service";
+import {
+  Mutation,
+  MutationPropertyTypes,
+} from "../../../../../services/mutation-service";
 import { useEffect, useState } from "react";
+import {
+  ContentImage,
+  UpdateImage,
+} from "../../../../../global-components/ContentImage/ContentImage";
 
 const newMutation: Mutation = {
   id: "0",
@@ -23,10 +30,17 @@ const newMutation: Mutation = {
   requiredMutationIds: [],
 };
 
+export type UpdateMutationProperty = (
+  propertyName: keyof Mutation,
+  value: MutationPropertyTypes
+) => void;
+
 interface IMutationCardProps {
   mutation?: Mutation;
   isEdit?: boolean;
   selectMutation?: (mutation: Mutation) => void;
+  updatedGeneProperty?: UpdateMutationProperty;
+  updatedGeneImage?: UpdateImage;
 }
 
 export const MutationCard = (props: IMutationCardProps) => {
@@ -37,6 +51,12 @@ export const MutationCard = (props: IMutationCardProps) => {
     if (props.mutation == undefined) return;
     setMutation(props.mutation);
   }, [props.mutation]);
+
+  const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
+  useEffect(() => {
+    if (props.isEdit == undefined) return;
+    setIsEdit(props.isEdit);
+  }, [props.isEdit]);
 
   const handleClick = () => {
     if (props.selectMutation == undefined) return;
@@ -73,7 +93,12 @@ export const MutationCard = (props: IMutationCardProps) => {
       onClick={handleClick}
     >
       <CardActionArea>
-        <CardMedia component="img" image={mutation.image} alt="Human Hand" />
+        <ContentImage
+          image={mutation?.image}
+          name={mutation?.name}
+          isEdit={isEdit}
+          updateImage={props?.updatedGeneImage}
+        ></ContentImage>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {mutation.name}

@@ -22,6 +22,11 @@ import {
 } from "../../../../services/character-service/Character";
 import { _saveNewContent } from "../services/content-data-service";
 
+export type ContentPropertyTypes =
+  | GenePropertyTypes
+  | MutationPropertyTypes
+  | PerkPropertyTypes;
+
 interface INewContentItemProps {
   contentTypeName: ContentTypeName;
   open: boolean;
@@ -39,14 +44,10 @@ export const NewContentItem = (props: INewContentItemProps) => {
   const saveNewContent = _saveNewContent(props.contentTypeName)();
   const saveNewImage = _saveNewImage();
 
-  function updatedGeneImage(geneImage: FormData) {
+  function updateImage(geneImage: FormData) {
     setImageToSave(geneImage);
   }
 
-  type ContentPropertyTypes =
-    | GenePropertyTypes
-    | MutationPropertyTypes
-    | PerkPropertyTypes;
   function updateProperty<T>(
     propertyName: keyof T,
     value: ContentPropertyTypes
@@ -116,7 +117,7 @@ export const NewContentItem = (props: INewContentItemProps) => {
             undefined,
             true,
             updateProperty,
-            updatedGeneImage
+            updateImage
           )}
         </DialogContent>
         <DialogActions>

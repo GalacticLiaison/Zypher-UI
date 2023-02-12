@@ -18,8 +18,8 @@ export const determineContentItem = (contentType: ContentTypeName) => {
         <GeneCard
           gene={gene as Gene}
           isEdit={isEdit}
-          updatedGeneProperty={updateProperty}
-          updatedGeneImage={updateImage}
+          updateGeneProperty={updateProperty}
+          updateGeneImage={updateImage}
         ></GeneCard>
       );
     case "Mutation":
