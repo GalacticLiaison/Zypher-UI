@@ -7,6 +7,15 @@ import { updateObject } from "../../../../_utils/global-helpers";
 import { ContentType, ContentTypeName } from "../ContentShowcase";
 import { saveNewImage, _updateContent } from "../services/content-data-service";
 import { determineContentItem } from "../services/component-picker-service";
+import { ContentPropertyTypes } from "./NewContentItem";
+import {
+  Mutation,
+  MutationPropertyTypes,
+} from "../../../../services/mutation-service";
+import {
+  Perk,
+  PerkPropertyTypes,
+} from "../../../../services/character-service/Character";
 
 interface IContentDesignerProps {
   contentTypeName: ContentTypeName;
@@ -39,14 +48,39 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
     setImageToUpdate(geneImage);
   }
 
-  function updateProperty<T>(propertyName: keyof T, value: GenePropertyTypes) {
+  function updateProperty<T>(
+    propertyName: keyof T,
+    value: ContentPropertyTypes
+  ) {
     console.log({ propertyName, value });
     if (itemToUpdate == undefined) return;
 
     switch (props.contentTypeName) {
       case "Gene":
         setItemToUpdate(
-          updateObject(itemToUpdate as Gene, propertyName as keyof Gene, value)
+          updateObject(
+            itemToUpdate as Gene,
+            propertyName as keyof Gene,
+            value as GenePropertyTypes
+          )
+        );
+        break;
+      case "Mutation":
+        setItemToUpdate(
+          updateObject(
+            itemToUpdate as Mutation,
+            propertyName as keyof Mutation,
+            value as MutationPropertyTypes
+          )
+        );
+        break;
+      case "Perk":
+        setItemToUpdate(
+          updateObject(
+            itemToUpdate as Perk,
+            propertyName as keyof Perk,
+            value as PerkPropertyTypes
+          )
         );
         break;
       default:
@@ -55,6 +89,7 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
   }
 
   const toggleIsEdit = () => {
+    console.log("toggleIsEdit");
     setIsEdit(!isEdit);
   };
 

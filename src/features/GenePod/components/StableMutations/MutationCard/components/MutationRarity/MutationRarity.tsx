@@ -1,11 +1,34 @@
-import { useState } from "react";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
+import { Rarity } from "../../../../../../../services/rarity-service";
 
 interface IMutationRarityProps {
-  item: any;
+  rarity: Rarity;
 }
 
 export const MutationRarity = (props: IMutationRarityProps) => {
-  const [item, setItem] = useState(props.item);
+  const [rarity, setRarity] = useState(props.rarity);
+  useEffect(() => {
+    setRarity(props.rarity);
+  }, [props.rarity]);
 
-  return <div>I am a MutationRarity component</div>;
+  const rarityColor = () => {
+    switch (rarity) {
+      case "Common":
+        return "success";
+      case "Rare":
+        return "info";
+      case "Epic":
+        return "secondary";
+      case "Legendary":
+        return "warning";
+    }
+  };
+
+  return (
+    <Typography gutterBottom variant="caption" component="div">
+      <Chip label={rarity} color={rarityColor()} variant="outlined" />
+    </Typography>
+  );
 };

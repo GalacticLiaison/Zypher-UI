@@ -1,11 +1,8 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { CardActionArea, Grid, TextField } from "@mui/material";
+import { CardActionArea } from "@mui/material";
 import { GeneXenogenCost } from "./components/GeneXenogenCost/GeneXenogenCost";
 import { useEffect, useState } from "react";
-import { GeneImage } from "./components/GeneImage/GeneImage";
-import { GeneName } from "./components/GeneName/GeneName";
-import { GeneDescription } from "./components/GeneDescription/GeneDescription";
 import { Gene, GenePropertyTypes } from "../../../../services/gene-service";
 import {
   ContentImage,
@@ -40,7 +37,7 @@ interface IGeneCardProps {
   gene?: Gene;
   isEdit?: boolean;
   updateGeneProperty?: UpdateGeneProperty;
-  updateGeneImage?: UpdateImage;
+  updateImage?: UpdateImage;
 }
 
 export const GeneCard = (props: IGeneCardProps) => {
@@ -55,6 +52,37 @@ export const GeneCard = (props: IGeneCardProps) => {
     if (props.isEdit == undefined) return;
     setIsEdit(props.isEdit);
   }, [props.isEdit]);
+
+  const cardContent = (
+    <>
+      <ContentImage
+        image={gene?.image}
+        name={gene?.name}
+        isEdit={isEdit}
+        updateImage={props?.updateImage}
+        contentType="Gene"
+      ></ContentImage>
+      <CardContent>
+        <ContentName
+          name={gene?.name}
+          isEdit={isEdit}
+          updateName={props.updateGeneProperty}
+          contentType="Gene"
+        ></ContentName>
+        <GeneXenogenCost
+          gene={gene}
+          isEdit={isEdit}
+          updateGeneXenogenCost={props.updateGeneProperty}
+        ></GeneXenogenCost>
+        <ContentDescription
+          isEdit={isEdit}
+          description={gene?.description}
+          updateDescription={props.updateGeneProperty}
+          contentType="Gene"
+        ></ContentDescription>
+      </CardContent>
+    </>
+  );
 
   return (
     <Card
@@ -71,50 +99,7 @@ export const GeneCard = (props: IGeneCardProps) => {
         "&::scrollbarWidth": "none",
       }}
     >
-      {isEdit ? (
-        <div>
-          <ContentImage
-            image={gene?.image}
-            name={gene?.name}
-            isEdit={isEdit}
-            updateImage={props?.updateGeneImage}
-            contentType="Gene"
-          ></ContentImage>
-          <CardContent>
-            <ContentName
-              name={gene?.name}
-              isEdit={isEdit}
-              updateName={props.updateGeneProperty}
-              contentType="Gene"
-            ></ContentName>
-            <GeneXenogenCost
-              gene={gene}
-              isEdit={isEdit}
-              updateGeneXenogenCost={props.updateGeneProperty}
-            ></GeneXenogenCost>
-            <ContentDescription
-              isEdit={isEdit}
-              description={gene?.description}
-              updateDescription={props.updateGeneProperty}
-              contentType="Gene"
-            ></ContentDescription>
-          </CardContent>
-        </div>
-      ) : (
-        <div>
-          <CardActionArea>
-            <GeneImage image={gene?.image} name={gene?.name}></GeneImage>
-            <CardContent>
-              <GeneName name={gene?.name} isEdit={isEdit}></GeneName>
-              <GeneXenogenCost gene={gene} isEdit={isEdit}></GeneXenogenCost>
-              <GeneDescription
-                isEdit={isEdit}
-                description={gene?.description}
-              ></GeneDescription>
-            </CardContent>
-          </CardActionArea>
-        </div>
-      )}
+      {isEdit ? cardContent : <CardActionArea>{cardContent}</CardActionArea>}
     </Card>
   );
 };

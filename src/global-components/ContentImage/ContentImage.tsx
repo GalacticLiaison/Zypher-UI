@@ -20,7 +20,7 @@ export const ContentImage = (props: IContentImageProps) => {
     props.isEdit ?? false
   );
   useEffect(() => {
-    if (!props.isEdit) return;
+    if (props.isEdit == undefined) return;
     setIsEdit(props.isEdit);
   }, [props.isEdit]);
 

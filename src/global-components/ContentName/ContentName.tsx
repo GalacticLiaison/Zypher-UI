@@ -16,7 +16,7 @@ interface IContentNameProps {
 export const ContentName = (props: IContentNameProps) => {
   const [isEdit, setIsEdit] = useState<boolean | undefined>(props.isEdit);
   useEffect(() => {
-    if (!props.isEdit) return;
+    if (props.isEdit == undefined) return;
     setIsEdit(props.isEdit);
   }, [props.isEdit]);
 

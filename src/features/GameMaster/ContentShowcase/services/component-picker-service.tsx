@@ -19,21 +19,21 @@ export const determineContentItem = (contentType: ContentTypeName) => {
           gene={gene as Gene}
           isEdit={isEdit}
           updateGeneProperty={updateProperty}
-          updateGeneImage={updateImage}
+          updateImage={updateImage}
         ></GeneCard>
       );
     case "Mutation":
       return (
         mutation?: ContentType,
-        isEdit?: boolean
-        // updateProperty: <T>(propertyName: keyof T, value: any) => void,
-        // updateImage: (geneImage: FormData) => void
+        isEdit?: boolean,
+        updateProperty?: <T>(propertyName: keyof T, value: any) => void,
+        updateImage?: (geneImage: FormData) => void
       ) => (
         <MutationCard
           mutation={mutation as Mutation}
           isEdit={isEdit}
-          // updatedGeneProperty={updateProperty}
-          // updatedGeneImage={updateImage}
+          updateMutationProperty={updateProperty}
+          updateImage={updateImage}
         ></MutationCard>
       );
     case "Perk":

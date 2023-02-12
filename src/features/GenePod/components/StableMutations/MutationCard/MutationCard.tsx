@@ -1,6 +1,5 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, Chip } from "@mui/material";
 import {
@@ -12,6 +11,9 @@ import {
   ContentImage,
   UpdateImage,
 } from "../../../../../global-components/ContentImage/ContentImage";
+import { ContentDescription } from "../../../../../global-components/ContentDescription/ContentDescription";
+import { ContentName } from "../../../../../global-components/ContentName/ContentName";
+import { MutationRarity } from "./components/MutationRarity/MutationRarity";
 
 const newMutation: Mutation = {
   id: "0",
@@ -39,8 +41,8 @@ interface IMutationCardProps {
   mutation?: Mutation;
   isEdit?: boolean;
   selectMutation?: (mutation: Mutation) => void;
-  updatedGeneProperty?: UpdateMutationProperty;
-  updatedGeneImage?: UpdateImage;
+  updateMutationProperty?: UpdateMutationProperty;
+  updateImage?: UpdateImage;
 }
 
 export const MutationCard = (props: IMutationCardProps) => {
@@ -54,6 +56,7 @@ export const MutationCard = (props: IMutationCardProps) => {
 
   const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
   useEffect(() => {
+    console.log("isEdit changed", props.isEdit);
     if (props.isEdit == undefined) return;
     setIsEdit(props.isEdit);
   }, [props.isEdit]);
@@ -63,18 +66,31 @@ export const MutationCard = (props: IMutationCardProps) => {
     props.selectMutation(mutation);
   };
 
-  const rarityColor = () => {
-    switch (mutation.rarity) {
-      case "Common":
-        return "success";
-      case "Rare":
-        return "info";
-      case "Epic":
-        return "secondary";
-      case "Legendary":
-        return "warning";
-    }
-  };
+  const cardContent = (
+    <>
+      <ContentImage
+        image={mutation?.image}
+        name={mutation?.name}
+        isEdit={isEdit}
+        updateImage={props?.updateImage}
+      ></ContentImage>
+      <CardContent>
+        <ContentName
+          name={mutation?.name}
+          isEdit={isEdit}
+          updateName={props.updateMutationProperty}
+          contentType="Mutation"
+        ></ContentName>
+        <MutationRarity rarity={mutation?.rarity}></MutationRarity>
+        <ContentDescription
+          isEdit={isEdit}
+          description={mutation?.description}
+          updateDescription={props.updateMutationProperty}
+          contentType="Mutation"
+        ></ContentDescription>
+      </CardContent>
+    </>
+  );
 
   return (
     <Card
@@ -92,29 +108,7 @@ export const MutationCard = (props: IMutationCardProps) => {
       }}
       onClick={handleClick}
     >
-      <CardActionArea>
-        <ContentImage
-          image={mutation?.image}
-          name={mutation?.name}
-          isEdit={isEdit}
-          updateImage={props?.updatedGeneImage}
-        ></ContentImage>
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {mutation.name}
-          </Typography>
-          <Typography gutterBottom variant="caption" component="div">
-            <Chip
-              label={mutation.rarity}
-              color={rarityColor()}
-              variant="outlined"
-            />
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {mutation.description}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+      {isEdit ? cardContent : <CardActionArea>{cardContent}</CardActionArea>}
     </Card>
   );
 };

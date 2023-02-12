@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { useEffect, useState } from "react";
-import { Gene } from "../../services/gene-service";
+import { useState } from "react";
 import { _getAllGenes } from "../../api/hooks/Genes/getAllGenes";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -14,18 +13,6 @@ import {
 interface IGameMasterProps {}
 
 export const GameMaster = (props: IGameMasterProps) => {
-  // const { data, isLoading } = _getAllGenes();
-  // useEffect(() => {
-  //   if (!data) return;
-  //   setGenes(data);
-  // }, [data]);
-
-  const [genes, setGenes] = useState<Gene[]>([] as Gene[]);
-
-  // const [openNewGene, setOpenNewGene] = useState(false);
-  // const handleGeneModalOpen = () => setOpenNewGene(true);
-  // const handleGeneModalClose = () => setOpenNewGene(false);
-
   const [snackBarIsOpen, setSnackBarIsOpen] = useState(false);
   const handleSnackBarClose = (
     event?: React.SyntheticEvent | Event,
