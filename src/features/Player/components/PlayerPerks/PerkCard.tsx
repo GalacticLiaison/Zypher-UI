@@ -6,14 +6,23 @@ import { CardActionArea, Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Perk } from "../../../../services/character-service/Character";
 
+const newPerk: Perk = {
+  id: "0",
+  name: "",
+  description: "",
+  appliedStatBonuses: [],
+  image: "",
+};
+
 interface IPerkCardProps {
-  isEdit: boolean;
-  perk: Perk;
+  perk?: Perk;
+  isEdit?: boolean;
 }
 
 export const PerkCard = (props: IPerkCardProps) => {
-  const [perk, setPerk] = useState<Perk>(props.perk);
+  const [perk, setPerk] = useState<Perk>(props.perk ?? newPerk);
   useEffect(() => {
+    if (props.perk == undefined) return;
     setPerk(props.perk);
   }, [props.perk]);
 

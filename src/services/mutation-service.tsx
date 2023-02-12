@@ -17,6 +17,14 @@ export interface Mutation {
   appliedPerks: Perk[];
   requiredMutationIds: string[];
 }
+export type MutationPropertyTypes =
+  | string
+  | string[]
+  | []
+  | Rarity
+  | boolean
+  | StatChange[]
+  | Perk[];
 
 export const getStableMutations = (): Mutation[] => {
   return [] as Mutation[];

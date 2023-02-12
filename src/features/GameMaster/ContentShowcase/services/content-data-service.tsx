@@ -1,15 +1,15 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { _getAllGenes } from "../../../../api/hooks/Genes/getAllGenes";
+import { _saveNewGene } from "../../../../api/hooks/Genes/saveNewGene";
 import { _updateGene } from "../../../../api/hooks/Genes/updateGene";
 import { _saveNewImage } from "../../../../api/hooks/Image/saveNewImage";
 import { _getAllMutations } from "../../../../api/hooks/Mutations/getAllMutations";
+import { _saveNewMutation } from "../../../../api/hooks/Mutations/saveNewMutation";
 import { _updateMutation } from "../../../../api/hooks/Mutations/updateMutation";
 import { _getAllPerks } from "../../../../api/hooks/Perks/getAllPerks";
+import { _saveNewPerk } from "../../../../api/hooks/Perks/saveNewPerk";
 import { _updatePerk } from "../../../../api/hooks/Perks/updatePerk";
-import { Perk } from "../../../../services/character-service/Character";
-import { Gene } from "../../../../services/gene-service";
-import { Mutation } from "../../../../services/mutation-service";
-import { ContentType, ContentTypeName } from "../ContentShowcase";
+import { ContentTypeName } from "../ContentShowcase";
 
 export const getContent = (
   contentType: ContentTypeName
@@ -26,20 +26,27 @@ export const getContent = (
   }
 };
 
-export const updateContent = (
-  contentType: ContentTypeName,
-  contentItem: ContentType
-) => {
+export const _saveNewContent = (contentType: ContentTypeName): (() => any) => {
   switch (contentType) {
     case "Gene":
-      const updateGene = _updateGene();
-      return updateGene.mutate(contentItem as Gene);
+      return _saveNewGene;
     case "Mutation":
-      const updateMutation = _updateMutation();
-      return updateMutation.mutate(contentItem as Mutation);
+      return _saveNewMutation;
     case "Perk":
-      const updatePerk = _updatePerk();
-      return updatePerk.mutate(contentItem as Perk);
+      return _saveNewPerk;
+    default:
+      throw new Error("Invalid content type");
+  }
+};
+
+export const _updateContent = (contentType: ContentTypeName): (() => any) => {
+  switch (contentType) {
+    case "Gene":
+      return _updateGene;
+    case "Mutation":
+      return _updateMutation;
+    case "Perk":
+      return _updatePerk;
     default:
       throw new Error("Invalid content type");
   }

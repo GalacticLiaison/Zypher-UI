@@ -10,8 +10,17 @@ import { _saveNewGene } from "../../../../api/hooks/Genes/saveNewGene";
 import { _saveNewImage } from "../../../../api/hooks/Image/saveNewImage";
 import { Gene, GenePropertyTypes } from "../../../../services/gene-service";
 import { updateObject } from "../../../../_utils/global-helpers";
-import { GeneCard } from "../../../GenePod/components/GeneCard/GeneCard";
-import { ContentTypeName } from "../ContentShowcase";
+import { ContentType, ContentTypeName } from "../ContentShowcase";
+import { determineContentItem } from "../services/component-picker-service";
+import {
+  Mutation,
+  MutationPropertyTypes,
+} from "../../../../services/mutation-service";
+import {
+  Perk,
+  PerkPropertyTypes,
+} from "../../../../services/character-service/Character";
+import { _saveNewContent } from "../services/content-data-service";
 
 interface INewContentItemProps {
   contentTypeName: ContentTypeName;
@@ -21,30 +30,67 @@ interface INewContentItemProps {
 }
 
 export const NewContentItem = (props: INewContentItemProps) => {
-  const [geneToSave, setGeneToSave] = useState<Gene | undefined>({} as Gene);
+  const [itemToSave, setItemToSave] = useState<ContentType | undefined>(
+    {} as ContentType
+  );
   const [imageToSave, setImageToSave] = useState<FormData | undefined>(
     {} as FormData
   );
-  const saveNewGene = _saveNewGene();
+  const saveNewContent = _saveNewContent(props.contentTypeName)();
   const saveNewImage = _saveNewImage();
 
   function updatedGeneImage(geneImage: FormData) {
     setImageToSave(geneImage);
   }
 
-  function updatedGeneProperty(
-    propertyName: keyof Gene,
-    value: GenePropertyTypes
+  type ContentPropertyTypes =
+    | GenePropertyTypes
+    | MutationPropertyTypes
+    | PerkPropertyTypes;
+  function updateProperty<T>(
+    propertyName: keyof T,
+    value: ContentPropertyTypes
   ) {
-    if (geneToSave == undefined) return;
-    setGeneToSave(updateObject(geneToSave, propertyName, value));
+    if (itemToSave == undefined) return;
+
+    switch (props.contentTypeName) {
+      case "Gene":
+        setItemToSave(
+          updateObject(
+            itemToSave as Gene,
+            propertyName as keyof Gene,
+            value as GenePropertyTypes
+          )
+        );
+        break;
+      case "Mutation":
+        setItemToSave(
+          updateObject(
+            itemToSave as Mutation,
+            propertyName as keyof Mutation,
+            value as MutationPropertyTypes
+          )
+        );
+        break;
+      case "Perk":
+        setItemToSave(
+          updateObject(
+            itemToSave as Perk,
+            propertyName as keyof Perk,
+            value as PerkPropertyTypes
+          )
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   const handleSave = () => {
-    if (geneToSave != undefined) {
-      geneToSave.id = nanoid();
-      setGeneToSave(geneToSave);
-      saveNewGene.mutate(geneToSave);
+    if (itemToSave != undefined) {
+      itemToSave.id = nanoid();
+      setItemToSave(itemToSave);
+      saveNewContent.mutate(itemToSave);
     }
     if (imageToSave != undefined) {
       saveNewImage.mutate(imageToSave);
@@ -61,11 +107,17 @@ export const NewContentItem = (props: INewContentItemProps) => {
           <DialogContentText>
             Enter the details for the new {props.contentTypeName}.
           </DialogContentText>
-          <GeneCard
+          {/* <GeneCard
             isEdit={true}
             updatedGeneProperty={updatedGeneProperty}
             updatedGeneImage={updatedGeneImage}
-          ></GeneCard>
+          ></GeneCard> */}
+          {determineContentItem(props.contentTypeName)(
+            undefined,
+            true,
+            updateProperty,
+            updatedGeneImage
+          )}
         </DialogContent>
         <DialogActions>
           <Button variant="contained" color="error" onClick={props.handleClose}>

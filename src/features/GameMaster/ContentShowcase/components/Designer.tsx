@@ -5,7 +5,7 @@ import { _updateGene } from "../../../../api/hooks/Genes/updateGene";
 import { _saveNewImage } from "../../../../api/hooks/Image/saveNewImage";
 import { updateObject } from "../../../../_utils/global-helpers";
 import { ContentType, ContentTypeName } from "../ContentShowcase";
-import { saveNewImage, updateContent } from "../services/content-data-service";
+import { saveNewImage, _updateContent } from "../services/content-data-service";
 import { determineContentItem } from "../services/component-picker-service";
 
 interface IDesignerProps {
@@ -31,6 +31,9 @@ export const Designer = (props: IDesignerProps) => {
   );
   // ---------------
 
+  const updateContent = _updateContent(props.contentTypeName)();
+  // const { data, isLoading } = getContent(props.contentType)();
+
   function updateImage(geneImage: FormData) {
     if (imageToUpdate == undefined) return;
     setImageToUpdate(geneImage);
@@ -55,8 +58,8 @@ export const Designer = (props: IDesignerProps) => {
   };
 
   const saveEditedGene = () => {
-    if (itemToUpdate != undefined)
-      updateContent(props.contentTypeName, itemToUpdate);
+    if (itemToUpdate == undefined) return;
+    if (updateContent != undefined) updateContent.mutate(itemToUpdate);
     if (imageToUpdate != undefined) saveNewImage(imageToUpdate);
     setIsEdit(false);
 

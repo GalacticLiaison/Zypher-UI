@@ -6,15 +6,35 @@ import { CardActionArea, Chip } from "@mui/material";
 import { Mutation } from "../../../../../services/mutation-service";
 import { useEffect, useState } from "react";
 
+const newMutation: Mutation = {
+  id: "0",
+  name: "",
+  description: "",
+  rarity: "Common",
+  geneId: "",
+  strainId: "",
+  discovered: false,
+  image: "",
+  affectedBodyPart: "",
+  bodyPartMutations: [],
+  appliedStatBonuses: [],
+  appliedStatuses: [],
+  appliedPerks: [],
+  requiredMutationIds: [],
+};
+
 interface IMutationCardProps {
-  isEdit: boolean;
-  mutation: Mutation;
+  mutation?: Mutation;
+  isEdit?: boolean;
   selectMutation?: (mutation: Mutation) => void;
 }
 
 export const MutationCard = (props: IMutationCardProps) => {
-  const [mutation, setMutation] = useState<Mutation>(props.mutation);
+  const [mutation, setMutation] = useState<Mutation>(
+    props.mutation ?? newMutation
+  );
   useEffect(() => {
+    if (props.mutation == undefined) return;
     setMutation(props.mutation);
   }, [props.mutation]);
 

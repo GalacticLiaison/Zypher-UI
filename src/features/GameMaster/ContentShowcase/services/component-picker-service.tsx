@@ -10,10 +10,10 @@ export const determineContentItem = (contentType: ContentTypeName) => {
   switch (contentType) {
     case "Gene":
       return (
-        gene: ContentType,
-        isEdit: boolean,
-        updateProperty: <T>(propertyName: keyof T, value: any) => void,
-        updateImage: (geneImage: FormData) => void
+        gene?: ContentType,
+        isEdit?: boolean,
+        updateProperty?: <T>(propertyName: keyof T, value: any) => void,
+        updateImage?: (geneImage: FormData) => void
       ) => (
         <GeneCard
           gene={gene as Gene}
@@ -24,8 +24,8 @@ export const determineContentItem = (contentType: ContentTypeName) => {
       );
     case "Mutation":
       return (
-        mutation: ContentType,
-        isEdit: boolean
+        mutation?: ContentType,
+        isEdit?: boolean
         // updateProperty: <T>(propertyName: keyof T, value: any) => void,
         // updateImage: (geneImage: FormData) => void
       ) => (
@@ -37,7 +37,7 @@ export const determineContentItem = (contentType: ContentTypeName) => {
         ></MutationCard>
       );
     case "Perk":
-      return (perk: ContentType, isEdit: boolean) => (
+      return (perk?: ContentType, isEdit?: boolean) => (
         <PerkCard perk={perk as Perk} isEdit={isEdit}></PerkCard>
       );
     default:

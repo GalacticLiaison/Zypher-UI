@@ -64,6 +64,8 @@ export interface Perk {
   image: string;
 }
 
+export type PerkPropertyTypes = string | StatChange[];
+
 export interface StatChange {
   stat: PlayerStat;
   value: number;
