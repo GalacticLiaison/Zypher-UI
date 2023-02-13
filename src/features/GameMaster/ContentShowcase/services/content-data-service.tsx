@@ -51,8 +51,3 @@ export const _updateContent = (contentType: ContentTypeName): (() => any) => {
       throw new Error("Invalid content type");
   }
 };
-
-export const saveNewImage = (imageToUpdate: FormData) => {
-  const saveNewImage = _saveNewImage();
-  saveNewImage.mutate(imageToUpdate);
-};

@@ -56,7 +56,6 @@ export const MutationCard = (props: IMutationCardProps) => {
 
   const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
   useEffect(() => {
-    console.log("isEdit changed", props.isEdit);
     if (props.isEdit == undefined) return;
     setIsEdit(props.isEdit);
   }, [props.isEdit]);

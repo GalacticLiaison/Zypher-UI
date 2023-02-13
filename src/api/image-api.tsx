@@ -9,12 +9,12 @@ export interface Image {
   subFolderName: string;
 }
 
-export const saveImage = (image: FormData): Promise<void> =>
+export const saveImage = (image: string): Promise<void> =>
   axios
     .post(`${API_BASE_URL}/${env}/images`, image, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
     })
     .then((response) => {
       console.log("SAVE IMAGE: ", response);

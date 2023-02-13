@@ -94,6 +94,7 @@ export const NewContentItem = (props: INewContentItemProps) => {
       saveNewContent.mutate(itemToSave);
     }
     if (imageToSave != undefined) {
+      console.log("IMAGE TO SAVE: ", imageToSave);
       saveNewImage.mutate(imageToSave);
     }
     props.toggleSnackBar();

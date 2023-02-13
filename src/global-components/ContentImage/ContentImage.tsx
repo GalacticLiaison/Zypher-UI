@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ContentTypeName } from "../../features/GameMaster/ContentShowcase/ContentShowcase";
 import { determineDefaultImage } from "./services/image-utilities";
 
-export type UpdateImage = (image: FormData) => void;
+export type UpdateImage = (base64Image: string) => void;
 
 interface IContentImageProps {
   image?: string;
@@ -26,6 +26,7 @@ export const ContentImage = (props: IContentImageProps) => {
 
   const [image, setImage] = useState<string | undefined>(props.image);
   const [name, setName] = useState<string | undefined>(props.name);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // const classes = useStyles();
   // const [image, setImage] = useState(null);
@@ -42,22 +43,43 @@ export const ContentImage = (props: IContentImageProps) => {
     webkitRelativePath: string;
   }
 
-  const handleChange = (event: any) => {
+  const handleChange = async (event: any) => {
     if (!event.target.files) return;
-    const image = event.target.files[0];
+    const file = event.target.files[0];
+    const base64 = (await convertBase64(file)) as string;
+
+    console.log("file 1", file);
+    console.log("base64", base64);
+    // const image = event.target.files[0];
 
     const url = URL.createObjectURL(event.target.files[0]);
     setImage(url);
 
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("name", image.name);
-    formData.append("subFolderName", `src/assets/${props.contentType}s/`);
+    // const formData = new FormData();
+    // formData.append("image", file, file.name ?? "someImage");
 
-    console.log("formData:", formData);
+    // // formData.append("subFolderName", `src/assets/${props.contentType}s/`);
+
+    // console.log("formData:", formData);
     if (props.updateImage) {
-      props.updateImage(formData);
+      console.log("updateImage");
+      props.updateImage(base64);
     }
+  };
+
+  const convertBase64 = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
 
   return (

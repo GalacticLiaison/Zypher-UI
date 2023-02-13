@@ -12,7 +12,6 @@ interface IPlayerPerksProps {
 export const PlayerPerks = (props: IPlayerPerksProps) => {
   const [perks, setPerks] = useState<Perk[]>(props.perks);
   useEffect(() => {
-    console.log("perks changed");
     setPerks(props.perks);
   }, [props.perks]);
 

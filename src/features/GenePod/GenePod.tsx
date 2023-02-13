@@ -34,13 +34,10 @@ export const GenePod = (props: IGenePodProps) => {
   const handleStableMutsClose = () => setStableMutsModal(false);
 
   const applyMutation = (mutation: Mutation) => {
-    // console.log("Applying mutation: ", mutation);
     let statChanges = mutation.appliedStatBonuses;
     const perks = mutation.appliedPerks;
 
     perks.forEach((perk: Perk) => {
-      console.log("Perk: ", perk);
-      console.log("Perk Bonus: ", perk.appliedStatBonuses);
       if (perk.appliedStatBonuses)
         statChanges = [...statChanges, ...perk.appliedStatBonuses];
     });

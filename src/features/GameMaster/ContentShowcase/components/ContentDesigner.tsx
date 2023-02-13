@@ -1,11 +1,9 @@
 import { Button, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Gene, GenePropertyTypes } from "../../../../services/gene-service";
-import { _updateGene } from "../../../../api/hooks/Genes/updateGene";
-import { _saveNewImage } from "../../../../api/hooks/Image/saveNewImage";
 import { updateObject } from "../../../../_utils/global-helpers";
 import { ContentType, ContentTypeName } from "../ContentShowcase";
-import { saveNewImage, _updateContent } from "../services/content-data-service";
+import { _updateContent } from "../services/content-data-service";
 import { determineContentItem } from "../services/component-picker-service";
 import { ContentPropertyTypes } from "./NewContentItem";
 import {
@@ -16,6 +14,7 @@ import {
   Perk,
   PerkPropertyTypes,
 } from "../../../../services/character-service/Character";
+import { _saveNewImage } from "../../../../api/hooks/Image/saveNewImage";
 
 interface IContentDesignerProps {
   contentTypeName: ContentTypeName;
@@ -35,16 +34,16 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
   const [itemToUpdate, setItemToUpdate] = useState<ContentType | undefined>(
     props.contentItem
   );
-  const [imageToUpdate, setImageToUpdate] = useState<FormData | undefined>(
+  const [imageToUpdate, setImageToUpdate] = useState<string | undefined>(
     undefined
   );
   // ---------------
 
   const updateContent = _updateContent(props.contentTypeName)();
-  // const { data, isLoading } = getContent(props.contentType)();
+  const saveNewImage = _saveNewImage();
 
-  function updateImage(geneImage: FormData) {
-    if (imageToUpdate == undefined) return;
+  function updateImage(geneImage: string) {
+    console.log("updateImage 2: ", geneImage);
     setImageToUpdate(geneImage);
   }
 
@@ -52,7 +51,6 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
     propertyName: keyof T,
     value: ContentPropertyTypes
   ) {
-    console.log({ propertyName, value });
     if (itemToUpdate == undefined) return;
 
     switch (props.contentTypeName) {
@@ -89,14 +87,16 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
   }
 
   const toggleIsEdit = () => {
-    console.log("toggleIsEdit");
     setIsEdit(!isEdit);
   };
 
-  const saveEditedGene = () => {
+  const saveEditedItem = () => {
     if (itemToUpdate == undefined) return;
     if (updateContent != undefined) updateContent.mutate(itemToUpdate);
-    if (imageToUpdate != undefined) saveNewImage(imageToUpdate);
+    if (imageToUpdate != undefined) {
+      console.log("saveEditedGeneImage: ", imageToUpdate);
+      saveNewImage.mutate(imageToUpdate);
+    }
     setIsEdit(false);
 
     props.toggleSnackBar();
@@ -121,7 +121,7 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
       )}
       {isEdit && (
         <Grid item xs={5}>
-          <Button variant="contained" color="success" onClick={saveEditedGene}>
+          <Button variant="contained" color="success" onClick={saveEditedItem}>
             Save
           </Button>
         </Grid>

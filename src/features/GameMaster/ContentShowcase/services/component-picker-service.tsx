@@ -13,7 +13,7 @@ export const determineContentItem = (contentType: ContentTypeName) => {
         gene?: ContentType,
         isEdit?: boolean,
         updateProperty?: <T>(propertyName: keyof T, value: any) => void,
-        updateImage?: (geneImage: FormData) => void
+        updateImage?: (image: string) => void
       ) => (
         <GeneCard
           gene={gene as Gene}
@@ -27,7 +27,7 @@ export const determineContentItem = (contentType: ContentTypeName) => {
         mutation?: ContentType,
         isEdit?: boolean,
         updateProperty?: <T>(propertyName: keyof T, value: any) => void,
-        updateImage?: (geneImage: FormData) => void
+        updateImage?: (image: string) => void
       ) => (
         <MutationCard
           mutation={mutation as Mutation}

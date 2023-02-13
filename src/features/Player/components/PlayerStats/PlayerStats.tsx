@@ -25,7 +25,6 @@ export const PlayerStatistics = (props: IPlayerStats) => {
     props.statChanges ?? []
   );
   useEffect(() => {
-    console.log("stat changes changed", props.statChanges);
     setStatChanges(props.statChanges ?? []);
   }, [props.statChanges]);
 
