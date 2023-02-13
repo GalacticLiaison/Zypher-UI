@@ -9,7 +9,7 @@ export interface Image {
   subFolderName: string;
 }
 
-export const saveImage = (image: string): Promise<void> =>
+export const saveImage = (image: Image): Promise<void> =>
   axios
     .post(`${API_BASE_URL}/${env}/images`, image, {
       // headers: {

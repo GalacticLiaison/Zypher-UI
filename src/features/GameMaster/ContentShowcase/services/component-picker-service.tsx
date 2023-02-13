@@ -5,6 +5,7 @@ import { MutationCard } from "../../../GenePod/components/StableMutations/Mutati
 import { Mutation } from "../../../../services/mutation-service";
 import { Perk } from "../../../../services/character-service/Character";
 import { PerkCard } from "../../../Player/components/PlayerPerks/PerkCard";
+import { Image } from "../../../../api/image-api";
 
 export const determineContentItem = (contentType: ContentTypeName) => {
   switch (contentType) {
@@ -13,7 +14,7 @@ export const determineContentItem = (contentType: ContentTypeName) => {
         gene?: ContentType,
         isEdit?: boolean,
         updateProperty?: <T>(propertyName: keyof T, value: any) => void,
-        updateImage?: (image: string) => void
+        updateImage?: (image: Image) => void
       ) => (
         <GeneCard
           gene={gene as Gene}
@@ -27,7 +28,7 @@ export const determineContentItem = (contentType: ContentTypeName) => {
         mutation?: ContentType,
         isEdit?: boolean,
         updateProperty?: <T>(propertyName: keyof T, value: any) => void,
-        updateImage?: (image: string) => void
+        updateImage?: (image: Image) => void
       ) => (
         <MutationCard
           mutation={mutation as Mutation}

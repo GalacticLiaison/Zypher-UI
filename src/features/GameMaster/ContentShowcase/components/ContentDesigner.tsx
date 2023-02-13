@@ -15,6 +15,7 @@ import {
   PerkPropertyTypes,
 } from "../../../../services/character-service/Character";
 import { _saveNewImage } from "../../../../api/hooks/Image/saveNewImage";
+import { Image } from "../../../../api/image-api";
 
 interface IContentDesignerProps {
   contentTypeName: ContentTypeName;
@@ -34,7 +35,7 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
   const [itemToUpdate, setItemToUpdate] = useState<ContentType | undefined>(
     props.contentItem
   );
-  const [imageToUpdate, setImageToUpdate] = useState<string | undefined>(
+  const [imageToUpdate, setImageToUpdate] = useState<Image | undefined>(
     undefined
   );
   // ---------------
@@ -42,8 +43,7 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
   const updateContent = _updateContent(props.contentTypeName)();
   const saveNewImage = _saveNewImage();
 
-  function updateImage(geneImage: string) {
-    console.log("updateImage 2: ", geneImage);
+  function updateImage(geneImage: Image) {
     setImageToUpdate(geneImage);
   }
 

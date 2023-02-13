@@ -4,8 +4,9 @@ import IconButton from "@mui/material/IconButton";
 import { useEffect, useState } from "react";
 import { ContentTypeName } from "../../features/GameMaster/ContentShowcase/ContentShowcase";
 import { determineDefaultImage } from "./services/image-utilities";
+import { Image } from "../../api/image-api";
 
-export type UpdateImage = (base64Image: string) => void;
+export type UpdateImage = (image: Image) => void;
 
 interface IContentImageProps {
   image?: string;
@@ -34,15 +35,6 @@ export const ContentImage = (props: IContentImageProps) => {
     display: "none",
   };
 
-  interface File {
-    lastModified: number;
-    lastModifiedDate: string;
-    name: string;
-    size: number;
-    type: string;
-    webkitRelativePath: string;
-  }
-
   const handleChange = async (event: any) => {
     if (!event.target.files) return;
     const file = event.target.files[0];
@@ -63,7 +55,11 @@ export const ContentImage = (props: IContentImageProps) => {
     // console.log("formData:", formData);
     if (props.updateImage) {
       console.log("updateImage");
-      props.updateImage(base64);
+      props.updateImage({
+        name: file.name,
+        data: base64,
+        subFolderName: `src/assets/${props.contentType}s/`,
+      });
     }
   };
 
