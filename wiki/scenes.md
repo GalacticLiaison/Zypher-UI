@@ -9,3 +9,6 @@ sensory controllers
 mutation guinea pig
 magic runes
 robotic housekeeping
+
+UN-CATEGORIZED AS OF YET
+mech fully! integrated and contained

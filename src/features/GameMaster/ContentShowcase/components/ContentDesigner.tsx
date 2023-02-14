@@ -92,9 +92,17 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
 
   const saveEditedItem = () => {
     if (itemToUpdate == undefined) return;
+    if (imageToUpdate != undefined) {
+      const updatedImageUrl = `src/assets/${props.contentTypeName.toLowerCase()}s/${
+        imageToUpdate?.name
+      }`;
+      itemToUpdate.image = updatedImageUrl;
+
+      console.log("TEST: ", updatedImageUrl);
+    }
+
     if (updateContent != undefined) updateContent.mutate(itemToUpdate);
     if (imageToUpdate != undefined) {
-      console.log("saveEditedGeneImage: ", imageToUpdate);
       saveNewImage.mutate(imageToUpdate);
     }
     setIsEdit(false);

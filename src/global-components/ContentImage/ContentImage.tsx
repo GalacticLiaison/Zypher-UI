@@ -58,7 +58,7 @@ export const ContentImage = (props: IContentImageProps) => {
       props.updateImage({
         name: file.name,
         data: base64,
-        subFolderName: `src/assets/${props.contentType}s/`,
+        subFolderName: `src\\assets\\${props.contentType}s`,
       });
     }
   };
