@@ -7,6 +7,7 @@ import {
   UpdateImage,
 } from "../../../global-components/ContentImage/ContentImage";
 import { ContentName } from "../../../global-components/ContentName/ContentName";
+import { Draggable } from "../DraggableAndDroppable/Draggable";
 
 export interface CombatCard {
   id: number;
@@ -49,41 +50,43 @@ export const CombatCard = (props: ICombatCardProps) => {
   }, [props.isEdit]);
 
   return (
-    <Card
-      sx={{
-        maxWidth: 345,
-        height: 480,
-        boxShadow:
-          "0px 3px 6px rgba(0, 0, 0, 0.16), 0px 3px 6px rgba(0, 0, 0, 0.23)" /* Shadow */,
-        overflow: "scroll",
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-        "&::MsOverflowStyle": "none",
-        "&::scrollbarWidth": "none",
-      }}
-    >
-      <ContentImage
-        image={card?.image}
-        name={card?.name}
-        isEdit={isEdit}
-        updateImage={props?.updateImage}
-        contentType="Gene"
-      ></ContentImage>
-      <CardContent>
-        <ContentName
+    <Draggable id="draggable">
+      <Card
+        sx={{
+          maxWidth: 345,
+          height: 480,
+          boxShadow:
+            "0px 3px 6px rgba(0, 0, 0, 0.16), 0px 3px 6px rgba(0, 0, 0, 0.23)" /* Shadow */,
+          overflow: "scroll",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          "&::MsOverflowStyle": "none",
+          "&::scrollbarWidth": "none",
+        }}
+      >
+        <ContentImage
+          image={card?.image}
           name={card?.name}
           isEdit={isEdit}
-          updateName={props.updateCardProperty}
+          updateImage={props?.updateImage}
           contentType="Gene"
-        ></ContentName>
-        <ContentDescription
-          isEdit={isEdit}
-          description={card?.description}
-          updateDescription={props.updateCardProperty}
-          contentType="Gene"
-        ></ContentDescription>
-      </CardContent>
-    </Card>
+        ></ContentImage>
+        <CardContent>
+          <ContentName
+            name={card?.name}
+            isEdit={isEdit}
+            updateName={props.updateCardProperty}
+            contentType="Gene"
+          ></ContentName>
+          <ContentDescription
+            isEdit={isEdit}
+            description={card?.description}
+            updateDescription={props.updateCardProperty}
+            contentType="Gene"
+          ></ContentDescription>
+        </CardContent>
+      </Card>
+    </Draggable>
   );
 };

@@ -10,7 +10,7 @@ export const Battlefield = (props: IBattlefieldProps) => {
       {[0, 1, 2, 3, 4].map((card, index) => {
         return (
           <Grid key={index} item xs={2}>
-            <PlaySlot></PlaySlot>
+            <PlaySlot droppableId="index"></PlaySlot>
           </Grid>
         );
       })}
