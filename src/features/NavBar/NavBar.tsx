@@ -28,6 +28,11 @@ export const NavBar = (props: INavBarProps) => {
             Game Master
           </Button>
         </Link>
+        <Link to="/combat">
+          <Button variant="outlined" size="large" color="warning">
+            Combat
+          </Button>
+        </Link>
         <Link to="/">
           <Button variant="outlined" size="large" color="warning">
             Story

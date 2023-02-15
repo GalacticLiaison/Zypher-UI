@@ -12,3 +12,5 @@ robotic housekeeping
 
 UN-CATEGORIZED AS OF YET
 mech fully! integrated and contained
+
+Uncontacted - present as god

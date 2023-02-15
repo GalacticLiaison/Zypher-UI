@@ -45,11 +45,6 @@ export const STORY = () => {
 
   return (
     <div>
-      <Link to="/gamemaster">
-        <Button variant="outlined" size="large">
-          Game Master
-        </Button>
-      </Link>
       <GenePod
         player={player}
         discoveredGenes={discoveredGenes}
