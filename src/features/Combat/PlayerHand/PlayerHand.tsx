@@ -1,15 +1,24 @@
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CombatCard } from "../CombatCards/CombatCard";
+import { Draggable } from "../DraggableAndDroppable/Draggable";
 
 interface IPlayerHandProps {
-  //   item: any;
+  selectCard?: (card: CombatCard) => void;
+  handIsOpen?: boolean;
 }
 
 export const PlayerHand = (props: IPlayerHandProps) => {
-  const [handIsOpen, setHandIsOpen] = useState<boolean>(false);
+  const [handIsOpen, setHandIsOpen] = useState<boolean>(
+    props.handIsOpen ?? false
+  );
+
+  useEffect(() => {
+    if (props.handIsOpen == undefined) return;
+    setHandIsOpen(props.handIsOpen);
+  }, [props.handIsOpen]);
 
   const toggleDrawer = () => {
     setHandIsOpen(!handIsOpen);
@@ -48,15 +57,23 @@ export const PlayerHand = (props: IPlayerHandProps) => {
     },
   ];
 
+  const handleCardClick = (card: CombatCard) => {
+    if (props.selectCard == undefined) return;
+    props.selectCard(card);
+  };
+
   return (
     <>
-      <Button onClick={toggleDrawer}>Open Hand</Button>
       <Drawer anchor="bottom" open={handIsOpen} onClose={toggleDrawer}>
         <Grid container>
           {exampleCards.map((card, index) => {
             return (
               <Grid item xs={2} key={index}>
-                <CombatCard card={card} />
+                <div onClick={() => handleCardClick(card)}>
+                  <Draggable id={"draggable" + card.id}>
+                    <CombatCard card={card} />
+                  </Draggable>
+                </div>
               </Grid>
             );
           })}
