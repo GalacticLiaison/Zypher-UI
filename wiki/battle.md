@@ -40,6 +40,26 @@
     - blind
     - confusion
 
+Turn Phase
+
+- When characters turn:
+  - draw one card
+    - undecided on max hand size
+  - can play cards
+    - amount of cards able to display based on stats
+      - stamina (strength/fortitude)
+      - mana (intelligence/will)
+        - maybe same stats for some "cyber" resource
+    - can use actions to attack
+    - can spawn spawns
+      - spawns are not directly controlled and have their own AI
+        - they may be directed though with special cards
+
+Battle Mechanics
+
+- turn draw count
+- <br />
+
 - if done right this could be the money making engine
   - allow multiplayer where you use the char from your save!
   - possible rewards

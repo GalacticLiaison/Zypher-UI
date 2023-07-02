@@ -33,6 +33,11 @@ export const NavBar = (props: INavBarProps) => {
             Combat
           </Button>
         </Link>
+        <Link to="/deck-builder">
+          <Button variant="outlined" size="large" color="warning">
+            Deck Builder
+          </Button>
+        </Link>
         <Link to="/">
           <Button variant="outlined" size="large" color="warning">
             Story

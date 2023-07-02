@@ -11,6 +11,7 @@ interface IContentNameProps {
   name?: string;
   updateName?: any;
   contentType?: ContentTypeName;
+  style?: React.CSSProperties;
 }
 
 export const ContentName = (props: IContentNameProps) => {
@@ -41,7 +42,7 @@ export const ContentName = (props: IContentNameProps) => {
       onChange={handleChange}
     />
   ) : (
-    <Typography gutterBottom variant="h5" component="div">
+    <Typography style={props.style} gutterBottom component="div">
       {name ?? `No ${props.contentType} Name Assigned...`}
     </Typography>
   );

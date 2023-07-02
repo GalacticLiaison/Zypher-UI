@@ -29,7 +29,7 @@ const icon = (
 interface IPlayerHandProps {
   selectCard?: (card: CombatCard) => void;
   handIsOpen?: boolean;
-  cards: JSX.Element[];
+  cards: Map<number, JSX.Element>;
 }
 
 export const PlayerHand = (props: IPlayerHandProps) => {
@@ -37,7 +37,7 @@ export const PlayerHand = (props: IPlayerHandProps) => {
   const [cards, setCards] = useState<JSX.Element[]>([]);
   useEffect(() => {
     if (props.cards == undefined) return;
-    setCards(props.cards);
+    setCards(Array.from(props.cards.values()));
   }, [props.cards]);
 
   const handleChange = () => {

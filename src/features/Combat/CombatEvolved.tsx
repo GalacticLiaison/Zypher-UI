@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DndContext, DragStartEvent } from "@dnd-kit/core";
 import { Draggable } from "./DraggableAndDroppable/Draggable";
 import { Droppable } from "./DraggableAndDroppable/Droppable";
@@ -13,12 +13,7 @@ export function CombatEvolved() {
   const [parent, setParent] = useState(null);
 
   const [handIsOpen, setHandIsOpen] = useState<boolean>(false);
-  const toggleHand = () => {
-    setHandIsOpen(!handIsOpen);
-  };
-  const setHand = (value: boolean) => {
-    setHandIsOpen(value);
-  };
+  const [draggedCardId, setDraggedCardId] = useState<number>(0);
 
   const exampleCards: CombatCard[] = [
     {
@@ -53,6 +48,27 @@ export function CombatEvolved() {
     },
   ];
 
+  const initialHand = new Map<number, JSX.Element>();
+  exampleCards.forEach((card) => {
+    initialHand.set(card.id, (
+      <Draggable id={card.id.toString()}>
+        <CombatCard card={card}></CombatCard>
+      </Draggable>
+    ));
+  });
+  
+  const [draggedCardsIdMap, setDraggedCardsIdMap] = useState<Map<number, JSX.Element>>(initialHand);
+
+
+  const toggleHand = () => {
+    setHandIsOpen(!handIsOpen);
+  };
+
+  const setHand = (value: boolean) => {
+    console.log("Setting Hand to: ", value)
+    setHandIsOpen(value);
+  };
+
   const draggedCards = exampleCards.map((card) => (
     <Draggable id={card.id.toString()}>
       <CombatCard card={card}></CombatCard>
@@ -65,23 +81,29 @@ export function CombatEvolved() {
       <Button onClick={toggleHand}>Open Hand</Button>
 
       <Grid container spacing={3}>
-        {containers.map((id) => (
+        {
+        containers.map((id) => (
           // We updated the Droppable component so it would accept an `id`
           // prop and pass it to `useDroppable`
           <Grid key={id} item xs={4}>
             <Droppable key={id} droppableId={id}>
-              {parent === id ? draggedCards[0] : <PlaySlot></PlaySlot>}
+              {parent === id ? draggedCardsIdMap.get(draggedCardId) : <PlaySlot></PlaySlot>}
             </Droppable>
           </Grid>
         ))}
       </Grid>
-      <PlayerHand cards={draggedCards} handIsOpen={handIsOpen}></PlayerHand>
+      <PlayerHand cards={draggedCardsIdMap} handIsOpen={handIsOpen}></PlayerHand>
     </DndContext>
   );
 
+  
+
   function handleDragStart(event: DragStartEvent) {
-    // event.active.data.console.log("Drag Start");
+    // console.log("Drag Start", event);
     setHand(false);
+    setDraggedCardId(
+      parseInt(event?.active?.id as string)
+    )
   }
 
   function handleDragEnd(event: any) {
@@ -90,5 +112,11 @@ export function CombatEvolved() {
     // If the item is dropped over a container, set it as the parent
     // otherwise reset the parent to `null`
     setParent(over ? over.id : null);
+
+    // remove card from hand
+
+    draggedCardsIdMap.delete(draggedCardId);
+    setDraggedCardsIdMap(draggedCardsIdMap);
+    console.log(draggedCardsIdMap);
   }
 }
