@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { DndContext } from "@dnd-kit/core";
-
-import { Droppable } from "./Droppable";
-import { Draggable } from "./Draggable";
-import { CombatCard } from "../CombatCards/CombatCard";
+import { useEffect, useState } from "react";
+import { Droppable } from "../../../../Drag-Drop/Droppable";
+import { Draggable } from "../../../../Drag-Drop/Draggable";
+import { CombatCard } from "../../../CombatCards/CombatCard";
 import Grid from "@mui/material/Grid";
 
 export interface IHandProps {
   cards?: CombatCard[];
 }
 
-export const Hand_proto = (props: IHandProps) => {
+export const Hand = (props: IHandProps) => {
   // const containers = ["A", "B", "C"];
   // const [parent, setParent] = useState(null);
   // const draggableMarkup = <Draggable id="draggable">Drag me</Draggable>;
@@ -30,7 +28,7 @@ export const Hand_proto = (props: IHandProps) => {
   //  - When card is dropped between two other cards in hand, card is inserted in between
 
   return (
-    <Droppable key={"playerHand"} id={"playerHand"}>
+    <Droppable key={"playerHand"} droppableId={"playerHand"}>
       <Grid container spacing={2}>
         {cards?.map((card, index) => {
           return (

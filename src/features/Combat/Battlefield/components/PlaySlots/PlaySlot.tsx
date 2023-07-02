@@ -1,8 +1,8 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Droppable } from "../../DraggableAndDroppable/Droppable";
 import { useEffect, useState } from "react";
-import { CombatCard } from "../../CombatCards/CombatCard";
+import { CombatCard } from "../../../CombatCards/CombatCard";
+import { Droppable } from "../../../../Drag-Drop/Droppable";
 
 export interface IPlaySlotProps {
   card?: CombatCard;
@@ -12,6 +12,7 @@ export interface IPlaySlotProps {
 export const PlaySlot = (props: IPlaySlotProps) => {
   const [card, setCard] = useState<CombatCard | undefined>(props.card);
   useEffect(() => {
+    console.log("Slot: ", props.droppableId);
     if (props.card == undefined) return;
     console.log("PlaySlot: useEffect: props.card: ", props.card);
     setCard(props.card);

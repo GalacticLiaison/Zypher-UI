@@ -1,17 +1,15 @@
-import React from "react";
-import { useDraggable } from "@dnd-kit/core";
 import Grid from "@mui/material/Grid";
-import { PlaySlot } from "../../../Battlefield/components/PlaySlot";
-import { CombatCard } from "../../../CombatCards/CombatCard";
+import { PlaySlot } from "../PlaySlot";
+import { CombatCard } from "../../../../CombatCards/CombatCard";
 
-interface ISpawnCardSlotsProps {
+interface IReactionCardSlotsProps {
   slot1Card: CombatCard | undefined;
   slot2Card: CombatCard | undefined;
   slot3Card: CombatCard | undefined;
   droppableIdPrefix: string;
 }
 
-export function SpawnCardSlots(props: any) {
+export function ReactionCardSlots(props: any) {
   return (
     <Grid container justifyContent="space-evenly">
       <Grid item xs={2}>
