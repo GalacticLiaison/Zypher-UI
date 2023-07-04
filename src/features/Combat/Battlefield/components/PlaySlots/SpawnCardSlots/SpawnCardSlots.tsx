@@ -1,7 +1,5 @@
-import React from "react";
-import { useDraggable } from "@dnd-kit/core";
 import Grid from "@mui/material/Grid";
-import { PlaySlot } from "../PlaySlot";
+import { IPlaySlotStyleTemplate, PlaySlot } from "../PlaySlot";
 import { CombatCard } from "../../../../CombatCards/CombatCard";
 
 interface ISpawnCardSlotsProps {
@@ -11,25 +9,32 @@ interface ISpawnCardSlotsProps {
   droppableIdPrefix: string;
 }
 
-export function SpawnCardSlots(props: any) {
+export function SpawnCardSlots(props: ISpawnCardSlotsProps) {
+  const styleTemplate: IPlaySlotStyleTemplate = {
+    backgroundColor: "lightgreen",
+  };
+
   return (
-    <Grid container justifyContent="space-evenly">
+    <Grid id="spawns" container item justifyContent="center" xs={12}>
       <Grid item xs={2}>
         <PlaySlot
           droppableId={`${props.droppableIdPrefix}1`}
           card={props.slot1Card}
+          styleTemplate={styleTemplate}
         ></PlaySlot>
       </Grid>
       <Grid item xs={2}>
         <PlaySlot
           droppableId={`${props.droppableIdPrefix}2`}
           card={props.slot2Card}
+          styleTemplate={styleTemplate}
         ></PlaySlot>
       </Grid>
       <Grid item xs={2}>
         <PlaySlot
           droppableId={`${props.droppableIdPrefix}3`}
           card={props.slot3Card}
+          styleTemplate={styleTemplate}
         ></PlaySlot>
       </Grid>
     </Grid>

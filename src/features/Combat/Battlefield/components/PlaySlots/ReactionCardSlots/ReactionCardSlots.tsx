@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import { PlaySlot } from "../PlaySlot";
+import { IPlaySlotStyleTemplate, PlaySlot } from "../PlaySlot";
 import { CombatCard } from "../../../../CombatCards/CombatCard";
 
 interface IReactionCardSlotsProps {
@@ -9,25 +9,32 @@ interface IReactionCardSlotsProps {
   droppableIdPrefix: string;
 }
 
-export function ReactionCardSlots(props: any) {
+export function ReactionCardSlots(props: IReactionCardSlotsProps) {
+  const styleTemplate: IPlaySlotStyleTemplate = {
+    backgroundColor: "salmon",
+  };
+
   return (
-    <Grid container justifyContent="space-evenly">
+    <Grid id="reactions" container item justifyContent="center" xs={12}>
       <Grid item xs={2}>
         <PlaySlot
           droppableId={`${props.droppableIdPrefix}1`}
           card={props.slot1Card}
+          styleTemplate={styleTemplate}
         ></PlaySlot>
       </Grid>
       <Grid item xs={2}>
         <PlaySlot
           droppableId={`${props.droppableIdPrefix}2`}
           card={props.slot2Card}
+          styleTemplate={styleTemplate}
         ></PlaySlot>
       </Grid>
       <Grid item xs={2}>
         <PlaySlot
           droppableId={`${props.droppableIdPrefix}3`}
           card={props.slot3Card}
+          styleTemplate={styleTemplate}
         ></PlaySlot>
       </Grid>
     </Grid>

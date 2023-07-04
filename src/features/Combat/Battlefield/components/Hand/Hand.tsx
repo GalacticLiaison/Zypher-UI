@@ -5,6 +5,7 @@ import { CombatCard } from "../../../CombatCards/CombatCard";
 import Grid from "@mui/material/Grid";
 
 export interface IHandProps {
+  combatantPositionId: string;
   cards?: CombatCard[];
 }
 
@@ -29,11 +30,11 @@ export const Hand = (props: IHandProps) => {
 
   return (
     <Droppable key={"playerHand"} droppableId={"playerHand"}>
-      <Grid container spacing={2}>
+      <Grid container>
         {cards?.map((card, index) => {
           return (
-            <Grid key={index} item xs={2}>
-              <Draggable id={card.id.toString()}>
+            <Grid key={index} item xs={1}>
+              <Draggable id={`${props.combatantPositionId}-hand-${index}`}>
                 <CombatCard card={card}></CombatCard>;
               </Draggable>
             </Grid>

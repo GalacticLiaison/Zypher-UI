@@ -1,163 +1,201 @@
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
-import { PlaySlot } from "./components/PlaySlots/PlaySlot";
-import { DndContext, DragStartEvent } from "@dnd-kit/core";
+import { useEffect, useState } from "react";
+import { DndContext, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { CombatCard } from "../CombatCards/CombatCard";
-import { Draggable } from "../../Drag-Drop/Draggable";
-import { ReactionCardSlots } from "./components/PlaySlots/ReactionCardSlots/ReactionCardSlots";
-import { SpawnCardSlots } from "./components/PlaySlots/SpawnCardSlots/SpawnCardSlots";
-import { Hand } from "./components/Hand/Hand";
+import { Button } from "@mui/material";
+import { Combatant } from "../Combat";
+import {
+  CombatantBoard,
+  ICombatantBoardProps,
+} from "./components/CombatantBoard/CombatantBoard";
 
-interface IBattlefieldProps {}
+export interface Spawn {
+  card: CombatCard | undefined;
+  clickable: boolean;
+  attacking: boolean;
+}
 
-export function Battlefield() {
-  const [enemyHand, setEnemyHand] = useState<CombatCard[]>([
-    {
-      id: 123,
-      name: "Laser Blast",
-      description: "Fire everything!",
-      cost: 1,
-      type: "Action",
-      subtype: "Test",
-      rarity: "Common",
-      image: "src/assets/cards/laserBlast.png",
-    },
-    {
-      id: 456,
-      name: "Force Field",
-      description: "Da Bubble",
-      cost: 1,
-      type: "Reaction",
-      subtype: "Test",
-      rarity: "Common",
-      image: "src/assets/cards/forceField.png",
-    },
-    {
-      id: 789,
-      name: "Deployable Auto Turret",
-      description: "Relax, Its got this",
-      cost: 1,
-      type: "Spawn",
-      subtype: "Test",
-      rarity: "Common",
-      image: "src/assets/cards/deployableAutoTurret.png",
-    },
+export interface Reaction {
+  card: CombatCard | undefined;
+}
+
+// Combatant
+// export interface Combatant {
+//   name: string;
+//   health: number;
+//   hand: CombatCard[];
+//   deck: CombatCard[];
+//   board: {
+//     spawn1: Spawn;
+//     spawn2: Spawn;
+//     spawn3: Spawn;
+//     reaction1: Reaction;
+//     reaction2: Reaction;
+//     reaction3: Reaction;
+//   };
+// }
+
+export interface IBattlefieldProps {
+  topTeam: Combatant[];
+  bottomTeam: Combatant[];
+}
+
+export function Battlefield(props: IBattlefieldProps) {
+  // TURNS
+  // - Next player pulled from the turn queue
+  const [turnQueue, setTurnQueue] = useState<Combatant[]>([
+    props.bottomTeam[0],
+    props.topTeam[0],
+    props.topTeam[1],
   ]);
 
-  const [enemySpawn1, setEnemySpawn1] = useState<CombatCard | undefined>();
-  const [enemySpawn2, setEnemySpawn2] = useState<CombatCard | undefined>();
-  const [enemySpawn3, setEnemySpawn3] = useState<CombatCard | undefined>();
-  const [enemyReaction1, setEnemyReaction1] = useState<
-    CombatCard | undefined
-  >();
-  const [enemyReaction2, setEnemyReaction2] = useState<
-    CombatCard | undefined
-  >();
-  const [enemyReaction3, setEnemyReaction3] = useState<
-    CombatCard | undefined
-  >();
+  const [currentCombatantsTurn, setCurrentCombatantsTurn] = useState<Combatant>(
+    props.bottomTeam[0]
+  );
+  // const [nextTurn, setNextTurn] = useState<string>("enemy");
+  // const [turnCount, setTurnCount] = useState<number>(0);
 
-  const [playerHand, setPlayerHand] = useState<CombatCard[]>([
-    {
-      id: 123,
-      name: "Laser Blast",
-      description: "Fire everything!",
-      cost: 1,
-      type: "Action",
-      subtype: "Test",
-      rarity: "Common",
-      image: "src/assets/cards/laserBlast.png",
-    },
-    {
-      id: 456,
-      name: "Force Field",
-      description: "Da Bubble",
-      cost: 1,
-      type: "Reaction",
-      subtype: "Test",
-      rarity: "Common",
-      image: "src/assets/cards/forceField.png",
-    },
-    {
-      id: 789,
-      name: "Deployable Auto Turret",
-      description: "Relax, Its got this",
-      cost: 1,
-      type: "Spawn",
-      subtype: "Test",
-      rarity: "Common",
-      image: "src/assets/cards/deployableAutoTurret.png",
-    },
-  ]);
+  type turnPhase = "draw" | "play" | "spawn" | "end";
+  const [turnPhase, setTurnPhase] = useState<turnPhase>("draw");
 
-  const [playerSpawn1, setPlayerSpawn1] = useState<CombatCard | undefined>();
-  const [playerSpawn2, setPlayerSpawn2] = useState<CombatCard | undefined>();
-  const [playerSpawn3, setPlayerSpawn3] = useState<CombatCard | undefined>();
-  const [playerReaction1, setPlayerReaction1] = useState<
-    CombatCard | undefined
-  >();
-  const [playerReaction2, setPlayerReaction2] = useState<
-    CombatCard | undefined
-  >();
-  const [playerReaction3, setPlayerReaction3] = useState<
-    CombatCard | undefined
-  >();
+  // - Turn phases
+  //   - Draw
+  //   - Play/Attack
+  //   - End
 
-  const [draggedCardId, setDraggedCardId] = useState<number>(0);
+  const drawCard = () => {
+    // if (playerHand.length < 5) {
+
+    console.log("draw card");
+    const card = currentCombatantsTurn.deck.shift();
+    console.log("card", card);
+    if (card) {
+      currentCombatantsTurn.hand.push(card);
+    }
+
+    setCurrentCombatantsTurn(currentCombatantsTurn);
+    setBottomTeam([...bottomTeam]);
+    setTopTeam([...topTeam]);
+    setTurnPhase("play");
+    // }
+  };
+
+  const endTurn = () => {
+    const nextTurn = turnQueue.shift()!;
+    setCurrentCombatantsTurn(nextTurn);
+    setTurnQueue([...turnQueue, currentCombatantsTurn]);
+    setTurnPhase("draw");
+  };
+
+  const [selectedCard, setSelectedCard] = useState<CombatCard | undefined>();
+  const [targetCard, setTargetCard] = useState<CombatCard | undefined>();
+  const resolveCardInteraction = () => {
+    if (selectedCard == undefined || targetCard == undefined) return;
+  };
+  useEffect(() => {
+    if (targetCard == undefined) return;
+    resolveCardInteraction();
+  }, [targetCard]);
+
+  const handleCardClick = (card: any) => {
+    if (!selectedCard) {
+      setSelectedCard(card);
+    } else if (!targetCard) {
+      setTargetCard(card);
+    }
+  };
+
+  const [topTeam, setTopTeam] = useState<ICombatantBoardProps[]>(
+    props.topTeam.map((combatant, index) => {
+      return {
+        isTurn: false,
+        position: "top",
+        index: index,
+        combatant: combatant,
+        spawn1Slot: undefined,
+        spawn2Slot: undefined,
+        spawn3Slot: undefined,
+        reaction1Slot: undefined,
+        reaction2Slot: undefined,
+        reaction3Slot: undefined,
+        handleCardClick: handleCardClick,
+      };
+    })
+  );
+  const [bottomTeam, setBottomTeam] = useState<ICombatantBoardProps[]>(
+    props.bottomTeam.map((combatant, index) => {
+      return {
+        isTurn: false,
+        position: "bottom",
+        index: index,
+        combatant: combatant,
+        spawn1Slot: undefined,
+        spawn2Slot: undefined,
+        spawn3Slot: undefined,
+        reaction1Slot: undefined,
+        reaction2Slot: undefined,
+        reaction3Slot: undefined,
+        handleCardClick: handleCardClick,
+      };
+    })
+  );
+
+  const [draggedCardId, setDraggedCardId] = useState<
+    UniqueIdentifier | undefined
+  >();
 
   return (
     <div>
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-        <Grid container spacing={3}>
-          <Grid id="enemyReactions" item xs={12}>
-            {/* Enemy Reactions */}
-            <ReactionCardSlots
-              slot1Card={enemyReaction1}
-              slot2Card={enemyReaction2}
-              slot3Card={enemyReaction3}
-              droppableIdPrefix="enemyReaction"
-            ></ReactionCardSlots>
+        <Grid container>
+          <Grid item xs={12}>
+            <div style={{ height: 100, backgroundColor: "lightskyblue" }}></div>
           </Grid>
-          <Grid id="enemySpawns" item xs={12}>
-            {/* Enemy Spawns */}
-            <SpawnCardSlots
-              slot1Card={enemySpawn1}
-              slot2Card={enemySpawn2}
-              slot3Card={enemySpawn3}
-              droppableIdPrefix="enemySpawn"
-            ></SpawnCardSlots>
+          <Grid container item xs={12} spacing={2}>
+            {topTeam.map((combatant) => (
+              <CombatantBoard
+                key={combatant.index}
+                isTurn={false}
+                position={combatant.position}
+                index={combatant.index}
+                columns={12 / props.topTeam.length}
+                combatant={combatant.combatant}
+                spawn1Slot={combatant.spawn1Slot}
+                spawn2Slot={combatant.spawn2Slot}
+                spawn3Slot={combatant.spawn3Slot}
+                reaction1Slot={combatant.reaction1Slot}
+                reaction2Slot={combatant.reaction2Slot}
+                reaction3Slot={combatant.reaction3Slot}
+                handleCardClick={handleCardClick}
+              ></CombatantBoard>
+            ))}
           </Grid>
-          <Grid id="playerSpawns" item xs={12}>
-            {/* Player Spawns */}
-            <SpawnCardSlots
-              slot1Card={playerSpawn1}
-              slot2Card={playerSpawn2}
-              slot3Card={playerSpawn3}
-              droppableIdPrefix="playerSpawn"
-            ></SpawnCardSlots>
+          <Grid container item xs={12} spacing={2}>
+            {bottomTeam.map((combatant) => (
+              <CombatantBoard
+                key={combatant.index}
+                isTurn={false}
+                position={combatant.position}
+                index={combatant.index}
+                columns={12 / props.bottomTeam.length}
+                combatant={combatant.combatant}
+                spawn1Slot={combatant.spawn1Slot}
+                spawn2Slot={combatant.spawn2Slot}
+                spawn3Slot={combatant.spawn3Slot}
+                reaction1Slot={combatant.reaction1Slot}
+                reaction2Slot={combatant.reaction2Slot}
+                reaction3Slot={combatant.reaction3Slot}
+                handleCardClick={handleCardClick}
+              ></CombatantBoard>
+            ))}
           </Grid>
-          <Grid id="playerReactions" item xs={12}>
-            {/* Player Reactions */}
-            <ReactionCardSlots
-              slot1Card={playerReaction1}
-              slot2Card={playerReaction2}
-              slot3Card={playerReaction3}
-              droppableIdPrefix="playerReaction"
-            ></ReactionCardSlots>
-          </Grid>
-          <Grid id="playerHand" item xs={12}>
-            {/* Player Hand */}
-            <Hand cards={playerHand}></Hand>
-          </Grid>
-          <Grid id="PlayerPortrait" item xs={12}>
-            {/* Player Portrait */}
-            <Grid container>
-              <Grid item xs={5}></Grid>
-              <Grid item xs={2}>
-                <PlaySlot></PlaySlot>
-              </Grid>
-              <Grid item xs={5}></Grid>
-            </Grid>
+          <Grid item xs={12}>
+            <div style={{ height: 100, backgroundColor: "lightskyblue" }}>
+              <Button onClick={endTurn}>End Turn</Button>
+              <Button onClick={drawCard} variant="contained">
+                Draw
+              </Button>
+            </div>
           </Grid>
         </Grid>
       </DndContext>
@@ -166,56 +204,102 @@ export function Battlefield() {
 
   function handleDragStart(event: DragStartEvent) {
     console.log("Drag Start", event);
-    setDraggedCardId(parseInt(event?.active?.id as string));
+    setDraggedCardId(event?.active?.id);
   }
 
   function handleDragEnd(event: any) {
     const { over } = event;
-
     console.log("over: ", over);
 
     if (over) {
-      if (over.id == "playerSpawn1") {
-        const card = playerHand.find((card) => card.id == draggedCardId);
+      const [overBoardPosition, overCombatantIndex, overCardPosition] =
+        over.id.split("-");
+
+      const [
+        draggedBoardPosition,
+        draggedCombatantIndex,
+        draggedCardPosition,
+        handIndexString,
+      ] = (draggedCardId as string).split("-");
+
+      console.table({
+        overBoardPosition,
+        overCombatantIndex,
+        overCardPosition,
+        draggedBoardPosition,
+        draggedCombatantIndex,
+        draggedCardPosition,
+        handIndexString,
+      });
+
+      const sameBoardPosition = overBoardPosition == draggedBoardPosition;
+      const sameCombatant = overCombatantIndex == draggedCombatantIndex;
+      if (sameBoardPosition && sameCombatant) {
+        let boardPosition;
+        switch (overBoardPosition) {
+          case "top":
+            boardPosition = "top";
+            break;
+          case "bottom":
+            boardPosition = "bottom";
+            break;
+          default:
+            throw new Error("Invalid board position");
+        }
+
+        let combatantBoard =
+          boardPosition == "top"
+            ? topTeam[overCombatantIndex]
+            : bottomTeam[overCombatantIndex];
+        let combatant = combatantBoard.combatant;
+        const handIndex = parseInt(handIndexString);
+
+        const card = combatant.hand[handIndex];
         if (card?.type == "Spawn") {
-          setPlayerSpawn1(card);
-          setPlayerHand(playerHand.filter((card) => card.id != draggedCardId));
+          switch (overCardPosition) {
+            case "spawn1":
+              combatantBoard.spawn1Slot = card;
+              removeCardFromHand(combatant.hand, handIndex);
+              break;
+            case "spawn2":
+              combatantBoard.spawn2Slot = card;
+              removeCardFromHand(combatant.hand, handIndex);
+              break;
+            case "spawn3":
+              combatantBoard.spawn3Slot = card;
+              removeCardFromHand(combatant.hand, handIndex);
+              break;
+            default:
+              break;
+          }
         }
-      }
-      if (over.id == "playerSpawn2") {
-        const card = playerHand.find((card) => card.id == draggedCardId);
-        if (card?.type == "Spawn") {
-          setPlayerSpawn2(card);
-          setPlayerHand(playerHand.filter((card) => card.id != draggedCardId));
-        }
-      }
-      if (over.id == "playerSpawn3") {
-        const card = playerHand.find((card) => card.id == draggedCardId);
-        if (card?.type == "Spawn") {
-          setPlayerSpawn3(card);
-          setPlayerHand(playerHand.filter((card) => card.id != draggedCardId));
-        }
-      }
-      if (over.id == "playerReaction1") {
-        const card = playerHand.find((card) => card.id == draggedCardId);
+
         if (card?.type == "Reaction") {
-          setPlayerReaction1(card);
-          setPlayerHand(playerHand.filter((card) => card.id != draggedCardId));
+          switch (overCardPosition) {
+            case "reaction1":
+              combatantBoard.reaction1Slot = card;
+              removeCardFromHand(combatant.hand, handIndex);
+              break;
+            case "reaction2":
+              combatantBoard.reaction2Slot = card;
+              removeCardFromHand(combatant.hand, handIndex);
+              break;
+            case "reaction3":
+              combatantBoard.reaction3Slot = card;
+              removeCardFromHand(combatant.hand, handIndex);
+              break;
+            default:
+              break;
+          }
         }
+
+        overBoardPosition == "top"
+          ? setTopTeam([...topTeam])
+          : setBottomTeam([...bottomTeam]);
       }
-      if (over.id == "playerReaction2") {
-        const card = playerHand.find((card) => card.id == draggedCardId);
-        if (card?.type == "Reaction") {
-          setPlayerReaction2(card);
-          setPlayerHand(playerHand.filter((card) => card.id != draggedCardId));
-        }
-      }
-      if (over.id == "playerReaction3") {
-        const card = playerHand.find((card) => card.id == draggedCardId);
-        if (card?.type == "Reaction") {
-          setPlayerReaction3(card);
-          setPlayerHand(playerHand.filter((card) => card.id != draggedCardId));
-        }
+
+      function removeCardFromHand(hand: CombatCard[], handIndex: number) {
+        hand.splice(handIndex, 1);
       }
     }
   }
