@@ -4,6 +4,7 @@ import { SpawnCardSlots } from "../../PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { Portrait } from "../../Portrait/Portrait";
 import { CombatCard } from "../../../../CombatCards/CombatCard";
 import { Combatant } from "../../../../Combat";
+import { useEffect, useState } from "react";
 
 export interface ITopCombatantProps {
   index: number;
@@ -19,12 +20,17 @@ export interface ITopCombatantProps {
 }
 
 export const TopCombatant = (props: ITopCombatantProps) => {
+  const [combatant, setCombatant] = useState<Combatant>(props.combatant);
+  useEffect(() => {
+    setCombatant(props.combatant);
+  }, [props.combatant]);
+
   return (
     <Grid container item xs={props.columns ?? 12} spacing={3}>
       <Grid id="portrait" container item xs={12}>
         <Grid item xs={5}></Grid>
         <Grid item xs={2}>
-          <Portrait combatant={props.combatant}></Portrait>
+          <Portrait combatant={combatant}></Portrait>
         </Grid>
         <Grid item xs={5}></Grid>
         <Grid item xs={12}></Grid>

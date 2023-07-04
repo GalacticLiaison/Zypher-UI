@@ -22,7 +22,6 @@ export interface ICombatantBoardProps {
 export const CombatantBoard = (props: ICombatantBoardProps) => {
   const [combatant, setCombatant] = useState<Combatant>(props.combatant);
   useEffect(() => {
-    console.log("CombatantBoard useEffect", props.combatant);
     setCombatant(props.combatant);
   }, [props.combatant]);
 

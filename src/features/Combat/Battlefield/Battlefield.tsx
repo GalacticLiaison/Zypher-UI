@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DndContext, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { CombatCard } from "../CombatCards/CombatCard";
 import { Button } from "@mui/material";
@@ -8,6 +8,7 @@ import {
   CombatantBoard,
   ICombatantBoardProps,
 } from "./components/CombatantBoard/CombatantBoard";
+import { drawCard } from "./utils/battle-field-actions";
 
 export interface Spawn {
   card: CombatCard | undefined;
@@ -41,50 +42,65 @@ export interface IBattlefieldProps {
 }
 
 export function Battlefield(props: IBattlefieldProps) {
-  // TURNS
-  // - Next player pulled from the turn queue
-  const [turnQueue, setTurnQueue] = useState<Combatant[]>([
-    props.bottomTeam[0],
-    props.topTeam[0],
-    props.topTeam[1],
+  type Turn = {
+    combatant: Combatant;
+    position: "top" | "bottom";
+    index: number;
+  };
+  const [turnQueue, setTurnQueue] = useState<Turn[]>([
+    { combatant: props.topTeam[0], position: "top", index: 0 },
+    { combatant: props.topTeam[1], position: "top", index: 1 },
   ]);
+  useEffect(() => {
+    if (turnQueue) console.log("turnQueue: ", turnQueue);
+  }, [turnQueue]);
 
-  const [currentCombatantsTurn, setCurrentCombatantsTurn] = useState<Combatant>(
-    props.bottomTeam[0]
-  );
-  // const [nextTurn, setNextTurn] = useState<string>("enemy");
-  // const [turnCount, setTurnCount] = useState<number>(0);
+  const hasDrawnCard = useRef<boolean>(false);
+  const [currentTurn, setCurrentTurn] = useState<Turn>({
+    combatant: props.bottomTeam[0],
+    position: "bottom",
+    index: 0,
+  });
+  useEffect(() => {
+    console.log("currentTurn: ", currentTurn);
+    console.log("hasDrawnCard: ", hasDrawnCard);
+    if (hasDrawnCard.current) return;
+    beginTurn();
+    hasDrawnCard.current = true;
+  }, [currentTurn]);
 
   type turnPhase = "draw" | "play" | "spawn" | "end";
   const [turnPhase, setTurnPhase] = useState<turnPhase>("draw");
 
-  // - Turn phases
-  //   - Draw
-  //   - Play/Attack
-  //   - End
+  const handleDrawCard = () => {
+    drawCard(currentTurn.combatant);
 
-  const drawCard = () => {
-    // if (playerHand.length < 5) {
-
-    console.log("draw card");
-    const card = currentCombatantsTurn.deck.shift();
-    console.log("card", card);
-    if (card) {
-      currentCombatantsTurn.hand.push(card);
-    }
-
-    setCurrentCombatantsTurn(currentCombatantsTurn);
     setBottomTeam([...bottomTeam]);
     setTopTeam([...topTeam]);
+  };
+
+  const beginTurn = () => {
+    setTurnPhase("draw");
+    handleDrawCard();
     setTurnPhase("play");
-    // }
+  };
+
+  // End Action Phase Button Press
+  const finishActionPhase = () => {
+    beginSpawnPhase();
+  };
+
+  const beginSpawnPhase = () => {
+    setTurnPhase("spawn");
+    endTurn();
   };
 
   const endTurn = () => {
+    setTurnPhase("end");
     const nextTurn = turnQueue.shift()!;
-    setCurrentCombatantsTurn(nextTurn);
-    setTurnQueue([...turnQueue, currentCombatantsTurn]);
-    setTurnPhase("draw");
+    setTurnQueue([...turnQueue, currentTurn]);
+    hasDrawnCard.current = false;
+    setCurrentTurn(nextTurn);
   };
 
   const [selectedCard, setSelectedCard] = useState<CombatCard | undefined>();
@@ -147,7 +163,7 @@ export function Battlefield(props: IBattlefieldProps) {
   return (
     <div>
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <div style={{ height: 100, backgroundColor: "lightskyblue" }}></div>
           </Grid>
@@ -191,8 +207,14 @@ export function Battlefield(props: IBattlefieldProps) {
           </Grid>
           <Grid item xs={12}>
             <div style={{ height: 100, backgroundColor: "lightskyblue" }}>
-              <Button onClick={endTurn}>End Turn</Button>
-              <Button onClick={drawCard} variant="contained">
+              <Button
+                onClick={finishActionPhase}
+                variant="contained"
+                color="success"
+              >
+                End Action Phase
+              </Button>
+              <Button onClick={handleDrawCard} variant="contained">
                 Draw
               </Button>
             </div>

@@ -24,7 +24,6 @@ export interface IBottomCombatantProps {
 export const BottomCombatant = (props: IBottomCombatantProps) => {
   const [combatant, setCombatant] = useState<Combatant>(props.combatant);
   useEffect(() => {
-    console.log("BottomCombatant useEffect", props.combatant);
     setCombatant(props.combatant);
   }, [props.combatant]);
 
