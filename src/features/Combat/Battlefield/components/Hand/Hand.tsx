@@ -3,10 +3,11 @@ import { Droppable } from "../../../../Drag-Drop/Droppable";
 import { Draggable } from "../../../../Drag-Drop/Draggable";
 import { CombatCard } from "../../../CombatCards/CombatCard";
 import Grid from "@mui/material/Grid";
+import { SpawnCard } from "../../../CombatCards/SpawnCard";
 
 export interface IHandProps {
   combatantPositionId: string;
-  cards?: CombatCard[];
+  cards?: (CombatCard | SpawnCard)[];
 }
 
 export const Hand = (props: IHandProps) => {
@@ -14,7 +15,9 @@ export const Hand = (props: IHandProps) => {
   // const [parent, setParent] = useState(null);
   // const draggableMarkup = <Draggable id="draggable">Drag me</Draggable>;
 
-  const [cards, setCards] = useState<CombatCard[] | undefined>(props.cards);
+  const [cards, setCards] = useState<(CombatCard | SpawnCard)[] | undefined>(
+    props.cards
+  );
   useEffect(() => {
     if (props.cards == undefined) return;
     setCards(props.cards);

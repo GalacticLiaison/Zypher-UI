@@ -9,6 +9,7 @@ import {
   ICombatantBoardProps,
 } from "./components/CombatantBoard/CombatantBoard";
 import { drawCard } from "./utils/battle-field-actions";
+import { SpawnCard } from "../CombatCards/SpawnCard";
 
 export interface Spawn {
   card: CombatCard | undefined;
@@ -100,7 +101,7 @@ export function Battlefield(props: IBattlefieldProps) {
     const hand = currentTurn.combatant.hand;
     const spawn = hand.find((card) => card.type === "Spawn");
     if (spawn) {
-      combatantBoard.spawn1Slot = spawn;
+      combatantBoard.spawn1Slot = spawn as SpawnCard;
     }
     finishActionPhase();
   };
@@ -113,6 +114,40 @@ export function Battlefield(props: IBattlefieldProps) {
   const beginSpawnPhase = () => {
     setTurnPhase("spawn");
     endTurn();
+  };
+
+  const spawnsAttack = () => {
+    const combatantBoard =
+      currentTurn.position === "top"
+        ? topTeam[currentTurn.index]
+        : bottomTeam[currentTurn.index];
+
+    const spawns = [
+      combatantBoard.spawn1Slot,
+      combatantBoard.spawn2Slot,
+      combatantBoard.spawn3Slot,
+    ].filter((spawn) => spawn !== undefined);
+
+    spawns.forEach((spawn) => {
+      if (spawn) {
+        attackRandomEnemy(spawn);
+      }
+    });
+  };
+
+  const attackRandomEnemy = (spawn: SpawnCard) => {
+    const enemyTeam = currentTurn.position === "top" ? bottomTeam : topTeam;
+    const enemyBoard = enemyTeam[Math.floor(Math.random() * enemyTeam.length)];
+    const enemies = [
+      enemyBoard.spawn1Slot,
+      enemyBoard.spawn2Slot,
+      enemyBoard.spawn3Slot,
+    ].filter((enemy) => enemy !== undefined);
+
+    const enemy = enemies[Math.floor(Math.random() * enemies.length)];
+    if (enemy) {
+      enemy.health -= spawn.attack;
+    }
   };
 
   const endTurn = () => {
@@ -296,15 +331,15 @@ export function Battlefield(props: IBattlefieldProps) {
         if (card?.type == "Spawn") {
           switch (overCardPosition) {
             case "spawn1":
-              combatantBoard.spawn1Slot = card;
+              combatantBoard.spawn1Slot = card as SpawnCard;
               removeCardFromHand(combatant.hand, handIndex);
               break;
             case "spawn2":
-              combatantBoard.spawn2Slot = card;
+              combatantBoard.spawn2Slot = card as SpawnCard;
               removeCardFromHand(combatant.hand, handIndex);
               break;
             case "spawn3":
-              combatantBoard.spawn3Slot = card;
+              combatantBoard.spawn3Slot = card as SpawnCard;
               removeCardFromHand(combatant.hand, handIndex);
               break;
             default:

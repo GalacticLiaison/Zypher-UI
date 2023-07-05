@@ -9,6 +9,7 @@ import {
 import { ContentName } from "../../../global-components/ContentName/ContentName";
 import CardMedia from "@mui/material/CardMedia";
 import { Grid } from "@mui/material";
+import { SpawnCard } from "./SpawnCard";
 
 type CombatCardType = "Action" | "Spawn" | "Reaction";
 export interface CombatCard {
@@ -50,7 +51,18 @@ export interface ICombatCardProps {
 }
 
 export const CombatCard = (props: ICombatCardProps) => {
+  const [health, setHealth] = useState(0);
+  const [attack, setAttack] = useState(0);
   const [card, setCard] = useState<CombatCard>(props.card ?? newCard);
+  useEffect(() => {
+    if (card == undefined) return;
+    console.log("CARD:", card);
+    if (card.type == "Spawn") {
+      setHealth((card as SpawnCard).health);
+      setAttack((card as SpawnCard).attack);
+    }
+  }, [card]);
+
   useEffect(() => {
     if (props.card == undefined) return;
     setCard(props.card);
@@ -85,13 +97,17 @@ export const CombatCard = (props: ICombatCardProps) => {
       >
         <CardMedia component="img" image={card.image} />
         <CardContent>
-          <ContentName
-            name={card?.name}
-            isEdit={isEdit}
-            updateName={props.updateCardProperty}
-            contentType="Gene"
-            style={props.played ? { fontSize: ".75em" } : {}}
-          ></ContentName>
+          {props.played ? (
+            <></>
+          ) : (
+            <ContentName
+              name={card?.name}
+              isEdit={isEdit}
+              updateName={props.updateCardProperty}
+              contentType="Gene"
+              style={props.played ? { fontSize: ".75em" } : {}}
+            ></ContentName>
+          )}
           {props.played ? (
             <></>
           ) : (
@@ -106,10 +122,10 @@ export const CombatCard = (props: ICombatCardProps) => {
           {props.card?.type == "Spawn" ? (
             <Grid container justifyContent={"space-between"}>
               <Grid item xs={6}>
-                2
+                {attack}
               </Grid>
               <Grid item xs={6}>
-                100
+                {health}
               </Grid>
             </Grid>
           ) : (

@@ -5,14 +5,15 @@ import { Portrait } from "../../Portrait/Portrait";
 import { CombatCard } from "../../../../CombatCards/CombatCard";
 import { Combatant } from "../../../../Combat";
 import { useEffect, useState } from "react";
+import { SpawnCard } from "../../../../CombatCards/SpawnCard";
 
 export interface ITopCombatantProps {
   index: number;
   combatant: Combatant;
   columns?: number;
-  spawn1Slot?: CombatCard | undefined;
-  spawn2Slot?: CombatCard | undefined;
-  spawn3Slot?: CombatCard | undefined;
+  spawn1Slot?: SpawnCard | undefined;
+  spawn2Slot?: SpawnCard | undefined;
+  spawn3Slot?: SpawnCard | undefined;
   reaction1Slot?: CombatCard | undefined;
   reaction2Slot?: CombatCard | undefined;
   reaction3Slot?: CombatCard | undefined;

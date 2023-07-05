@@ -59,25 +59,3 @@ export const PlaySlot = (props: IPlaySlotProps) => {
     </span>
   );
 };
-
-const defaultEmptyCard = (
-  <Card
-    sx={{
-      // minWidth: 50,
-      height: "12em",
-      // maxHeight: "100%",
-      maxWidth: "77%",
-      boxShadow:
-        "0px 3px 6px rgba(0, 0, 0, 0.16), 0px 3px 6px rgba(0, 0, 0, 0.23)" /* Shadow */,
-      overflow: "scroll",
-      "&::-webkit-scrollbar": {
-        display: "none",
-      },
-      "&::MsOverflowStyle": "none",
-      "&::scrollbarWidth": "none",
-      position: "relative",
-    }}
-  >
-    <CardContent></CardContent>
-  </Card>
-);

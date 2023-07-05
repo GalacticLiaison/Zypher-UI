@@ -3,15 +3,16 @@ import { Combatant } from "../../../Combat";
 import { TopCombatant } from "./TopCombatant/TopCombatant";
 import { BottomCombatant } from "./BottomCombatant/BottomCombatant";
 import { useEffect, useState } from "react";
+import { SpawnCard } from "../../../CombatCards/SpawnCard";
 
 export interface ICombatantBoardProps {
   position: "top" | "bottom";
   index: number;
   combatant: Combatant;
   columns?: number | undefined;
-  spawn1Slot?: CombatCard | undefined;
-  spawn2Slot?: CombatCard | undefined;
-  spawn3Slot?: CombatCard | undefined;
+  spawn1Slot?: SpawnCard | undefined;
+  spawn2Slot?: SpawnCard | undefined;
+  spawn3Slot?: SpawnCard | undefined;
   reaction1Slot?: CombatCard | undefined;
   reaction2Slot?: CombatCard | undefined;
   reaction3Slot?: CombatCard | undefined;
