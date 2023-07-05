@@ -5,7 +5,6 @@ import { BottomCombatant } from "./BottomCombatant/BottomCombatant";
 import { useEffect, useState } from "react";
 
 export interface ICombatantBoardProps {
-  isTurn: boolean;
   position: "top" | "bottom";
   index: number;
   combatant: Combatant;

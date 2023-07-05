@@ -46,10 +46,11 @@ export function Battlefield(props: IBattlefieldProps) {
     combatant: Combatant;
     position: "top" | "bottom";
     index: number;
+    isPlayer: boolean;
   };
   const [turnQueue, setTurnQueue] = useState<Turn[]>([
-    { combatant: props.topTeam[0], position: "top", index: 0 },
-    { combatant: props.topTeam[1], position: "top", index: 1 },
+    { combatant: props.topTeam[0], position: "top", index: 0, isPlayer: false },
+    { combatant: props.topTeam[1], position: "top", index: 1, isPlayer: false },
   ]);
   useEffect(() => {
     if (turnQueue) console.log("turnQueue: ", turnQueue);
@@ -60,6 +61,7 @@ export function Battlefield(props: IBattlefieldProps) {
     combatant: props.bottomTeam[0],
     position: "bottom",
     index: 0,
+    isPlayer: true,
   });
   useEffect(() => {
     console.log("currentTurn: ", currentTurn);
@@ -83,6 +85,24 @@ export function Battlefield(props: IBattlefieldProps) {
     setTurnPhase("draw");
     handleDrawCard();
     setTurnPhase("play");
+    if (currentTurn.isPlayer) return;
+    setTimeout(() => {
+      runAiTurn();
+    }, 2000);
+  };
+
+  const runAiTurn = () => {
+    console.log("running ai turn");
+    const combatantBoard =
+      currentTurn.position === "top"
+        ? topTeam[currentTurn.index]
+        : bottomTeam[currentTurn.index];
+    const hand = currentTurn.combatant.hand;
+    const spawn = hand.find((card) => card.type === "Spawn");
+    if (spawn) {
+      combatantBoard.spawn1Slot = spawn;
+    }
+    finishActionPhase();
   };
 
   // End Action Phase Button Press
@@ -124,7 +144,6 @@ export function Battlefield(props: IBattlefieldProps) {
   const [topTeam, setTopTeam] = useState<ICombatantBoardProps[]>(
     props.topTeam.map((combatant, index) => {
       return {
-        isTurn: false,
         position: "top",
         index: index,
         combatant: combatant,
@@ -141,7 +160,6 @@ export function Battlefield(props: IBattlefieldProps) {
   const [bottomTeam, setBottomTeam] = useState<ICombatantBoardProps[]>(
     props.bottomTeam.map((combatant, index) => {
       return {
-        isTurn: false,
         position: "bottom",
         index: index,
         combatant: combatant,
@@ -171,7 +189,6 @@ export function Battlefield(props: IBattlefieldProps) {
             {topTeam.map((combatant) => (
               <CombatantBoard
                 key={combatant.index}
-                isTurn={false}
                 position={combatant.position}
                 index={combatant.index}
                 columns={12 / props.topTeam.length}
@@ -190,7 +207,6 @@ export function Battlefield(props: IBattlefieldProps) {
             {bottomTeam.map((combatant) => (
               <CombatantBoard
                 key={combatant.index}
-                isTurn={false}
                 position={combatant.position}
                 index={combatant.index}
                 columns={12 / props.bottomTeam.length}
