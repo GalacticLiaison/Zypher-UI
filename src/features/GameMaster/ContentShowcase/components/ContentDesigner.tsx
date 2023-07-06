@@ -97,8 +97,6 @@ export const ContentDesigner = (props: IContentDesignerProps) => {
         imageToUpdate?.name
       }`;
       itemToUpdate.image = updatedImageUrl;
-
-      console.log("TEST: ", updatedImageUrl);
     }
 
     if (updateContent != undefined) updateContent.mutate(itemToUpdate);

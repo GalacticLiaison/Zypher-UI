@@ -40,8 +40,8 @@ export const ContentImage = (props: IContentImageProps) => {
     const file = event.target.files[0];
     const base64 = (await convertBase64(file)) as string;
 
-    console.log("file 1", file);
-    console.log("base64", base64);
+    // console.log("file 1", file);
+    // console.log("base64", base64);
     // const image = event.target.files[0];
 
     const url = URL.createObjectURL(event.target.files[0]);
@@ -54,7 +54,7 @@ export const ContentImage = (props: IContentImageProps) => {
 
     // console.log("formData:", formData);
     if (props.updateImage) {
-      console.log("updateImage");
+      // console.log("updateImage");
       props.updateImage({
         name: file.name,
         data: base64,

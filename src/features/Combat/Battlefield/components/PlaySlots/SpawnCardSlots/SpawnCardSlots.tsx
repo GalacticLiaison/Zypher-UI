@@ -1,11 +1,12 @@
-import Grid from "@mui/material/Grid";
-import { IPlaySlotStyleTemplate, PlaySlot } from "../PlaySlot";
-import { CombatCard } from "../../../../CombatCards/CombatCard";
+import { IPlaySlotStyleTemplate } from "../components/PlaySlot/PlaySlot";
+import { SpawnCard } from "../../../../CombatCards/SpawnCard";
+import { useEffect, useState } from "react";
+import { PlaySlots } from "../PlaySlots";
 
-interface ISpawnCardSlotsProps {
-  slot1Card: CombatCard | undefined;
-  slot2Card: CombatCard | undefined;
-  slot3Card: CombatCard | undefined;
+export type SpawnSlot = SpawnCard | null;
+
+export interface ISpawnCardSlotsProps {
+  slotLayout: Map<number, SpawnSlot>;
   droppableIdPrefix: string;
 }
 
@@ -14,29 +15,19 @@ export function SpawnCardSlots(props: ISpawnCardSlotsProps) {
     backgroundColor: "lightgreen",
   };
 
+  const [slotLayout, setSlotLayout] = useState<Map<number, SpawnSlot>>(
+    props.slotLayout
+  );
+  useEffect(() => {
+    setSlotLayout(new Map(props.slotLayout));
+  }, [props.slotLayout]);
+
   return (
-    <Grid id="spawns" container item justifyContent="center" xs={12}>
-      <Grid item xs={2}>
-        <PlaySlot
-          droppableId={`${props.droppableIdPrefix}1`}
-          card={props.slot1Card}
-          styleTemplate={styleTemplate}
-        ></PlaySlot>
-      </Grid>
-      <Grid item xs={2}>
-        <PlaySlot
-          droppableId={`${props.droppableIdPrefix}2`}
-          card={props.slot2Card}
-          styleTemplate={styleTemplate}
-        ></PlaySlot>
-      </Grid>
-      <Grid item xs={2}>
-        <PlaySlot
-          droppableId={`${props.droppableIdPrefix}3`}
-          card={props.slot3Card}
-          styleTemplate={styleTemplate}
-        ></PlaySlot>
-      </Grid>
-    </Grid>
+    <PlaySlots
+      slots={slotLayout}
+      droppableIdPrefix={props.droppableIdPrefix}
+      styleTemplate={styleTemplate}
+      id="Spawns"
+    ></PlaySlots>
   );
 }

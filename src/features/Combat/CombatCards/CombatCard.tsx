@@ -42,11 +42,11 @@ const newCard: CombatCard = {
 };
 
 export interface ICombatCardProps {
-  card?: CombatCard;
-  isEdit?: boolean;
+  card?: CombatCard | null;
+  played?: boolean;
   updateCardProperty?: UpdateCardProperty;
   updateImage?: UpdateImage;
-  played?: boolean;
+  isEdit?: boolean;
   size?: { height: number | string; maxWidth: number | string };
 }
 
@@ -54,9 +54,9 @@ export const CombatCard = (props: ICombatCardProps) => {
   const [health, setHealth] = useState(0);
   const [attack, setAttack] = useState(0);
   const [card, setCard] = useState<CombatCard>(props.card ?? newCard);
+
   useEffect(() => {
     if (card == undefined) return;
-    console.log("CARD:", card);
     if (card.type == "Spawn") {
       setHealth((card as SpawnCard).health);
       setAttack((card as SpawnCard).attack);

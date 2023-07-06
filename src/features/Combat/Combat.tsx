@@ -48,29 +48,63 @@ export const Combat = () => {
     health: 2,
   };
 
+  const wolf: SpawnCard = {
+    id: 789,
+    name: "Space Wolf",
+    description: "doggo in space",
+    cost: 1,
+    type: "Spawn",
+    subtype: "Test",
+    rarity: "Common",
+    image: "src/assets/enemies/wolfCreature2.png",
+    attack: 2,
+    health: 3,
+  };
+
+  const cyberSoldier: SpawnCard = {
+    id: 789,
+    name: "Cyber Soldier",
+    description: "He is a soldier, but cyber",
+    cost: 1,
+    type: "Spawn",
+    subtype: "Test",
+    rarity: "Common",
+    image: "src/assets/enemies/cyberSoldier.png",
+    attack: 1,
+    health: 1,
+  };
+
   const topTeam: Combatant[] = [
     {
       name: "Enemy 1",
       health: 100,
-      hand: [laserBlast, forceField, deployableAutoTurret],
+      hand: [
+        JSON.parse(JSON.stringify(laserBlast)),
+        JSON.parse(JSON.stringify(forceField)),
+        JSON.parse(JSON.stringify(cyberSoldier)),
+      ],
       deck: [
-        deployableAutoTurret,
-        laserBlast,
-        deployableAutoTurret,
-        forceField,
-        deployableAutoTurret,
+        JSON.parse(JSON.stringify(cyberSoldier)),
+        JSON.parse(JSON.stringify(laserBlast)),
+        JSON.parse(JSON.stringify(cyberSoldier)),
+        JSON.parse(JSON.stringify(forceField)),
+        JSON.parse(JSON.stringify(cyberSoldier)),
       ],
     },
     {
       name: "Enemy 2",
       health: 100,
-      hand: [laserBlast, forceField, deployableAutoTurret],
+      hand: [
+        JSON.parse(JSON.stringify(laserBlast)),
+        JSON.parse(JSON.stringify(forceField)),
+        JSON.parse(JSON.stringify(cyberSoldier)),
+      ],
       deck: [
-        deployableAutoTurret,
-        laserBlast,
-        deployableAutoTurret,
-        forceField,
-        deployableAutoTurret,
+        JSON.parse(JSON.stringify(cyberSoldier)),
+        JSON.parse(JSON.stringify(laserBlast)),
+        JSON.parse(JSON.stringify(cyberSoldier)),
+        JSON.parse(JSON.stringify(forceField)),
+        JSON.parse(JSON.stringify(cyberSoldier)),
       ],
     },
   ];
@@ -78,13 +112,17 @@ export const Combat = () => {
     {
       name: "Player",
       health: 100,
-      hand: [laserBlast, forceField, deployableAutoTurret],
+      hand: [
+        JSON.parse(JSON.stringify(wolf)),
+        JSON.parse(JSON.stringify(forceField)),
+        JSON.parse(JSON.stringify(deployableAutoTurret)),
+      ],
       deck: [
-        deployableAutoTurret,
-        laserBlast,
-        deployableAutoTurret,
-        forceField,
-        deployableAutoTurret,
+        JSON.parse(JSON.stringify(deployableAutoTurret)),
+        JSON.parse(JSON.stringify(laserBlast)),
+        JSON.parse(JSON.stringify(deployableAutoTurret)),
+        JSON.parse(JSON.stringify(forceField)),
+        JSON.parse(JSON.stringify(deployableAutoTurret)),
       ],
     },
   ];

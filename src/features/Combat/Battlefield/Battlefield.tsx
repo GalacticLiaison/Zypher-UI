@@ -10,6 +10,9 @@ import {
 } from "./components/CombatantBoard/CombatantBoard";
 import { drawCard } from "./utils/battle-field-actions";
 import { SpawnCard } from "../CombatCards/SpawnCard";
+import { ReactionCard } from "../CombatCards/ReactionCard";
+import { SpawnSlot } from "./components/PlaySlots/SpawnCardSlots/SpawnCardSlots";
+import { ReactionSlot } from "./components/PlaySlots/ReactionCardSlots/ReactionCardSlots";
 
 export interface Spawn {
   card: CombatCard | undefined;
@@ -21,52 +24,47 @@ export interface Reaction {
   card: CombatCard | undefined;
 }
 
-// Combatant
-// export interface Combatant {
-//   name: string;
-//   health: number;
-//   hand: CombatCard[];
-//   deck: CombatCard[];
-//   board: {
-//     spawn1: Spawn;
-//     spawn2: Spawn;
-//     spawn3: Spawn;
-//     reaction1: Reaction;
-//     reaction2: Reaction;
-//     reaction3: Reaction;
-//   };
-// }
-
 export interface IBattlefieldProps {
   topTeam: Combatant[];
   bottomTeam: Combatant[];
 }
 
+// Playing cards costs action points (influenced by stamina, agility, maybe will)
+// in addition to the card's other costs (mana, health, etc.)
+
 export function Battlefield(props: IBattlefieldProps) {
   type Turn = {
     combatant: Combatant;
     position: "top" | "bottom";
-    index: number;
+    positionIndex: number;
     isPlayer: boolean;
   };
   const [turnQueue, setTurnQueue] = useState<Turn[]>([
-    { combatant: props.topTeam[0], position: "top", index: 0, isPlayer: false },
-    { combatant: props.topTeam[1], position: "top", index: 1, isPlayer: false },
+    {
+      combatant: props.topTeam[0],
+      position: "top",
+      positionIndex: 0,
+      isPlayer: false,
+    },
+    {
+      combatant: props.topTeam[1],
+      position: "top",
+      positionIndex: 1,
+      isPlayer: false,
+    },
   ]);
-  useEffect(() => {
-    if (turnQueue) console.log("turnQueue: ", turnQueue);
-  }, [turnQueue]);
+  // useEffect(() => {
+  //   if (turnQueue) console.log("turnQueue: ", turnQueue);
+  // }, [turnQueue]);
 
   const hasDrawnCard = useRef<boolean>(false);
   const [currentTurn, setCurrentTurn] = useState<Turn>({
     combatant: props.bottomTeam[0],
     position: "bottom",
-    index: 0,
+    positionIndex: 0,
     isPlayer: true,
   });
   useEffect(() => {
-    console.log("currentTurn: ", currentTurn);
-    console.log("hasDrawnCard: ", hasDrawnCard);
     if (hasDrawnCard.current) return;
     beginTurn();
     hasDrawnCard.current = true;
@@ -93,16 +91,22 @@ export function Battlefield(props: IBattlefieldProps) {
   };
 
   const runAiTurn = () => {
-    console.log("running ai turn");
     const combatantBoard =
       currentTurn.position === "top"
-        ? topTeam[currentTurn.index]
-        : bottomTeam[currentTurn.index];
+        ? topTeam[currentTurn.positionIndex]
+        : bottomTeam[currentTurn.positionIndex];
     const hand = currentTurn.combatant.hand;
     const spawn = hand.find((card) => card.type === "Spawn");
+
     if (spawn) {
-      combatantBoard.spawn1Slot = spawn as SpawnCard;
+      const spawnSlotLayout = new Map(combatantBoard.spawnSlotLayout);
+
+      if (spawnSlotLayout.get(0)) return;
+
+      spawnSlotLayout.set(0, spawn as SpawnCard);
+      combatantBoard.spawnSlotLayout = spawnSlotLayout;
     }
+
     finishActionPhase();
   };
 
@@ -113,41 +117,66 @@ export function Battlefield(props: IBattlefieldProps) {
 
   const beginSpawnPhase = () => {
     setTurnPhase("spawn");
+    spawnsAttack();
     endTurn();
   };
 
   const spawnsAttack = () => {
     const combatantBoard =
       currentTurn.position === "top"
-        ? topTeam[currentTurn.index]
-        : bottomTeam[currentTurn.index];
+        ? topTeam[currentTurn.positionIndex]
+        : bottomTeam[currentTurn.positionIndex];
 
-    const spawns = [
-      combatantBoard.spawn1Slot,
-      combatantBoard.spawn2Slot,
-      combatantBoard.spawn3Slot,
-    ].filter((spawn) => spawn !== undefined);
-
-    spawns.forEach((spawn) => {
-      if (spawn) {
+    combatantBoard.spawnSlotLayout.forEach((spawn) => {
+      if (spawn && spawn.type === "Spawn") {
         attackRandomEnemy(spawn);
       }
     });
   };
 
-  const attackRandomEnemy = (spawn: SpawnCard) => {
-    const enemyTeam = currentTurn.position === "top" ? bottomTeam : topTeam;
-    const enemyBoard = enemyTeam[Math.floor(Math.random() * enemyTeam.length)];
-    const enemies = [
-      enemyBoard.spawn1Slot,
-      enemyBoard.spawn2Slot,
-      enemyBoard.spawn3Slot,
-    ].filter((enemy) => enemy !== undefined);
+  const attackRandomEnemy = (attackingSpawn: SpawnCard) => {
+    const opponentsTeam = currentTurn.position === "top" ? bottomTeam : topTeam;
+    const opponentsBoard =
+      opponentsTeam[Math.floor(Math.random() * opponentsTeam.length)];
+    const opponentsSlotLayout = new Map(opponentsBoard.spawnSlotLayout);
+
+    type Slot = {
+      index: number;
+      spawn: SpawnCard | null;
+    };
+
+    const enemySpawnSlots: Slot[] = [];
+    for (let index = 0; index < opponentsSlotLayout.size; index++) {
+      const slot = opponentsSlotLayout.get(index);
+      enemySpawnSlots.push({
+        index: index,
+        spawn: slot ? slot : null,
+      });
+    }
+
+    const enemies = enemySpawnSlots.filter((enemy) => enemy.spawn !== null);
+
+    console.log("enemySpawnSlots: ", enemySpawnSlots);
+    console.log("enemies: ", enemies);
 
     const enemy = enemies[Math.floor(Math.random() * enemies.length)];
-    if (enemy) {
-      enemy.health -= spawn.attack;
+    if (enemy && enemy.spawn) {
+      enemy.spawn.health -= attackingSpawn.attack;
+      console.log(`${attackingSpawn.name} attacks ${enemy.spawn.name}`);
+      opponentsSlotLayout.set(enemy.index, enemy.spawn);
+      opponentsBoard.spawnSlotLayout = opponentsSlotLayout;
     }
+
+    // setBottomTeam([...bottomTeam]);
+    // setTopTeam([...topTeam]);
+
+    // const enemy = enemies.get(
+    //   Math.floor(Math.random() * opponentsBoard.spawnSlotLayout.size)
+    // );
+
+    // if (enemy) {
+    //   enemy.health -= spawn.attack;
+    // }
   };
 
   const endTurn = () => {
@@ -176,18 +205,26 @@ export function Battlefield(props: IBattlefieldProps) {
     }
   };
 
+  const startingSpawnMap = new Map<number, SpawnSlot>();
+  startingSpawnMap.set(0, null);
+  startingSpawnMap.set(1, null);
+  startingSpawnMap.set(2, null);
+
+  const startingReactionMap = new Map<number, ReactionSlot>();
+  startingReactionMap.set(0, null);
+  startingReactionMap.set(1, null);
+  startingReactionMap.set(2, null);
+
   const [topTeam, setTopTeam] = useState<ICombatantBoardProps[]>(
     props.topTeam.map((combatant, index) => {
       return {
         position: "top",
         index: index,
         combatant: combatant,
-        spawn1Slot: undefined,
-        spawn2Slot: undefined,
-        spawn3Slot: undefined,
-        reaction1Slot: undefined,
-        reaction2Slot: undefined,
-        reaction3Slot: undefined,
+        spawnSlotLayout: new Map<number, SpawnCard | null>(startingSpawnMap),
+        reactionSlotLayout: new Map<number, ReactionCard | null>(
+          startingReactionMap
+        ),
         handleCardClick: handleCardClick,
       };
     })
@@ -198,12 +235,10 @@ export function Battlefield(props: IBattlefieldProps) {
         position: "bottom",
         index: index,
         combatant: combatant,
-        spawn1Slot: undefined,
-        spawn2Slot: undefined,
-        spawn3Slot: undefined,
-        reaction1Slot: undefined,
-        reaction2Slot: undefined,
-        reaction3Slot: undefined,
+        spawnSlotLayout: new Map<number, SpawnCard | null>(startingSpawnMap),
+        reactionSlotLayout: new Map<number, ReactionCard | null>(
+          startingReactionMap
+        ),
         handleCardClick: handleCardClick,
       };
     })
@@ -228,12 +263,8 @@ export function Battlefield(props: IBattlefieldProps) {
                 index={combatant.index}
                 columns={12 / props.topTeam.length}
                 combatant={combatant.combatant}
-                spawn1Slot={combatant.spawn1Slot}
-                spawn2Slot={combatant.spawn2Slot}
-                spawn3Slot={combatant.spawn3Slot}
-                reaction1Slot={combatant.reaction1Slot}
-                reaction2Slot={combatant.reaction2Slot}
-                reaction3Slot={combatant.reaction3Slot}
+                spawnSlotLayout={combatant.spawnSlotLayout}
+                reactionSlotLayout={combatant.reactionSlotLayout}
                 handleCardClick={handleCardClick}
               ></CombatantBoard>
             ))}
@@ -246,12 +277,8 @@ export function Battlefield(props: IBattlefieldProps) {
                 index={combatant.index}
                 columns={12 / props.bottomTeam.length}
                 combatant={combatant.combatant}
-                spawn1Slot={combatant.spawn1Slot}
-                spawn2Slot={combatant.spawn2Slot}
-                spawn3Slot={combatant.spawn3Slot}
-                reaction1Slot={combatant.reaction1Slot}
-                reaction2Slot={combatant.reaction2Slot}
-                reaction3Slot={combatant.reaction3Slot}
+                spawnSlotLayout={combatant.spawnSlotLayout}
+                reactionSlotLayout={combatant.reactionSlotLayout}
                 handleCardClick={handleCardClick}
               ></CombatantBoard>
             ))}
@@ -276,17 +303,19 @@ export function Battlefield(props: IBattlefieldProps) {
   );
 
   function handleDragStart(event: DragStartEvent) {
-    console.log("Drag Start", event);
     setDraggedCardId(event?.active?.id);
   }
 
   function handleDragEnd(event: any) {
     const { over } = event;
-    console.log("over: ", over);
 
     if (over) {
-      const [overBoardPosition, overCombatantIndex, overCardPosition] =
-        over.id.split("-");
+      const [
+        overBoardPosition,
+        overCombatantIndex,
+        overSlotType,
+        overSlotIndex,
+      ] = over.id.split("-");
 
       const [
         draggedBoardPosition,
@@ -298,73 +327,66 @@ export function Battlefield(props: IBattlefieldProps) {
       console.table({
         overBoardPosition,
         overCombatantIndex,
-        overCardPosition,
+        overSlotType,
+        overSlotIndex,
         draggedBoardPosition,
         draggedCombatantIndex,
         draggedCardPosition,
         handIndexString,
       });
 
+      if (overBoardPosition != "top" && overBoardPosition != "bottom") return;
+
       const sameBoardPosition = overBoardPosition == draggedBoardPosition;
       const sameCombatant = overCombatantIndex == draggedCombatantIndex;
       if (sameBoardPosition && sameCombatant) {
-        let boardPosition;
-        switch (overBoardPosition) {
-          case "top":
-            boardPosition = "top";
-            break;
-          case "bottom":
-            boardPosition = "bottom";
-            break;
-          default:
-            throw new Error("Invalid board position");
-        }
+        playCard();
+      }
 
+      function playCard() {
         let combatantBoard =
-          boardPosition == "top"
+          overBoardPosition == "top"
             ? topTeam[overCombatantIndex]
             : bottomTeam[overCombatantIndex];
         let combatant = combatantBoard.combatant;
         const handIndex = parseInt(handIndexString);
 
+        //#region Developer Note: On Using a Map as a React State
+        /*
+        Immutable Updates: React relies on immutable data updates to detect changes in props 
+        or state. It means that you should avoid directly mutating the existing Map object 
+        and instead create a new Map object with the desired changes. 
+        This ensures that React detects the change and triggers a re-render.
+        
+        Shallow Equality Check: React performs a shallow equality check to determine 
+        if the props have changed. When you use a Map as a prop, React checks if the 
+        reference to the Map object has changed, not its internal content. 
+        So if you modify the content of the Map using the set() method, 
+        the reference to the Map object remains the same, and React may not detect the change.
+        */
+        //#endregion
         const card = combatant.hand[handIndex];
-        if (card?.type == "Spawn") {
-          switch (overCardPosition) {
-            case "spawn1":
-              combatantBoard.spawn1Slot = card as SpawnCard;
-              removeCardFromHand(combatant.hand, handIndex);
-              break;
-            case "spawn2":
-              combatantBoard.spawn2Slot = card as SpawnCard;
-              removeCardFromHand(combatant.hand, handIndex);
-              break;
-            case "spawn3":
-              combatantBoard.spawn3Slot = card as SpawnCard;
-              removeCardFromHand(combatant.hand, handIndex);
-              break;
-            default:
-              break;
-          }
+        switch (card?.type) {
+          case "Spawn":
+            const spawnSlotLayout = new Map(combatantBoard.spawnSlotLayout);
+            spawnSlotLayout.set(parseInt(overSlotIndex), card as SpawnCard);
+            combatantBoard.spawnSlotLayout = spawnSlotLayout;
+            break;
+          case "Reaction":
+            const reactionSlotLayout = new Map(
+              combatantBoard.reactionSlotLayout
+            );
+            reactionSlotLayout.set(
+              parseInt(overSlotIndex),
+              card as ReactionCard
+            );
+            combatantBoard.reactionSlotLayout = reactionSlotLayout;
+            break;
+          default:
+            break;
         }
 
-        if (card?.type == "Reaction") {
-          switch (overCardPosition) {
-            case "reaction1":
-              combatantBoard.reaction1Slot = card;
-              removeCardFromHand(combatant.hand, handIndex);
-              break;
-            case "reaction2":
-              combatantBoard.reaction2Slot = card;
-              removeCardFromHand(combatant.hand, handIndex);
-              break;
-            case "reaction3":
-              combatantBoard.reaction3Slot = card;
-              removeCardFromHand(combatant.hand, handIndex);
-              break;
-            default:
-              break;
-          }
-        }
+        removeCardFromHand(combatant.hand, handIndex);
 
         overBoardPosition == "top"
           ? setTopTeam([...topTeam])

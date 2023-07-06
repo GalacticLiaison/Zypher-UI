@@ -1,6 +1,12 @@
 import Grid from "@mui/material/Grid";
-import { ReactionCardSlots } from "../../PlaySlots/ReactionCardSlots/ReactionCardSlots";
-import { SpawnCardSlots } from "../../PlaySlots/SpawnCardSlots/SpawnCardSlots";
+import {
+  ReactionCardSlots,
+  ReactionSlot,
+} from "../../PlaySlots/ReactionCardSlots/ReactionCardSlots";
+import {
+  SpawnCardSlots,
+  SpawnSlot,
+} from "../../PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { Portrait } from "../../Portrait/Portrait";
 import { CombatCard } from "../../../../CombatCards/CombatCard";
 import { Combatant } from "../../../../Combat";
@@ -12,12 +18,8 @@ export interface IBottomCombatantProps {
   index: number;
   combatant: Combatant;
   columns?: number;
-  spawn1Slot?: CombatCard | undefined;
-  spawn2Slot?: CombatCard | undefined;
-  spawn3Slot?: CombatCard | undefined;
-  reaction1Slot?: CombatCard | undefined;
-  reaction2Slot?: CombatCard | undefined;
-  reaction3Slot?: CombatCard | undefined;
+  spawnSlotLayout: Map<number, SpawnSlot>;
+  reactionSlotLayout: Map<number, ReactionSlot>;
   handleCardClick: (card: CombatCard) => void;
 }
 
@@ -27,19 +29,29 @@ export const BottomCombatant = (props: IBottomCombatantProps) => {
     setCombatant(props.combatant);
   }, [props.combatant]);
 
+  const [spawnSlotLayout, setSpawnSlotLayout] = useState<
+    Map<number, SpawnSlot>
+  >(props.spawnSlotLayout);
+  useEffect(() => {
+    setSpawnSlotLayout(new Map(props.spawnSlotLayout));
+  }, [props.spawnSlotLayout]);
+
+  const [reactionSlotLayout, setReactionSlotLayout] = useState<
+    Map<number, ReactionSlot>
+  >(props.reactionSlotLayout);
+  useEffect(() => {
+    setReactionSlotLayout(new Map(props.reactionSlotLayout));
+  }, [props.reactionSlotLayout]);
+
   return (
     <Grid container item xs={props.columns ?? 12} spacing={3}>
       <SpawnCardSlots
-        slot1Card={props.spawn1Slot}
-        slot2Card={props.spawn2Slot}
-        slot3Card={props.spawn3Slot}
-        droppableIdPrefix={`bottom-${props.index}-spawn`}
+        slotLayout={spawnSlotLayout}
+        droppableIdPrefix={`bottom-${props.index}-spawn-`}
       ></SpawnCardSlots>
       <ReactionCardSlots
-        slot1Card={props.reaction1Slot}
-        slot2Card={props.reaction2Slot}
-        slot3Card={props.reaction3Slot}
-        droppableIdPrefix={`bottom-${props.index}-reaction`}
+        slotLayout={reactionSlotLayout}
+        droppableIdPrefix={`bottom-${props.index}-reaction-`}
       ></ReactionCardSlots>
       <Grid id="playerCards" container item spacing={3} xs={12}>
         <Grid item xs={10}>

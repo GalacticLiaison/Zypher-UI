@@ -3,19 +3,16 @@ import { Combatant } from "../../../Combat";
 import { TopCombatant } from "./TopCombatant/TopCombatant";
 import { BottomCombatant } from "./BottomCombatant/BottomCombatant";
 import { useEffect, useState } from "react";
-import { SpawnCard } from "../../../CombatCards/SpawnCard";
+import { SpawnSlot } from "../PlaySlots/SpawnCardSlots/SpawnCardSlots";
+import { ReactionSlot } from "../PlaySlots/ReactionCardSlots/ReactionCardSlots";
 
 export interface ICombatantBoardProps {
   position: "top" | "bottom";
   index: number;
   combatant: Combatant;
   columns?: number | undefined;
-  spawn1Slot?: SpawnCard | undefined;
-  spawn2Slot?: SpawnCard | undefined;
-  spawn3Slot?: SpawnCard | undefined;
-  reaction1Slot?: CombatCard | undefined;
-  reaction2Slot?: CombatCard | undefined;
-  reaction3Slot?: CombatCard | undefined;
+  spawnSlotLayout: Map<number, SpawnSlot>;
+  reactionSlotLayout: Map<number, ReactionSlot>;
   handleCardClick: (card: CombatCard) => void;
 }
 
@@ -25,17 +22,28 @@ export const CombatantBoard = (props: ICombatantBoardProps) => {
     setCombatant(props.combatant);
   }, [props.combatant]);
 
+  const [spawnSlotLayout, setSpawnSlotLayout] = useState<
+    Map<number, SpawnSlot>
+  >(props.spawnSlotLayout);
+  useEffect(() => {
+    console.log("Change detected in spawnSlotLayout: 1");
+    setSpawnSlotLayout(new Map(props.spawnSlotLayout));
+  }, [props.spawnSlotLayout]);
+
+  const [reactionSlotLayout, setReactionSlotLayout] = useState<
+    Map<number, ReactionSlot>
+  >(props.reactionSlotLayout);
+  useEffect(() => {
+    setReactionSlotLayout(new Map(props.reactionSlotLayout));
+  }, [props.reactionSlotLayout]);
+
   return props.position === "top" ? (
     <TopCombatant
       index={props.index}
       columns={props.columns}
       combatant={combatant}
-      spawn1Slot={props.spawn1Slot}
-      spawn2Slot={props.spawn2Slot}
-      spawn3Slot={props.spawn3Slot}
-      reaction1Slot={props.reaction1Slot}
-      reaction2Slot={props.reaction2Slot}
-      reaction3Slot={props.reaction3Slot}
+      spawnSlotLayout={spawnSlotLayout}
+      reactionSlotLayout={reactionSlotLayout}
       handleCardClick={props.handleCardClick}
     ></TopCombatant>
   ) : (
@@ -43,12 +51,8 @@ export const CombatantBoard = (props: ICombatantBoardProps) => {
       index={props.index}
       columns={props.columns}
       combatant={combatant}
-      spawn1Slot={props.spawn1Slot}
-      spawn2Slot={props.spawn2Slot}
-      spawn3Slot={props.spawn3Slot}
-      reaction1Slot={props.reaction1Slot}
-      reaction2Slot={props.reaction2Slot}
-      reaction3Slot={props.reaction3Slot}
+      spawnSlotLayout={spawnSlotLayout}
+      reactionSlotLayout={reactionSlotLayout}
       handleCardClick={props.handleCardClick}
     ></BottomCombatant>
   );

@@ -1,11 +1,20 @@
 import Grid from "@mui/material/Grid";
-import { IPlaySlotStyleTemplate, PlaySlot } from "../PlaySlot";
-import { CombatCard } from "../../../../CombatCards/CombatCard";
+import { ReactionCard } from "../../../../CombatCards/ReactionCard";
+import { useEffect, useState } from "react";
+import {
+  determineNumberOfSlots,
+  determineSlotWidth,
+} from "../utils/card-slot-helpers";
+import {
+  IPlaySlotStyleTemplate,
+  PlaySlot,
+} from "../components/PlaySlot/PlaySlot";
+import { PlaySlots } from "../PlaySlots";
 
-interface IReactionCardSlotsProps {
-  slot1Card: CombatCard | undefined;
-  slot2Card: CombatCard | undefined;
-  slot3Card: CombatCard | undefined;
+export type ReactionSlot = ReactionCard | null;
+
+export interface IReactionCardSlotsProps {
+  slotLayout: Map<number, ReactionSlot>;
   droppableIdPrefix: string;
 }
 
@@ -14,29 +23,19 @@ export function ReactionCardSlots(props: IReactionCardSlotsProps) {
     backgroundColor: "salmon",
   };
 
+  const [slotLayout, setSlotLayout] = useState<Map<number, ReactionSlot>>(
+    props.slotLayout
+  );
+  useEffect(() => {
+    setSlotLayout(new Map(props.slotLayout));
+  }, [props.slotLayout]);
+
   return (
-    <Grid id="reactions" container item justifyContent="center" xs={12}>
-      <Grid item xs={2}>
-        <PlaySlot
-          droppableId={`${props.droppableIdPrefix}1`}
-          card={props.slot1Card}
-          styleTemplate={styleTemplate}
-        ></PlaySlot>
-      </Grid>
-      <Grid item xs={2}>
-        <PlaySlot
-          droppableId={`${props.droppableIdPrefix}2`}
-          card={props.slot2Card}
-          styleTemplate={styleTemplate}
-        ></PlaySlot>
-      </Grid>
-      <Grid item xs={2}>
-        <PlaySlot
-          droppableId={`${props.droppableIdPrefix}3`}
-          card={props.slot3Card}
-          styleTemplate={styleTemplate}
-        ></PlaySlot>
-      </Grid>
-    </Grid>
+    <PlaySlots
+      slots={slotLayout}
+      droppableIdPrefix={props.droppableIdPrefix}
+      styleTemplate={styleTemplate}
+      id="Reactions"
+    ></PlaySlots>
   );
 }
