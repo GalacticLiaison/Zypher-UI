@@ -26,7 +26,6 @@ export const CombatantBoard = (props: ICombatantBoardProps) => {
     Map<number, SpawnSlot>
   >(props.spawnSlotLayout);
   useEffect(() => {
-    console.log("Change detected in spawnSlotLayout: 1");
     setSpawnSlotLayout(new Map(props.spawnSlotLayout));
   }, [props.spawnSlotLayout]);
 

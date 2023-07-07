@@ -125,7 +125,16 @@ export const CombatCard = (props: ICombatCardProps) => {
                 {attack}
               </Grid>
               <Grid item xs={6}>
-                {health}
+                <div
+                  style={{
+                    color:
+                      (props.card as SpawnCard).totalHealth > health
+                        ? "red"
+                        : "inherit",
+                  }}
+                >
+                  {health}
+                </div>
               </Grid>
             </Grid>
           ) : (

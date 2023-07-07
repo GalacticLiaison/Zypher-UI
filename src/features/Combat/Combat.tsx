@@ -46,6 +46,7 @@ export const Combat = () => {
     image: "src/assets/cards/deployableAutoTurret.png",
     attack: 1,
     health: 2,
+    totalHealth: 2,
   };
 
   const wolf: SpawnCard = {
@@ -59,6 +60,7 @@ export const Combat = () => {
     image: "src/assets/enemies/wolfCreature2.png",
     attack: 2,
     health: 3,
+    totalHealth: 3,
   };
 
   const cyberSoldier: SpawnCard = {
@@ -72,6 +74,7 @@ export const Combat = () => {
     image: "src/assets/enemies/cyberSoldier.png",
     attack: 1,
     health: 1,
+    totalHealth: 1,
   };
 
   const topTeam: Combatant[] = [

@@ -35,7 +35,7 @@ export const PlaySlots = (props: IPlaySlotsProps) => {
       xs={12}
       spacing={1}
     >
-      {[...Array(determineNumberOfSlots(slots))].map((value, index) => {
+      {[...Array(determineNumberOfSlots(slots))].map((x, index) => {
         const slot = slots.get(index);
         return (
           <Grid key={index} item xs={determineSlotWidth(slots)}>

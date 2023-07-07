@@ -19,16 +19,9 @@ export interface IPlaySlotProps {
 export const PlaySlot = (props: IPlaySlotProps) => {
   const [card, setCard] = useState<CombatCard | null | undefined>(props.card);
   useEffect(() => {
-    if (props.card == undefined) return;
-    console.log("CARD CHANGED!: ", props.card);
+    if (props.card === undefined) return;
     setCard(props.card);
   }, [props.card]);
-
-  const [canAttack, setCanAttack] = useState<boolean>(false);
-  useEffect(() => {
-    if (props.canAttack == undefined) return;
-    if (card && props.canAttack == true) setCanAttack(props.canAttack);
-  }, [props.canAttack]);
 
   const slot = (
     <div

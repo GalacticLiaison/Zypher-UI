@@ -53,9 +53,6 @@ export function Battlefield(props: IBattlefieldProps) {
       isPlayer: false,
     },
   ]);
-  // useEffect(() => {
-  //   if (turnQueue) console.log("turnQueue: ", turnQueue);
-  // }, [turnQueue]);
 
   const hasDrawnCard = useRef<boolean>(false);
   const [currentTurn, setCurrentTurn] = useState<Turn>({
@@ -156,27 +153,18 @@ export function Battlefield(props: IBattlefieldProps) {
 
     const enemies = enemySpawnSlots.filter((enemy) => enemy.spawn !== null);
 
-    console.log("enemySpawnSlots: ", enemySpawnSlots);
-    console.log("enemies: ", enemies);
-
     const enemy = enemies[Math.floor(Math.random() * enemies.length)];
     if (enemy && enemy.spawn) {
-      enemy.spawn.health -= attackingSpawn.attack;
       console.log(`${attackingSpawn.name} attacks ${enemy.spawn.name}`);
-      opponentsSlotLayout.set(enemy.index, enemy.spawn);
+      enemy.spawn.health -= attackingSpawn.attack;
+      if (enemy.spawn.health <= 0) {
+        opponentsSlotLayout.set(enemy.index, null);
+      } else {
+        opponentsSlotLayout.set(enemy.index, enemy.spawn);
+      }
+
       opponentsBoard.spawnSlotLayout = opponentsSlotLayout;
     }
-
-    // setBottomTeam([...bottomTeam]);
-    // setTopTeam([...topTeam]);
-
-    // const enemy = enemies.get(
-    //   Math.floor(Math.random() * opponentsBoard.spawnSlotLayout.size)
-    // );
-
-    // if (enemy) {
-    //   enemy.health -= spawn.attack;
-    // }
   };
 
   const endTurn = () => {

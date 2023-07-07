@@ -4,4 +4,5 @@ export interface SpawnCard extends CombatCard {
   type: "Spawn";
   attack: number;
   health: number;
+  totalHealth: number;
 }
