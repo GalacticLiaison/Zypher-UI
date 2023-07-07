@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { Combatant } from "../../../Combat";
+import { Combatant } from "../../../../../Combat";
 
 export interface IDeckProps {
   combatant: Combatant;

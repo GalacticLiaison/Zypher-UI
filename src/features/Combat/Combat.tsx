@@ -1,6 +1,6 @@
-import { Battlefield } from "./Battlefield/Battlefield";
 import { CombatCard } from "./CombatCards/CombatCard";
 import { SpawnCard } from "./CombatCards/SpawnCard";
+import { BattleExecutor } from "./Battle/BattleExecutor";
 
 export interface Combatant {
   name: string;
@@ -10,8 +10,11 @@ export interface Combatant {
 }
 
 export const Combat = () => {
-  // Step 1 - fetch battle data from API
-  //  - Who are the enemies?
+  /*
+    Responsibilities:
+    - Entrance to the Combat Feature
+    - Fetches Data (combatants, cards, etc)
+  */
 
   const laserBlast: CombatCard = {
     id: 123,
@@ -77,7 +80,7 @@ export const Combat = () => {
     totalHealth: 1,
   };
 
-  const topTeam: Combatant[] = [
+  const topTeamCombatants: Combatant[] = [
     {
       name: "Enemy 1",
       health: 100,
@@ -111,7 +114,7 @@ export const Combat = () => {
       ],
     },
   ];
-  const bottomTeam: Combatant[] = [
+  const bottomTeamCombatants: Combatant[] = [
     {
       name: "Player",
       health: 100,
@@ -130,5 +133,10 @@ export const Combat = () => {
     },
   ];
 
-  return <Battlefield topTeam={topTeam} bottomTeam={bottomTeam}></Battlefield>;
+  return (
+    <BattleExecutor
+      topTeamCombatants={topTeamCombatants}
+      bottomTeamCombatants={bottomTeamCombatants}
+    ></BattleExecutor>
+  );
 };

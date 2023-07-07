@@ -61,5 +61,10 @@ Battle Mechanics
 - <br />
 
 - if done right this could be the money making engine
+
   - allow multiplayer where you use the char from your save!
   - possible rewards
+
+- spawns can move side to side on spots instead of attack
+  - maybe spawns dont attack the turn they are summoned?
+  - opens up focus on spawn placement to avoid/trigger effects

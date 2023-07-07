@@ -1,7 +1,7 @@
 import { IPlaySlotStyleTemplate } from "../components/PlaySlot/PlaySlot";
-import { SpawnCard } from "../../../../CombatCards/SpawnCard";
 import { useEffect, useState } from "react";
 import { PlaySlots } from "../PlaySlots";
+import { SpawnCard } from "../../../../../../CombatCards/SpawnCard";
 
 export type SpawnSlot = SpawnCard | null;
 

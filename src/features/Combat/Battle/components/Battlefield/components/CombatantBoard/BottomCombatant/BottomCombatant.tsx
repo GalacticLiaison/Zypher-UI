@@ -20,6 +20,7 @@ export interface IBottomCombatantProps {
   columns?: number;
   spawnSlotLayout: Map<number, SpawnSlot>;
   reactionSlotLayout: Map<number, ReactionSlot>;
+
   handleCardClick: (card: CombatCard) => void;
 }
 

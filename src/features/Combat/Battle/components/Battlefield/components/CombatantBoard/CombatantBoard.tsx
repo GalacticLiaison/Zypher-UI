@@ -17,6 +17,15 @@ export interface ICombatantBoardProps {
 }
 
 export const CombatantBoard = (props: ICombatantBoardProps) => {
+  /*
+    Responsibilities:
+    - Manage State of Single Combatant
+      - Deck
+      - Draw Cards
+      - Hand
+  */
+
+  // ====================== Passed  Data ======================
   const [combatant, setCombatant] = useState<Combatant>(props.combatant);
   useEffect(() => {
     setCombatant(props.combatant);

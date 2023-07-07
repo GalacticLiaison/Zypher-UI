@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { GameMaster } from "./features/GameMaster/GameMaster";
 import { STORY } from "./STORY";
 import { DeckBuilder } from "./features/Deck Builder/DeckBuilder";
-import { Battlefield } from "./features/Combat/Battlefield/Battlefield";
+import { Battlefield } from "./features/Combat/Battle/components/Battlefield/Battlefield";
 import { Combat } from "./features/Combat/Combat";
 
 export function Router() {

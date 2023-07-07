@@ -1,8 +1,6 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import { useEffect, useState } from "react";
-import { CombatCard } from "../../../../../CombatCards/CombatCard";
-import { Droppable } from "../../../../../../Drag-Drop/Droppable";
+import { CombatCard } from "../../../../../../../CombatCards/CombatCard";
+import { Droppable } from "../../../../../../../../Drag-Drop/Droppable";
 
 export interface IPlaySlotStyleTemplate {
   backgroundColor?: string;

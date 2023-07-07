@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Droppable } from "../../../../Drag-Drop/Droppable";
-import { Draggable } from "../../../../Drag-Drop/Draggable";
-import { CombatCard } from "../../../CombatCards/CombatCard";
 import Grid from "@mui/material/Grid";
-import { SpawnCard } from "../../../CombatCards/SpawnCard";
+import { Droppable } from "../../../../../../Drag-Drop/Droppable";
+import { Draggable } from "../../../../../../Drag-Drop/Draggable";
+import { CombatCard } from "../../../../../CombatCards/CombatCard";
+import { SpawnCard } from "../../../../../CombatCards/SpawnCard";
 
 export interface IHandProps {
   combatantPositionId: string;
