@@ -29,6 +29,17 @@ export interface IBattlefieldProps {
   bottomTeam: Combatant[];
 }
 
+type spawnAttTarg = {
+  type: "spawn";
+  index: number;
+  spawn: SpawnCard | null;
+};
+type combatantAttTarg = {
+  type: "combatant";
+  combatant: Combatant;
+};
+type AttackTarget = spawnAttTarg | combatantAttTarg;
+
 // Playing cards costs action points (influenced by stamina, agility, maybe will)
 // in addition to the card's other costs (mana, health, etc.)
 
@@ -137,25 +148,36 @@ export function Battlefield(props: IBattlefieldProps) {
       opponentsTeam[Math.floor(Math.random() * opponentsTeam.length)];
     const opponentsSlotLayout = new Map(opponentsBoard.spawnSlotLayout);
 
-    type Slot = {
-      index: number;
-      spawn: SpawnCard | null;
-    };
-
-    const enemySpawnSlots: Slot[] = [];
+    const attackTargets: AttackTarget[] = [];
     for (let index = 0; index < opponentsSlotLayout.size; index++) {
-      const slot = opponentsSlotLayout.get(index);
-      enemySpawnSlots.push({
+      const spawn = opponentsSlotLayout.get(index);
+      attackTargets.push({
+        type: "spawn",
         index: index,
-        spawn: slot ? slot : null,
+        spawn: spawn ? spawn : null,
       });
     }
 
-    const enemies = enemySpawnSlots.filter((enemy) => enemy.spawn !== null);
+    const enemies = attackTargets.filter(
+      (enemy) => (enemy as spawnAttTarg).spawn !== null
+    );
+    enemies.push({
+      type: "combatant",
+      combatant: opponentsBoard.combatant,
+    });
 
     const enemy = enemies[Math.floor(Math.random() * enemies.length)];
-    if (enemy && enemy.spawn) {
-      console.log(`${attackingSpawn.name} attacks ${enemy.spawn.name}`);
+    attackEnemy(enemy, attackingSpawn, opponentsSlotLayout, opponentsBoard);
+  };
+
+  function attackEnemy(
+    enemy: AttackTarget,
+    attackingSpawn: SpawnCard,
+    opponentsSlotLayout: Map<number, SpawnSlot>,
+    opponentsBoard: ICombatantBoardProps
+  ) {
+    if (enemy && enemy.type === "spawn" && enemy.spawn) {
+      console.log(`${attackingSpawn.name} attacks ${enemy?.spawn?.name}`);
       enemy.spawn.health -= attackingSpawn.attack;
       if (enemy.spawn.health <= 0) {
         opponentsSlotLayout.set(enemy.index, null);
@@ -165,7 +187,10 @@ export function Battlefield(props: IBattlefieldProps) {
 
       opponentsBoard.spawnSlotLayout = opponentsSlotLayout;
     }
-  };
+    if (enemy && enemy.type === "combatant") {
+      enemy.combatant.health -= attackingSpawn.attack;
+    }
+  }
 
   const endTurn = () => {
     setTurnPhase("end");
@@ -380,10 +405,10 @@ export function Battlefield(props: IBattlefieldProps) {
           ? setTopTeam([...topTeam])
           : setBottomTeam([...bottomTeam]);
       }
-
-      function removeCardFromHand(hand: CombatCard[], handIndex: number) {
-        hand.splice(handIndex, 1);
-      }
     }
+  }
+
+  function removeCardFromHand(hand: CombatCard[], handIndex: number) {
+    hand.splice(handIndex, 1);
   }
 }
