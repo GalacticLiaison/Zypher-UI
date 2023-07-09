@@ -8,9 +8,11 @@ import {
   SpawnSlot,
 } from "../../PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { Portrait } from "../../Portrait/Portrait";
-import { CombatCard } from "../../../../CombatCards/CombatCard";
-import { Combatant } from "../../../../Combat";
 import { useEffect, useState } from "react";
+import { Combatant } from "../../../../../../Combat";
+import { CombatCard } from "../../../../../../CombatCards/CombatCard";
+import { Hand } from "../../Hand/Hand";
+import { Deck } from "../../Deck/Deck";
 
 export interface ITopCombatantProps {
   index: number;
@@ -51,6 +53,17 @@ export const TopCombatant = (props: ITopCombatantProps) => {
         </Grid>
         <Grid item xs={5}></Grid>
         <Grid item xs={12}></Grid>
+      </Grid>
+      <Grid id="playerCards" container item spacing={3} xs={12}>
+        <Grid item xs={10}>
+          <Hand
+            combatantPositionId={`top-${props.index}`}
+            cards={combatant.hand}
+          ></Hand>
+        </Grid>
+        <Grid item xs={2}>
+          <Deck count={combatant.deck.length}></Deck>
+        </Grid>
       </Grid>
       <ReactionCardSlots
         slotLayout={reactionSlotLayout}

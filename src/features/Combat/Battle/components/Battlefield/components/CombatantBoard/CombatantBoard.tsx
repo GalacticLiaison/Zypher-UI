@@ -1,10 +1,10 @@
-import { CombatCard } from "../../../CombatCards/CombatCard";
-import { Combatant } from "../../../Combat";
 import { TopCombatant } from "./TopCombatant/TopCombatant";
 import { BottomCombatant } from "./BottomCombatant/BottomCombatant";
 import { useEffect, useState } from "react";
 import { SpawnSlot } from "../PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { ReactionSlot } from "../PlaySlots/ReactionCardSlots/ReactionCardSlots";
+import { Combatant } from "../../../../../Combat";
+import { CombatCard } from "../../../../../CombatCards/CombatCard";
 
 export interface ICombatantBoardProps {
   position: "top" | "bottom";

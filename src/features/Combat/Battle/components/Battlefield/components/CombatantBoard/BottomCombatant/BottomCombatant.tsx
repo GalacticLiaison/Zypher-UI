@@ -8,11 +8,11 @@ import {
   SpawnSlot,
 } from "../../PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { Portrait } from "../../Portrait/Portrait";
-import { CombatCard } from "../../../../CombatCards/CombatCard";
-import { Combatant } from "../../../../Combat";
 import { Hand } from "../../Hand/Hand";
 import { Deck } from "../../Deck/Deck";
 import { useEffect, useState } from "react";
+import { Combatant } from "../../../../../../Combat";
+import { CombatCard } from "../../../../../../CombatCards/CombatCard";
 
 export interface IBottomCombatantProps {
   index: number;

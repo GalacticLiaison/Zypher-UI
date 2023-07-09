@@ -90,11 +90,23 @@ export const Combat = () => {
         JSON.parse(JSON.stringify(cyberSoldier)),
       ],
       deck: [
-        JSON.parse(JSON.stringify(cyberSoldier)),
+        (() => {
+          let soldier = JSON.parse(JSON.stringify(cyberSoldier));
+          soldier.name = "Cyber Soldier 2";
+          return soldier;
+        })(),
         JSON.parse(JSON.stringify(laserBlast)),
-        JSON.parse(JSON.stringify(cyberSoldier)),
+        (() => {
+          let soldier = JSON.parse(JSON.stringify(cyberSoldier));
+          soldier.name = "Cyber Soldier 3";
+          return soldier;
+        })(),
         JSON.parse(JSON.stringify(forceField)),
-        JSON.parse(JSON.stringify(cyberSoldier)),
+        (() => {
+          let soldier = JSON.parse(JSON.stringify(cyberSoldier));
+          soldier.name = "Cyber Soldier 4";
+          return soldier;
+        })(),
       ],
     },
     {
@@ -106,11 +118,23 @@ export const Combat = () => {
         JSON.parse(JSON.stringify(cyberSoldier)),
       ],
       deck: [
-        JSON.parse(JSON.stringify(cyberSoldier)),
+        (() => {
+          let soldier = JSON.parse(JSON.stringify(cyberSoldier));
+          soldier.name = "Cyber Soldier 2B";
+          return soldier;
+        })(),
         JSON.parse(JSON.stringify(laserBlast)),
-        JSON.parse(JSON.stringify(cyberSoldier)),
+        (() => {
+          let soldier = JSON.parse(JSON.stringify(cyberSoldier));
+          soldier.name = "Cyber Soldier 3B";
+          return soldier;
+        })(),
         JSON.parse(JSON.stringify(forceField)),
-        JSON.parse(JSON.stringify(cyberSoldier)),
+        (() => {
+          let soldier = JSON.parse(JSON.stringify(cyberSoldier));
+          soldier.name = "Cyber Soldier 4B";
+          return soldier;
+        })(),
       ],
     },
   ];

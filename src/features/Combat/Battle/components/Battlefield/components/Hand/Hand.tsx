@@ -36,9 +36,9 @@ export const Hand = (props: IHandProps) => {
       <Grid container>
         {cards?.map((card, index) => {
           return (
-            <Grid key={index} item xs={1}>
+            <Grid key={index} item xs={3}>
               <Draggable id={`${props.combatantPositionId}-hand-${index}`}>
-                <CombatCard card={card}></CombatCard>;
+                <CombatCard card={card}></CombatCard>
               </Draggable>
             </Grid>
           );

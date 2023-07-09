@@ -38,15 +38,17 @@ export const PlaySlot = (props: IPlaySlotProps) => {
   return (
     <span ref={props.ref}>
       <Droppable droppableId={props.droppableId ?? "noId"}>
-        {card ? (
-          <CombatCard
-            card={card}
-            size={{ height: "12em", maxWidth: "77%" }}
-            played={true}
-          ></CombatCard>
-        ) : (
-          slot
-        )}
+        <div style={{ height: "9em", width: "6em" }}>
+          {card ? (
+            <CombatCard
+              card={card}
+              // size={{ height: "12em", maxWidth: "77%" }}
+              played={true}
+            ></CombatCard>
+          ) : (
+            slot
+          )}
+        </div>
       </Droppable>
     </span>
   );

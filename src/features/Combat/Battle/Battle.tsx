@@ -7,6 +7,7 @@ import { ReactionCard } from "../CombatCards/ReactionCard";
 import { AI_TakeTurn } from "../AI/AI";
 import { SpawnSlot } from "./components/Battlefield/components/PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { ReactionSlot } from "./components/Battlefield/components/PlaySlots/ReactionCardSlots/ReactionCardSlots";
+import { CombatCard } from "../CombatCards/CombatCard";
 
 export type CombatantBoardData = {
   position: "top" | "bottom";
@@ -82,39 +83,47 @@ export const Battle = (props: IBattleProps) => {
     if (lastPhaseRan.current == turnPhase) {
       return;
     }
-    switch (turnPhase) {
-      case "start":
-        props.completeTurnPhase(turnPhase);
-        break;
-      case "draw":
-        drawCard();
-        props.completeTurnPhase(turnPhase);
-        break;
-      case "play":
-        if (currentTurn.isPlayer === false) {
-          setTimeout(() => {
-            AI_TakeTurn(
-              findCombatantBoard(currentTurn.combatant, currentTurn.position),
-              currentTurn.combatant.hand
-            );
-            setTopTeam([...topTeam]);
-            setBottomTeam([...bottomTeam]);
-            props.completeTurnPhase(turnPhase);
-          }, 2000);
-        }
-        // Button Press Ends Play Phase
-        break;
-      case "spawn":
-        spawnsAttack();
-        props.completeTurnPhase(turnPhase);
-        break;
-      case "end":
-        props.completeTurnPhase(turnPhase);
-        break;
-      default:
-        console.error("Battle: Invalid Turn Phase");
-        break;
-    }
+
+    const executeTurn = async () => {
+      switch (turnPhase) {
+        case "start":
+          props.completeTurnPhase(turnPhase);
+          break;
+        case "draw":
+          drawCard();
+          props.completeTurnPhase(turnPhase);
+          break;
+        case "play":
+          if (currentTurn.isPlayer === false) {
+            setTimeout(() => {
+              AI_TakeTurn(
+                removeCardFromHand,
+                findCombatantBoard(currentTurn.combatant, currentTurn.position),
+                currentTurn.combatant.hand
+              );
+              setTopTeam([...topTeam]);
+              setBottomTeam([...bottomTeam]);
+              props.completeTurnPhase(turnPhase);
+            }, 2000);
+          }
+          // Button Press Ends Play Phase
+          break;
+        case "spawn":
+          await spawnsAttack();
+          props.completeTurnPhase(turnPhase);
+          break;
+        case "end":
+          props.completeTurnPhase(turnPhase);
+          break;
+        default:
+          console.error("Battle: Invalid Turn Phase");
+          break;
+      }
+    };
+
+    executeTurn()
+      .then(() => console.log("YEE"))
+      .catch(console.error);
   }, [turnPhase]);
 
   // ======================  Battle State Management ======================
@@ -193,14 +202,17 @@ export const Battle = (props: IBattleProps) => {
       : setBottomTeam([...bottomTeam]);
   };
 
-  const spawnsAttack = () => {
+  const spawnsAttack = async () => {
     const combatantBoard =
       currentTurn.position === "top"
         ? topTeam[currentTurn.positionIndex]
         : bottomTeam[currentTurn.positionIndex];
 
-    combatantBoard.spawnSlotLayout.forEach((spawn) => {
+    combatantBoard.spawnSlotLayout.forEach(async (spawn) => {
       if (spawn && spawn.type === "Spawn") {
+        console.log("PRE WAIT");
+        // await wait(5000);
+        console.log("POST WAIT");
         attackRandomEnemy(spawn);
       }
     });
@@ -230,7 +242,12 @@ export const Battle = (props: IBattleProps) => {
       combatant: opponentsBoard.combatant,
     });
 
-    const enemy = enemies[Math.floor(Math.random() * enemies.length)];
+    console.log("ENEMIES: ", enemies);
+
+    const seed = Math.floor(Math.random() * enemies.length);
+    console.log("SEED: ", seed);
+
+    const enemy = enemies[seed];
     attackEnemy(enemy, attackingSpawn, opponentsSlotLayout, opponentsBoard);
   };
 
@@ -252,6 +269,7 @@ export const Battle = (props: IBattleProps) => {
       opponentsBoard.spawnSlotLayout = opponentsSlotLayout;
     }
     if (enemy && enemy.type === "combatant") {
+      console.log(`${attackingSpawn.name} attacks ${enemy?.combatant.name}`);
       enemy.combatant.health -= attackingSpawn.attack;
     }
   };
@@ -273,3 +291,7 @@ export const Battle = (props: IBattleProps) => {
     </>
   );
 };
+
+export function removeCardFromHand(hand: CombatCard[], handIndex: number) {
+  hand.splice(handIndex, 1);
+}

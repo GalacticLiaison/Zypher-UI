@@ -5,7 +5,7 @@ import { CombatCard } from "../../../CombatCards/CombatCard";
 import { Button } from "@mui/material";
 import { SpawnCard } from "../../../CombatCards/SpawnCard";
 import { ReactionCard } from "../../../CombatCards/ReactionCard";
-import { CombatantBoardData } from "../../Battle";
+import { CombatantBoardData, removeCardFromHand } from "../../Battle";
 import { CombatantBoard } from "./components/CombatantBoard/CombatantBoard";
 
 export interface Spawn {
@@ -212,9 +212,5 @@ export function Battlefield(props: IBattlefieldProps) {
           : setBottomTeam([...bottomTeam]);
       }
     }
-  }
-
-  function removeCardFromHand(hand: CombatCard[], handIndex: number) {
-    hand.splice(handIndex, 1);
   }
 }

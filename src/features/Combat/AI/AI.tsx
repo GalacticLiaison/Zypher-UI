@@ -3,6 +3,7 @@ import { CombatCard } from "../CombatCards/CombatCard";
 import { SpawnCard } from "../CombatCards/SpawnCard";
 
 export const AI_TakeTurn = (
+  removeCardFromHand: (hand: CombatCard[], handIndex: number) => void,
   aiBoard?: CombatantBoardData,
   aiHand?: (CombatCard | SpawnCard)[]
 ) => {
@@ -13,14 +14,23 @@ export const AI_TakeTurn = (
 
   console.log("AI_TakeTurn");
 
-  const spawn = aiHand.find((card) => card.type === "Spawn");
+  let spawn;
+  let spawnIndex;
+  for (let i = 0; i < aiHand.length; i++) {
+    if (aiHand[i].type === "Spawn") {
+      spawn = aiHand[i];
+      spawnIndex = i;
+      break;
+    }
+  }
 
-  if (spawn) {
+  if (spawn && spawnIndex) {
     const spawnSlotLayout = new Map(aiBoard.spawnSlotLayout);
 
     if (spawnSlotLayout.get(0)) return;
 
     spawnSlotLayout.set(0, spawn as SpawnCard);
     aiBoard.spawnSlotLayout = spawnSlotLayout;
+    removeCardFromHand(aiBoard.combatant.hand, spawnIndex);
   }
 };
