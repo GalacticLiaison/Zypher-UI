@@ -1,19 +1,36 @@
 import { CombatCard } from "./CombatCards/CombatCard";
 import { SpawnCard } from "./CombatCards/SpawnCard";
-import { BattleExecutor } from "./Battle/BattleExecutor";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import {
+  CombatantBoardData,
+  setBattlefieldData,
+  setBattlefieldLayout,
+  setCurrentTurn,
+  setTurnQueue,
+} from "./combatSlice";
+import { Turn, TurnManager } from "./components/TurnManager/TurnManager";
+import { Battle } from "./Battle/Battle";
+import { SpawnSlot } from "./Battle/components/Battlefield/components/PlaySlots/SpawnCardSlots/SpawnCardSlots";
+import { ReactionSlot } from "./Battle/components/Battlefield/components/PlaySlots/ReactionCardSlots/ReactionCardSlots";
+import { Battlefield } from "./Battle/components/Battlefield/Battlefield";
 
 export interface Combatant {
+  id: string;
   name: string;
   health: number;
   hand: (CombatCard | SpawnCard)[];
   deck: (CombatCard | SpawnCard)[];
 }
 
+export const MINIMUM_SLOTS = 3;
+
 export const Combat = () => {
   /*
     Responsibilities:
     - Entrance to the Combat Feature
     - Fetches Data (combatants, cards, etc)
+    - Initializes Battle
   */
 
   const laserBlast: CombatCard = {
@@ -82,6 +99,7 @@ export const Combat = () => {
 
   const topTeamCombatants: Combatant[] = [
     {
+      id: "e1",
       name: "Enemy 1",
       health: 100,
       hand: [
@@ -110,6 +128,7 @@ export const Combat = () => {
       ],
     },
     {
+      id: "e2",
       name: "Enemy 2",
       health: 100,
       hand: [
@@ -138,8 +157,10 @@ export const Combat = () => {
       ],
     },
   ];
+
   const bottomTeamCombatants: Combatant[] = [
     {
+      id: "p1",
       name: "Player",
       health: 100,
       hand: [
@@ -157,10 +178,112 @@ export const Combat = () => {
     },
   ];
 
+  const dispatch = useDispatch();
+
+  // On Component Load
+  useEffect(() => {
+    // fetch data
+    // set data
+    setInitialBattlefield();
+    setInitialTurnOrder();
+  }, []);
+
+  const setInitialBattlefield = () => {
+    dispatch(
+      setBattlefieldLayout({
+        topTeamIds: [...topTeamCombatants.map((combatant) => combatant.id)],
+        bottomTeamIds: [
+          ...bottomTeamCombatants.map((combatant) => combatant.id),
+        ],
+      })
+    );
+    dispatch(
+      setBattlefieldData({
+        topTeam: [
+          ...topTeamCombatants.map((combatant): CombatantBoardData => {
+            return {
+              combatantId: combatant.id,
+              combatant,
+              spawnSlotLayout: [...Array(MINIMUM_SLOTS).fill(null)],
+              reactionSlotLayout: [...Array(MINIMUM_SLOTS).fill(null)],
+            };
+          }),
+        ],
+        bottomTeam: [
+          ...bottomTeamCombatants.map((combatant): CombatantBoardData => {
+            return {
+              combatantId: combatant.id,
+              combatant,
+              spawnSlotLayout: [...Array(MINIMUM_SLOTS).fill(null)],
+              reactionSlotLayout: [...Array(MINIMUM_SLOTS).fill(null)],
+            };
+          }),
+        ],
+      })
+    );
+  };
+
+  // const createCombatantBoardMap = (combatants: Combatant[]) => {
+  //   const STANDARD_SPAWN_SLOT_COUNT = 3; // TODO: setting ENV variable
+  //   const STANDARD_REACTION_SLOT_COUNT = 3; // TODO: setting ENV variable
+
+  //   const startingSpawnMap = new Map<number, SpawnSlot | null>();
+  //   for (let i = 0; i < STANDARD_SPAWN_SLOT_COUNT; i++) {
+  //     startingSpawnMap.set(i, null);
+  //   }
+
+  //   const startingReactionMap = new Map<number, ReactionSlot | null>();
+  //   for (let i = 0; i < STANDARD_REACTION_SLOT_COUNT; i++) {
+  //     startingReactionMap.set(i, null);
+  //   }
+
+  //   let combatantMap = new Map<number, CombatantBoardData | null>();
+  //   combatants.forEach((combatant, index) => {
+  //     combatantMap.set(index, {
+  //       combatantId: combatant.id,
+  //       combatant,
+  //       spawnSlotLayout: startingSpawnMap,
+  //       reactionSlotLayout: startingReactionMap,
+  //     });
+  //   });
+
+  //   return combatantMap;
+  // };
+
+  const setInitialTurnOrder = () => {
+    dispatch(setTurnQueue(calculateTurnOrder()));
+    dispatch(
+      setCurrentTurn({
+        combatant: bottomTeamCombatants[0],
+        position: "bottom",
+        positionIndex: 0,
+        isPlayer: true,
+      })
+    );
+  };
+
+  const calculateTurnOrder = (): Turn[] => {
+    // Future State will do the agility calculation here
+    return [
+      {
+        combatant: topTeamCombatants[0],
+        position: "top",
+        positionIndex: 0,
+        isPlayer: false,
+      },
+      {
+        combatant: topTeamCombatants[1],
+        position: "top",
+        positionIndex: 1,
+        isPlayer: false,
+      },
+    ];
+  };
+
   return (
-    <BattleExecutor
-      topTeamCombatants={topTeamCombatants}
-      bottomTeamCombatants={bottomTeamCombatants}
-    ></BattleExecutor>
+    <>
+      <TurnManager></TurnManager>
+      <Battlefield></Battlefield>
+    </>
   );
 };

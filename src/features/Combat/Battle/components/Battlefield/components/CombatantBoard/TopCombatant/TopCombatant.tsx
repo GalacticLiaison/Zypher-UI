@@ -1,55 +1,55 @@
 import Grid from "@mui/material/Grid";
-import {
-  ReactionCardSlots,
-  ReactionSlot,
-} from "../../PlaySlots/ReactionCardSlots/ReactionCardSlots";
-import {
-  SpawnCardSlots,
-  SpawnSlot,
-} from "../../PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { Portrait } from "../../Portrait/Portrait";
 import { useEffect, useState } from "react";
-import { Combatant } from "../../../../../../Combat";
 import { CombatCard } from "../../../../../../CombatCards/CombatCard";
 import { Hand } from "../../Hand/Hand";
 import { Deck } from "../../Deck/Deck";
+import { CombatState, CombatantBoardData } from "../../../../../../combatSlice";
+import { useSelector } from "react-redux";
+import { PlaySlots } from "../../PlaySlots/PlaySlots";
 
 export interface ITopCombatantProps {
   index: number;
-  combatant: Combatant;
-  columns?: number;
-  spawnSlotLayout: Map<number, SpawnSlot>;
-  reactionSlotLayout: Map<number, ReactionSlot>;
+  combatantId: string;
 
   handleCardClick: (card: CombatCard) => void;
 }
 
 export const TopCombatant = (props: ITopCombatantProps) => {
-  const [combatant, setCombatant] = useState<Combatant>(props.combatant);
-  useEffect(() => {
-    setCombatant(props.combatant);
-  }, [props.combatant]);
+  const { battlefieldData } = useSelector(
+    (store: any) => store.combat
+  ) as CombatState;
 
-  const [spawnSlotLayout, setSpawnSlotLayout] = useState<
-    Map<number, SpawnSlot>
-  >(props.spawnSlotLayout);
+  const [combatantId, setCombatantId] = useState<string>(props.combatantId);
   useEffect(() => {
-    setSpawnSlotLayout(props.spawnSlotLayout);
-  }, [props.spawnSlotLayout]);
+    setCombatantId(props.combatantId);
+  }, [props.combatantId]);
 
-  const [reactionSlotLayout, setReactionSlotLayout] = useState<
-    Map<number, ReactionSlot>
-  >(props.reactionSlotLayout);
+  const getCombatantBoard = () => {
+    return battlefieldData.topTeam.find(
+      (board: CombatantBoardData) => board.combatant.id === combatantId
+    );
+  };
+
+  const [board, setBoard] = useState<CombatantBoardData | undefined>(
+    getCombatantBoard()
+  );
+
+  const [topTeamLength, setTopTeamLength] = useState<number>(
+    battlefieldData.topTeam.length
+  );
+
   useEffect(() => {
-    setReactionSlotLayout(new Map(props.reactionSlotLayout));
-  }, [props.reactionSlotLayout]);
+    setBoard(getCombatantBoard());
+    setTopTeamLength(battlefieldData.topTeam.length);
+  }, [battlefieldData]);
 
-  return (
-    <Grid container item xs={props.columns ?? 12} spacing={3}>
+  return board ? (
+    <Grid container item xs={12 / topTeamLength ?? 12} spacing={3}>
       <Grid id="portrait" container item xs={12}>
         <Grid item xs={5}></Grid>
         <Grid item xs={2}>
-          <Portrait combatant={combatant}></Portrait>
+          <Portrait combatant={board.combatant}></Portrait>
         </Grid>
         <Grid item xs={5}></Grid>
         <Grid item xs={12}></Grid>
@@ -58,21 +58,27 @@ export const TopCombatant = (props: ITopCombatantProps) => {
         <Grid item xs={10}>
           <Hand
             combatantPositionId={`top-${props.index}`}
-            cards={combatant.hand}
+            cards={board.combatant.hand}
           ></Hand>
         </Grid>
         <Grid item xs={2}>
-          <Deck count={combatant.deck.length}></Deck>
+          <Deck count={board.combatant.deck.length}></Deck>
         </Grid>
       </Grid>
-      <ReactionCardSlots
-        slotLayout={reactionSlotLayout}
+      <PlaySlots
+        combatantId={combatantId}
+        position="top"
+        playSlotsType="Reaction"
         droppableIdPrefix={`top-${props.index}-reaction-`}
-      ></ReactionCardSlots>
-      <SpawnCardSlots
-        slotLayout={spawnSlotLayout}
+      ></PlaySlots>
+      <PlaySlots
+        combatantId={combatantId}
+        position="top"
+        playSlotsType="Spawn"
         droppableIdPrefix={`top-${props.index}-spawn-`}
-      ></SpawnCardSlots>
+      ></PlaySlots>
     </Grid>
+  ) : (
+    <div>Loading Top Combatant.....</div>
   );
 };

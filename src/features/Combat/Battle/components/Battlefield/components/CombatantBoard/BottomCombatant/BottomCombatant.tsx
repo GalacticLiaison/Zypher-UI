@@ -1,78 +1,84 @@
 import Grid from "@mui/material/Grid";
-import {
-  ReactionCardSlots,
-  ReactionSlot,
-} from "../../PlaySlots/ReactionCardSlots/ReactionCardSlots";
-import {
-  SpawnCardSlots,
-  SpawnSlot,
-} from "../../PlaySlots/SpawnCardSlots/SpawnCardSlots";
 import { Portrait } from "../../Portrait/Portrait";
 import { Hand } from "../../Hand/Hand";
 import { Deck } from "../../Deck/Deck";
 import { useEffect, useState } from "react";
-import { Combatant } from "../../../../../../Combat";
 import { CombatCard } from "../../../../../../CombatCards/CombatCard";
+import { CombatState, CombatantBoardData } from "../../../../../../combatSlice";
+import { useSelector } from "react-redux";
+import { PlaySlots } from "../../PlaySlots/PlaySlots";
 
 export interface IBottomCombatantProps {
   index: number;
-  combatant: Combatant;
-  columns?: number;
-  spawnSlotLayout: Map<number, SpawnSlot>;
-  reactionSlotLayout: Map<number, ReactionSlot>;
+  combatantId: string;
 
   handleCardClick: (card: CombatCard) => void;
 }
 
 export const BottomCombatant = (props: IBottomCombatantProps) => {
-  const [combatant, setCombatant] = useState<Combatant>(props.combatant);
-  useEffect(() => {
-    setCombatant(props.combatant);
-  }, [props.combatant]);
+  const { battlefieldData } = useSelector(
+    (store: any) => store.combat
+  ) as CombatState;
 
-  const [spawnSlotLayout, setSpawnSlotLayout] = useState<
-    Map<number, SpawnSlot>
-  >(props.spawnSlotLayout);
+  const [combatantId, setCombatantId] = useState<string>(props.combatantId);
   useEffect(() => {
-    setSpawnSlotLayout(new Map(props.spawnSlotLayout));
-  }, [props.spawnSlotLayout]);
+    setCombatantId(props.combatantId);
+  }, [props.combatantId]);
 
-  const [reactionSlotLayout, setReactionSlotLayout] = useState<
-    Map<number, ReactionSlot>
-  >(props.reactionSlotLayout);
+  const getCombatantBoard = () => {
+    return battlefieldData.bottomTeam.find(
+      (board: CombatantBoardData) => board.combatant.id === combatantId
+    );
+  };
+
+  const [board, setBoard] = useState<CombatantBoardData | undefined>(
+    getCombatantBoard()
+  );
+
+  const [bottomTeamLength, setBottomTeamLength] = useState<number>(
+    battlefieldData.bottomTeam.length
+  );
+
   useEffect(() => {
-    setReactionSlotLayout(new Map(props.reactionSlotLayout));
-  }, [props.reactionSlotLayout]);
+    setBoard(getCombatantBoard());
+    setBottomTeamLength(battlefieldData.bottomTeam.length);
+  }, [battlefieldData]);
 
-  return (
-    <Grid container item xs={props.columns ?? 12} spacing={3}>
-      <SpawnCardSlots
-        slotLayout={spawnSlotLayout}
+  return board ? (
+    <Grid container item xs={12 / bottomTeamLength ?? 12} spacing={3}>
+      <PlaySlots
+        combatantId={combatantId}
+        position="bottom"
+        playSlotsType="Spawn"
         droppableIdPrefix={`bottom-${props.index}-spawn-`}
-      ></SpawnCardSlots>
-      <ReactionCardSlots
-        slotLayout={reactionSlotLayout}
+      ></PlaySlots>
+      <PlaySlots
+        combatantId={combatantId}
+        playSlotsType="Reaction"
+        position="bottom"
         droppableIdPrefix={`bottom-${props.index}-reaction-`}
-      ></ReactionCardSlots>
+      ></PlaySlots>
       <Grid id="playerCards" container item spacing={3} xs={12}>
         <Grid item xs={10}>
           <Hand
             combatantPositionId={`bottom-${props.index}`}
-            cards={combatant.hand}
+            cards={board.combatant.hand}
           ></Hand>
         </Grid>
         <Grid item xs={2}>
-          <Deck count={combatant.deck.length}></Deck>
+          <Deck count={board.combatant.deck.length}></Deck>
         </Grid>
       </Grid>
       <Grid id="portrait" container item xs={12}>
         <Grid item xs={5}></Grid>
         <Grid item xs={2}>
-          <Portrait combatant={combatant}></Portrait>
+          <Portrait combatant={board.combatant}></Portrait>
         </Grid>
         <Grid item xs={5}></Grid>
         <Grid item xs={12}></Grid>
       </Grid>
     </Grid>
+  ) : (
+    <div>Loading Bottom Combatant.....</div>
   );
 };

@@ -1,27 +1,34 @@
 import { useEffect, useState } from "react";
-import { CombatCard } from "../../../../../../../CombatCards/CombatCard";
 import { Droppable } from "../../../../../../../../Drag-Drop/Droppable";
+import {
+  ISpawnCardProps,
+  SpawnCard,
+} from "../../../../../../../CombatCards/SpawnCard";
+import {
+  IReactionCardProps,
+  ReactionCard,
+} from "../../../../../../../CombatCards/ReactionCard";
 
 export interface IPlaySlotStyleTemplate {
   backgroundColor?: string;
 }
 
+export type PlaySlot = ISpawnCardProps | IReactionCardProps | null;
+
 export interface IPlaySlotProps {
-  card: CombatCard | null | undefined;
-  canAttack?: boolean;
+  slot: PlaySlot;
   droppableId?: string;
   styleTemplate?: IPlaySlotStyleTemplate;
-  ref?: any;
 }
 
 export const PlaySlot = (props: IPlaySlotProps) => {
-  const [card, setCard] = useState<CombatCard | null | undefined>(props.card);
-  useEffect(() => {
-    if (props.card === undefined) return;
-    setCard(props.card);
-  }, [props.card]);
+  const [slot, setSlot] = useState<PlaySlot>(props.slot);
 
-  const slot = (
+  useEffect(() => {
+    if (props.slot) setSlot({ ...props.slot });
+  }, [props.slot]);
+
+  const defaultSlot = (
     <div
       style={{
         height: "9em",
@@ -36,20 +43,21 @@ export const PlaySlot = (props: IPlaySlotProps) => {
   );
 
   return (
-    <span ref={props.ref}>
-      <Droppable droppableId={props.droppableId ?? "noId"}>
-        <div style={{ height: "9em", width: "6em" }}>
-          {card ? (
-            <CombatCard
-              card={card}
-              // size={{ height: "12em", maxWidth: "77%" }}
-              played={true}
-            ></CombatCard>
+    <Droppable droppableId={props.droppableId ?? "noId"}>
+      <div style={{ height: "9em", width: "6em" }}>
+        {slot != null ? (
+          slot.card?.type === "Spawn" ? (
+            <SpawnCard card={slot.card as SpawnCard} played={true}></SpawnCard>
           ) : (
-            slot
-          )}
-        </div>
-      </Droppable>
-    </span>
+            <ReactionCard
+              card={slot.card as ReactionCard}
+              played={true}
+            ></ReactionCard>
+          )
+        ) : (
+          defaultSlot
+        )}
+      </div>
+    </Droppable>
   );
 };

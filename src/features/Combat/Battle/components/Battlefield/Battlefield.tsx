@@ -3,27 +3,25 @@ import { useEffect, useState } from "react";
 import { DndContext, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { CombatCard } from "../../../CombatCards/CombatCard";
 import { Button } from "@mui/material";
-import { SpawnCard } from "../../../CombatCards/SpawnCard";
-import { ReactionCard } from "../../../CombatCards/ReactionCard";
-import { CombatantBoardData, removeCardFromHand } from "../../Battle";
 import { CombatantBoard } from "./components/CombatantBoard/CombatantBoard";
-
-export interface Spawn {
-  card: CombatCard | undefined;
-  clickable: boolean;
-  attacking: boolean;
-}
+import { useDispatch, useSelector } from "react-redux";
+import {
+  CombatState,
+  CombatantBoardData,
+  drawCard,
+  playCard,
+  setTurnPhaseIsComplete,
+} from "../../../combatSlice";
 
 export interface Reaction {
   card: CombatCard | undefined;
 }
 
 export interface IBattlefieldProps {
-  topTeam: CombatantBoardData[];
-  bottomTeam: CombatantBoardData[];
-
-  nextTurnPhase: () => void;
-  drawCard: () => void;
+  // topTeam: CombatantBoardData[];
+  // bottomTeam: CombatantBoardData[];
+  // nextTurnPhase: () => void;
+  // drawCard: () => void;
 }
 
 // Playing cards costs action points (influenced by stamina, agility, maybe will)
@@ -38,14 +36,36 @@ export function Battlefield(props: IBattlefieldProps) {
 
   // ====================== Passed  Data ======================
 
-  const [topTeam, setTopTeam] = useState<CombatantBoardData[]>(props.topTeam);
-  const [bottomTeam, setBottomTeam] = useState<CombatantBoardData[]>(
-    props.bottomTeam
+  // Start Here:
+  // - so down stream the playslots are getting set then overwritten,
+  //     - since they have an empty array store state im guessing thats whats going on, its immediately overwriting
+  // - Ideas:
+  //   - Could use the initial state to set minimum slots instead of empty arrays
+  //   - Refactor: make literally everything use state, dont get cute with props/useContext
+  //   - and really ask your self if you need all the data you are pulling in,
+  //     alot of components you could probably just pass an id down and fetch state when needed
+
+  const { battlefieldLayout } = useSelector(
+    (store: any) => store.combat
+  ) as CombatState;
+
+  const [topTeamIds, setTopTeamIds] = useState<Array<string>>(
+    battlefieldLayout.topTeamIds
+  );
+  const [bottomTeamIds, setBottomTeamIds] = useState<Array<string>>(
+    battlefieldLayout.bottomTeamIds
   );
 
-  const drawCard = () => {
-    props.drawCard();
-  };
+  useEffect(() => {
+    setTopTeamIds(battlefieldLayout.topTeamIds);
+    setBottomTeamIds(battlefieldLayout.bottomTeamIds);
+  }, [battlefieldLayout]);
+
+  // const drawCard = () => {
+  //   props.drawCard();
+  // };
+
+  const dispatch = useDispatch();
 
   // ====================== Drag and Drop ======================
 
@@ -78,42 +98,44 @@ export function Battlefield(props: IBattlefieldProps) {
           <div style={{ height: 100, backgroundColor: "lightskyblue" }}></div>
         </Grid>
         <Grid container item xs={12} spacing={2}>
-          {topTeam.map((combatant) => (
-            <CombatantBoard
-              key={combatant.index}
-              position={combatant.position}
-              index={combatant.index}
-              columns={12 / props.topTeam.length}
-              combatant={combatant.combatant}
-              spawnSlotLayout={combatant.spawnSlotLayout}
-              reactionSlotLayout={combatant.reactionSlotLayout}
-              handleCardClick={handleCardClick}
-            ></CombatantBoard>
-          ))}
+          {topTeamIds.map((id, index) => {
+            return (
+              <CombatantBoard
+                key={index}
+                index={index}
+                combatantId={id}
+                position={"top"}
+                // columns={12 / topTeamIds.length}
+                // board={board}
+                handleCardClick={handleCardClick}
+              ></CombatantBoard>
+            );
+          })}
         </Grid>
         <Grid container item xs={12} spacing={2}>
-          {bottomTeam.map((combatant) => (
-            <CombatantBoard
-              key={combatant.index}
-              position={combatant.position}
-              index={combatant.index}
-              columns={12 / props.bottomTeam.length}
-              combatant={combatant.combatant}
-              spawnSlotLayout={combatant.spawnSlotLayout}
-              reactionSlotLayout={combatant.reactionSlotLayout}
-              handleCardClick={handleCardClick}
-            ></CombatantBoard>
-          ))}
+          {bottomTeamIds.map((id, index) => {
+            return (
+              <CombatantBoard
+                key={index}
+                index={index}
+                combatantId={id}
+                position={"bottom"}
+                // columns={12 / bottomTeam.length}
+                // board={board}
+                handleCardClick={handleCardClick}
+              ></CombatantBoard>
+            );
+          })}
         </Grid>
         <Grid item xs={12}>
           <Button
-            onClick={props.nextTurnPhase}
+            onClick={() => dispatch(setTurnPhaseIsComplete(true))}
             variant="contained"
             color="success"
           >
             End Action Phase
           </Button>
-          <Button onClick={drawCard} variant="contained">
+          <Button onClick={() => dispatch(drawCard())} variant="contained">
             Draw
           </Button>
         </Grid>
@@ -133,7 +155,7 @@ export function Battlefield(props: IBattlefieldProps) {
         overBoardPosition,
         overCombatantIndex,
         overSlotType,
-        overSlotIndex,
+        overSlotIndex, // reaction[0[], reaction[1], etc
       ] = over.id.split("-");
 
       const [
@@ -159,57 +181,14 @@ export function Battlefield(props: IBattlefieldProps) {
       const sameBoardPosition = overBoardPosition == draggedBoardPosition;
       const sameCombatant = overCombatantIndex == draggedCombatantIndex;
       if (sameBoardPosition && sameCombatant) {
-        playCard();
-      }
-
-      function playCard() {
-        let combatantBoard =
-          overBoardPosition == "top"
-            ? topTeam[overCombatantIndex]
-            : bottomTeam[overCombatantIndex];
-        let combatant = combatantBoard.combatant;
-        const handIndex = parseInt(handIndexString);
-
-        //#region Developer Note: On Using a Map as a React State
-        /*
-        Immutable Updates: React relies on immutable data updates to detect changes in props 
-        or state. It means that you should avoid directly mutating the existing Map object 
-        and instead create a new Map object with the desired changes. 
-        This ensures that React detects the change and triggers a re-render.
-        
-        Shallow Equality Check: React performs a shallow equality check to determine 
-        if the props have changed. When you use a Map as a prop, React checks if the 
-        reference to the Map object has changed, not its internal content. 
-        So if you modify the content of the Map using the set() method, 
-        the reference to the Map object remains the same, and React may not detect the change.
-        */
-        //#endregion
-        const card = combatant.hand[handIndex];
-        switch (card?.type) {
-          case "Spawn":
-            const spawnSlotLayout = new Map(combatantBoard.spawnSlotLayout);
-            spawnSlotLayout.set(parseInt(overSlotIndex), card as SpawnCard);
-            combatantBoard.spawnSlotLayout = spawnSlotLayout;
-            break;
-          case "Reaction":
-            const reactionSlotLayout = new Map(
-              combatantBoard.reactionSlotLayout
-            );
-            reactionSlotLayout.set(
-              parseInt(overSlotIndex),
-              card as ReactionCard
-            );
-            combatantBoard.reactionSlotLayout = reactionSlotLayout;
-            break;
-          default:
-            break;
-        }
-
-        removeCardFromHand(combatant.hand, handIndex);
-
-        overBoardPosition == "top"
-          ? setTopTeam([...topTeam])
-          : setBottomTeam([...bottomTeam]);
+        dispatch(
+          playCard({
+            overBoardPosition,
+            overCombatantIndex,
+            overSlotIndex,
+            handIndex: parseInt(handIndexString),
+          })
+        );
       }
     }
   }

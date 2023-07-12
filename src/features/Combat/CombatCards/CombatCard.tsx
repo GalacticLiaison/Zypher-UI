@@ -2,7 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UpdateImage } from "../../../global-components/ContentImage/ContentImage";
 import { SpawnCard } from "./SpawnCard";
 
@@ -43,25 +43,24 @@ export interface ICombatCardProps {
   updateImage?: UpdateImage;
   isEdit?: boolean;
   size?: { height: number; width: number };
+  stats?: { attack: number; health: number };
 }
 
 export const CombatCard = (props: ICombatCardProps) => {
-  const [health, setHealth] = useState(0);
-  const [attack, setAttack] = useState(0);
   const [card, setCard] = useState<CombatCard>(props.card ?? newCard);
-
-  useEffect(() => {
-    if (card == undefined) return;
-    if (card.type == "Spawn") {
-      setHealth((card as SpawnCard).health);
-      setAttack((card as SpawnCard).attack);
-    }
-  }, [card]);
-
   useEffect(() => {
     if (props.card == undefined) return;
     setCard(props.card);
   }, [props.card]);
+
+  const [stats, setStats] = useState<
+    { attack: number; health: number } | undefined
+  >(props.stats);
+
+  useEffect(() => {
+    if (props.stats == undefined) return;
+    setStats(props.stats);
+  }, [props.stats]);
 
   const [isEdit, setIsEdit] = useState(props.isEdit ?? false);
   useEffect(() => {
@@ -179,22 +178,22 @@ export const CombatCard = (props: ICombatCardProps) => {
           )}
 
           <Grid item container style={{ minHeight: "1.3em" }}>
-            {props.card?.type == "Spawn" && (
+            {props.card?.type == "Spawn" && stats && (
               <>
                 <Grid item xs={6}>
-                  <Typography variant="body2">{attack}</Typography>
+                  <Typography variant="body2">{stats.attack}</Typography>
                 </Grid>
                 <Grid
                   item
                   xs={6}
                   style={{
                     color:
-                      (props.card as SpawnCard).totalHealth > health
+                      (props.card as SpawnCard).totalHealth > stats.health
                         ? "red"
                         : "inherit",
                   }}
                 >
-                  <Typography variant="body2">{health}</Typography>
+                  <Typography variant="body2">{stats.health}</Typography>
                 </Grid>
               </>
             )}
