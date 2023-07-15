@@ -6,13 +6,13 @@ export interface ReactionCard extends CombatCard {
 }
 
 export interface IReactionCardProps {
-  card: ReactionCard;
+  card: ReactionCard | null;
   played?: boolean;
   isEdit?: boolean;
 }
 
 export const ReactionCard = (props: IReactionCardProps) => {
-  const [card, setCard] = useState<ReactionCard>(props.card);
+  const [card, setCard] = useState<ReactionCard | null>(props.card);
 
   useEffect(() => {
     if (card == undefined) return;
@@ -21,7 +21,7 @@ export const ReactionCard = (props: IReactionCardProps) => {
     }
   }, [props.card]);
 
-  if (card.type != "Reaction")
+  if (card?.type != "Reaction")
     return <div>Error: Wrong Card Type in Reaction Slot</div>;
 
   return <CombatCard card={card} played={true}></CombatCard>;

@@ -86,7 +86,7 @@ export const PlaySlots = (props: IPlaySlotsProps) => {
         return (
           <Grid key={index} item xs={determineSlotWidth(slots)}>
             <PlaySlot
-              // slot={slot ? { ...slot } : null}
+              position={props.position}
               slot={slot}
               droppableId={`${props.droppableIdPrefix}${index}`}
               styleTemplate={styleTemplate}

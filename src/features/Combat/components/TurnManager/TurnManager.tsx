@@ -5,14 +5,29 @@ import {
   endTurn,
   setCurrentTurnPhase,
   setTurnPhaseIsComplete,
+  spawnAttacks,
   spawnsAttack,
 } from "../../combatSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import { AI__TakeTurn } from "../../AI/AI";
+import { SpawnCard } from "../../CombatCards/SpawnCard";
+
+export type BoardLocation = {
+  position: "top" | "bottom";
+  type: "spawn" | "reaction";
+  rowIndex: number;
+};
+
+export type Spawn = {
+  boardLocation: BoardLocation;
+  card: SpawnCard;
+  image: string;
+  name: string;
+};
 
 export type Turn = {
-  combatant: Combatant;
+  turnTaker: Combatant | Spawn;
   position: "top" | "bottom";
   positionIndex: number;
   isPlayer: boolean;
@@ -54,7 +69,8 @@ export const TurnManager = () => {
         // Button Press Ends Play Phase
         break;
       case "spawn":
-        dispatch(spawnsAttack());
+        // dispatch(spawnsAttack());
+        dispatch(spawnAttacks(currentTurn.turnTaker as Spawn));
         completeTurnPhase();
 
         break;
@@ -78,13 +94,13 @@ export const TurnManager = () => {
   const completeTurnPhase = () => {
     switch (currentTurnPhase) {
       case "start":
-        setNextPhase("draw");
+        currentTurn.isPlayer ? setNextPhase("draw") : setNextPhase("spawn");
         break;
       case "draw":
         setNextPhase("play");
         break;
       case "play":
-        setNextPhase("spawn");
+        setNextPhase("end");
         break;
       case "spawn":
         setNextPhase("end");
@@ -103,7 +119,9 @@ export const TurnManager = () => {
         const ENABLE_BATTLE_LOGS = true;
         if (ENABLE_BATTLE_LOGS) {
           console.log(
-            `Turn Phase: ${currentTurnPhase} -> ${nextPhase} for ${currentTurn.combatant.name}`
+            `Turn Phase: ${currentTurnPhase} -> ${nextPhase} for ${
+              (currentTurn.turnTaker as Combatant).name
+            }`
           );
         }
         dispatch(setCurrentTurnPhase(nextPhase));

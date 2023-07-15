@@ -16,6 +16,7 @@ export interface IPlaySlotStyleTemplate {
 export type PlaySlot = ISpawnCardProps | IReactionCardProps | null;
 
 export interface IPlaySlotProps {
+  position: "top" | "bottom";
   slot: PlaySlot;
   droppableId?: string;
   styleTemplate?: IPlaySlotStyleTemplate;
@@ -47,7 +48,11 @@ export const PlaySlot = (props: IPlaySlotProps) => {
       <div style={{ height: "9em", width: "6em" }}>
         {slot != null ? (
           slot.card?.type === "Spawn" ? (
-            <SpawnCard card={slot.card as SpawnCard} played={true}></SpawnCard>
+            <SpawnCard
+              card={slot.card as SpawnCard}
+              played={true}
+              position={props.position}
+            ></SpawnCard>
           ) : (
             <ReactionCard
               card={slot.card as ReactionCard}

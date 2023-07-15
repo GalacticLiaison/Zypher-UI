@@ -10,10 +10,10 @@ import {
   setTurnQueue,
 } from "./combatSlice";
 import { Turn, TurnManager } from "./components/TurnManager/TurnManager";
-import { Battle } from "./Battle/Battle";
-import { SpawnSlot } from "./Battle/components/Battlefield/components/PlaySlots/SpawnCardSlots/SpawnCardSlots";
-import { ReactionSlot } from "./Battle/components/Battlefield/components/PlaySlots/ReactionCardSlots/ReactionCardSlots";
 import { Battlefield } from "./Battle/components/Battlefield/Battlefield";
+import { ReactionCard } from "./CombatCards/ReactionCard";
+import { BattleManager } from "./components/BattleManager/BattleManager";
+import { TurnOrderDisplay } from "./components/TurnOrderDisplay/TurnOrderDisplay";
 
 export interface Combatant {
   id: string;
@@ -21,6 +21,7 @@ export interface Combatant {
   health: number;
   hand: (CombatCard | SpawnCard)[];
   deck: (CombatCard | SpawnCard)[];
+  image: string;
 }
 
 export const MINIMUM_SLOTS = 3;
@@ -44,7 +45,7 @@ export const Combat = () => {
     image: "src/assets/cards/laserBlast.png",
   };
 
-  const forceField: CombatCard = {
+  const forceField: ReactionCard = {
     id: 456,
     name: "Force Field",
     description: "Da Bubble",
@@ -67,6 +68,7 @@ export const Combat = () => {
     attack: 1,
     health: 2,
     totalHealth: 2,
+    isAttacking: false,
   };
 
   const wolf: SpawnCard = {
@@ -81,20 +83,22 @@ export const Combat = () => {
     attack: 2,
     health: 3,
     totalHealth: 3,
+    isAttacking: false,
   };
 
   const cyberSoldier: SpawnCard = {
     id: 789,
-    name: "Cyber Soldier",
-    description: "He is a soldier, but cyber",
+    name: "Fellhound",
+    description: "mean but still not bad dog",
     cost: 1,
     type: "Spawn",
     subtype: "Test",
     rarity: "Common",
-    image: "src/assets/enemies/cyberSoldier.png",
+    image: "src/assets/enemies/wolfCreature.png",
     attack: 1,
     health: 1,
     totalHealth: 1,
+    isAttacking: false,
   };
 
   const topTeamCombatants: Combatant[] = [
@@ -126,6 +130,7 @@ export const Combat = () => {
           return soldier;
         })(),
       ],
+      image: "src/assets/enemies/cyberSoldier.png",
     },
     {
       id: "e2",
@@ -155,6 +160,7 @@ export const Combat = () => {
           return soldier;
         })(),
       ],
+      image: "src/assets/enemies/cyberSoldier.png",
     },
   ];
 
@@ -175,6 +181,7 @@ export const Combat = () => {
         JSON.parse(JSON.stringify(forceField)),
         JSON.parse(JSON.stringify(deployableAutoTurret)),
       ],
+      image: "src/assets/characters/player.png",
     },
   ];
 
@@ -254,7 +261,7 @@ export const Combat = () => {
     dispatch(setTurnQueue(calculateTurnOrder()));
     dispatch(
       setCurrentTurn({
-        combatant: bottomTeamCombatants[0],
+        turnTaker: bottomTeamCombatants[0],
         position: "bottom",
         positionIndex: 0,
         isPlayer: true,
@@ -266,13 +273,13 @@ export const Combat = () => {
     // Future State will do the agility calculation here
     return [
       {
-        combatant: topTeamCombatants[0],
+        turnTaker: topTeamCombatants[0],
         position: "top",
         positionIndex: 0,
         isPlayer: false,
       },
       {
-        combatant: topTeamCombatants[1],
+        turnTaker: topTeamCombatants[1],
         position: "top",
         positionIndex: 1,
         isPlayer: false,
@@ -283,6 +290,7 @@ export const Combat = () => {
   return (
     <>
       <TurnManager></TurnManager>
+      <BattleManager></BattleManager>
       <Battlefield></Battlefield>
     </>
   );

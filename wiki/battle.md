@@ -68,3 +68,7 @@ Battle Mechanics
 - spawns can move side to side on spots instead of attack
   - maybe spawns dont attack the turn they are summoned?
   - opens up focus on spawn placement to avoid/trigger effects
+
+spawns have agility and share same que as players
+
+- spawn stats can maybe scale with player stats, maybe based on specific stats allowing players to min max

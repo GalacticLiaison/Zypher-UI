@@ -8,10 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   CombatState,
   CombatantBoardData,
+  addToTurnQueue,
   drawCard,
   playCard,
   setTurnPhaseIsComplete,
 } from "../../../combatSlice";
+import { TurnOrderDisplay } from "../../../components/TurnOrderDisplay/TurnOrderDisplay";
 
 export interface Reaction {
   card: CombatCard | undefined;
@@ -35,17 +37,7 @@ export function Battlefield(props: IBattlefieldProps) {
   */
 
   // ====================== Passed  Data ======================
-
-  // Start Here:
-  // - so down stream the playslots are getting set then overwritten,
-  //     - since they have an empty array store state im guessing thats whats going on, its immediately overwriting
-  // - Ideas:
-  //   - Could use the initial state to set minimum slots instead of empty arrays
-  //   - Refactor: make literally everything use state, dont get cute with props/useContext
-  //   - and really ask your self if you need all the data you are pulling in,
-  //     alot of components you could probably just pass an id down and fetch state when needed
-
-  const { battlefieldLayout } = useSelector(
+  const { battlefieldLayout, currentTurnPhase } = useSelector(
     (store: any) => store.combat
   ) as CombatState;
 
@@ -91,12 +83,14 @@ export function Battlefield(props: IBattlefieldProps) {
     UniqueIdentifier | undefined
   >();
 
+  // Start Here: you finished up the turn order display.
+  // Figure out how we want to add Spawns to the turn queue
+  //   - agility calculation
+  //   - get spawn attacking working
+
   return (
     <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <div style={{ height: 100, backgroundColor: "lightskyblue" }}></div>
-        </Grid>
+      <Grid container spacing={2} style={{ marginTop: "3%" }}>
         <Grid container item xs={12} spacing={2}>
           {topTeamIds.map((id, index) => {
             return (
@@ -127,17 +121,27 @@ export function Battlefield(props: IBattlefieldProps) {
             );
           })}
         </Grid>
-        <Grid item xs={12}>
-          <Button
-            onClick={() => dispatch(setTurnPhaseIsComplete(true))}
-            variant="contained"
-            color="success"
-          >
-            End Action Phase
-          </Button>
-          <Button onClick={() => dispatch(drawCard())} variant="contained">
-            Draw
-          </Button>
+        <Grid item container xs={12}>
+          <Grid item xs={6}>
+            <Button
+              onClick={() => dispatch(setTurnPhaseIsComplete(true))}
+              variant="contained"
+              color="success"
+            >
+              End Action Phase
+            </Button>
+            <Button onClick={() => dispatch(drawCard())} variant="contained">
+              Draw
+            </Button>
+          </Grid>
+          <Grid item container xs={6}>
+            <Grid item xs={10}>
+              <TurnOrderDisplay></TurnOrderDisplay>
+            </Grid>
+            <Grid item xs={2}>
+              <div>Current Turn Phase: {currentTurnPhase}</div>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </DndContext>
